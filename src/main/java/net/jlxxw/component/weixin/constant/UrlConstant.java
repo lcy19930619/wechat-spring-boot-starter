@@ -12,4 +12,10 @@ public interface UrlConstant {
      */
     String PUSH_TEMPLATE_PREFIX = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=";
 
+    /**
+     * 客服信息推送地址前缀
+     */
+    String PUSH_CUSTOMER =  "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=";
+
+
 }
