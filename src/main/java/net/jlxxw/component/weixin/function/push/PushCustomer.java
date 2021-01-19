@@ -43,7 +43,7 @@ public class PushCustomer {
             throw new IllegalArgumentException("token error");
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        headers.setContentType(MediaType.APPLICATION_JSON);
         String json = JSON.toJSONString(messageDTO);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity(UrlConstant.PUSH_TEMPLATE_PREFIX + token, request, WeiXinResponse.class);
