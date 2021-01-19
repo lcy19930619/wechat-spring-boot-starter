@@ -46,7 +46,7 @@ public class PushCustomer {
         headers.setContentType(MediaType.APPLICATION_JSON);
         String json = JSON.toJSONString(messageDTO);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity(UrlConstant.PUSH_TEMPLATE_PREFIX + token, request, WeiXinResponse.class);
+        ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity(UrlConstant.PUSH_CUSTOMER_PREFIX + token, request, WeiXinResponse.class);
         WeiXinResponse body = responseEntity.getBody();
         if (Objects.isNull(body)) {
             return null;

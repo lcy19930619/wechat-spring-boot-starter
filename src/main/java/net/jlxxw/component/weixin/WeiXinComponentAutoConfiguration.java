@@ -1,11 +1,17 @@
 package net.jlxxw.component.weixin;
 
+import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
+import net.jlxxw.component.weixin.function.token.WeiXinTokenManagerImpl;
+import net.jlxxw.component.weixin.mapper.TokenMapper;
+import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,18 +24,19 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Configuration
 @ComponentScan("net.jlxxw.component.weixin")
+@EnableScheduling
 public class WeiXinComponentAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         return new RestTemplate(new HttpComponentsClientHttpRequestFactory(
                 HttpClientBuilder.create().build()));
     }
 
 
     @Bean("pushThreadPool")
-    public Executor pushThreadPool(){
+    public Executor pushThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //获取到服务器的cpu内核
         int i = Runtime.getRuntime().availableProcessors();
@@ -51,10 +58,11 @@ public class WeiXinComponentAutoConfiguration {
 
     /**
      * 批量执行线程池
+     *
      * @return
      */
     @Bean("batchExecuteThreadPool")
-    public Executor batchExecuteThreadPool(){
+    public Executor batchExecuteThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //获取到服务器的cpu内核
         int i = Runtime.getRuntime().availableProcessors();
@@ -71,6 +79,14 @@ public class WeiXinComponentAutoConfiguration {
         //配置拒绝策略
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         return executor;
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "weixin",name = "enableDefaultTokenManager",havingValue = "true")
+    public WeiXinTokenManager weiXinTokenManager(WeiXinProperties weiXinProperties,
+                                                 RestTemplate restTemplate,
+                                                 TokenMapper tokenMapper){
+        return new WeiXinTokenManagerImpl(weiXinProperties,restTemplate,tokenMapper);
     }
 
 
