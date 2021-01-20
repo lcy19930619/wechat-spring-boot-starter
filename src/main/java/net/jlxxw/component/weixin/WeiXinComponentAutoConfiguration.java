@@ -86,7 +86,7 @@ public class WeiXinComponentAutoConfiguration {
      * @return
      */
     @Bean("eventBusThreadPool")
-    public Executor eventBusThreadPool(){
+    public ThreadPoolTaskExecutor eventBusThreadPool(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //获取到服务器的cpu内核
         int i = Runtime.getRuntime().availableProcessors();
