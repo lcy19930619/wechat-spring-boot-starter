@@ -81,6 +81,30 @@ public class WeiXinComponentAutoConfiguration {
         return executor;
     }
 
+    /**
+     * 事件总线线程池
+     * @return
+     */
+    @Bean("eventBusThreadPool")
+    public Executor eventBusThreadPool(){
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        //获取到服务器的cpu内核
+        int i = Runtime.getRuntime().availableProcessors();
+        //核心池大小
+        executor.setCorePoolSize(i);
+        //最大线程数
+        executor.setMaxPoolSize(i * 2);
+        //队列程度
+        executor.setQueueCapacity(1000);
+        //线程空闲时间
+        executor.setKeepAliveSeconds(1000);
+        //线程前缀名称
+        executor.setThreadNamePrefix("eventBus-execute-pool-");
+        //配置拒绝策略
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        return executor;
+    }
+
     @Bean
     @ConditionalOnProperty(prefix = "weixin",name = "enableDefaultTokenManager",havingValue = "true")
     public WeiXinTokenManager weiXinTokenManager(WeiXinProperties weiXinProperties,
