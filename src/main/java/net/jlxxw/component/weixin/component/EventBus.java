@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.xml.sax.SAXException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -140,9 +139,8 @@ public class EventBus {
      * @param weiXinMessage 微信消息
      * @param weiXinMessageTypeEnum 消息类型枚举
      * @return 处理完毕的xml字符串
-     * @throws SAXException 转换为微信应答对象失败
      */
-    private String handlerMessage(WeiXinMessage weiXinMessage,WeiXinMessageTypeEnum weiXinMessageTypeEnum) throws SAXException {
+    private String handlerMessage(WeiXinMessage weiXinMessage,WeiXinMessageTypeEnum weiXinMessageTypeEnum)  {
         if(CollectionUtils.isEmpty(weiXinMessageListeners)){
             throw new IllegalArgumentException("未注册相关事件监听器");
         }
