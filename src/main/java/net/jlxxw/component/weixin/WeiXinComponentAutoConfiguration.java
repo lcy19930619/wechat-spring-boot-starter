@@ -4,6 +4,7 @@ import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManagerImpl;
 import net.jlxxw.component.weixin.mapper.TokenMapper;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
+import net.jlxxw.component.weixin.schedul.ScheduledUpdateToken;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -113,5 +114,11 @@ public class WeiXinComponentAutoConfiguration {
         return new WeiXinTokenManagerImpl(weiXinProperties,restTemplate,tokenMapper);
     }
 
+    @Bean
+    @ConditionalOnProperty(prefix = "weixin",name = "enableDefaultTokenManager",havingValue = "true")
+    public ScheduledUpdateToken weiXinTokenManager(TokenMapper tokenMapper,
+                                                   WeiXinTokenManager weiXinTokenManager){
+        return new ScheduledUpdateToken(tokenMapper,weiXinTokenManager);
+    }
 
 }

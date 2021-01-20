@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 /**
  * @author chunyang.leng
  * @date 2021/1/19 5:19 下午
@@ -27,4 +29,11 @@ public interface TokenMapper {
 
     @Insert("insert into wei_xin_token(token) values (#{token})")
     int insert(@Param("token") String token);
+
+    /**
+     * 锁表
+     * @return
+     */
+    @Select("select max(create_time) from wei_xin_token for update")
+    Date lockSelectMaxDate();
 }
