@@ -9,31 +9,31 @@ public enum WeiXinMessageTypeEnum {
     /**
      * 文本
      */
-    TEXT(""),
+    TEXT("文本信息"),
     /**
      * 图片
      */
-    IMAGE(""),
+    IMAGE("图片信息"),
     /**
      * 音频
      */
-    VOICE(""),
+    VOICE("音频信息"),
     /**
      * 视频
      */
-    VIDEO(""),
+    VIDEO("视频信息"),
     /**
      * 小视频
      */
-    SHORT_VIDEO(""),
+    SHORT_VIDEO("小视频信息"),
     /**
      * 地理位置信息
      */
-    LOCATION(""),
+    LOCATION("地理位置信息"),
     /**
      * 链接
      */
-    LINK(""),
+    LINK("链接信息"),
     ;
 
     /**

@@ -68,11 +68,18 @@ public class EventBus {
             }
             messageListenerMap.put(k,v.get(0));
         });
+
+        final WeiXinMessageTypeEnum[] values = WeiXinMessageTypeEnum.values();
+        for (WeiXinMessageTypeEnum value : values) {
+            if(!messageListenerMap.containsKey(value)){
+                logger.warn(value.getDescription()+"消息处理器未注册!!!");
+            }
+        }
     }
     /**
      * 微信请求处理结果
      */
-    public String dispatcher(HttpServletRequest request) throws Exception {
+    public String dispatcher(HttpServletRequest request)  {
         final Future<String> future = eventBusThreadPool.submit(() -> {
             // 将解析结果存储在HashMap中
             JSONObject jsonObject = new JSONObject();
@@ -113,6 +120,7 @@ public class EventBus {
                     weiXinMessage = jsonObject.toJavaObject(LinkMessage.class);
                     return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LINK);
                 case "event":
+                    // todo
                     break;
 
                 default:
