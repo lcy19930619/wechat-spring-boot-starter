@@ -9,30 +9,43 @@ public enum WeiXinMessageTypeEnum {
     /**
      * 文本
      */
-    TEXT,
+    TEXT(""),
     /**
      * 图片
      */
-    IMAGE,
+    IMAGE(""),
     /**
      * 音频
      */
-    VOICE,
+    VOICE(""),
     /**
      * 视频
      */
-    VIDEO,
+    VIDEO(""),
     /**
      * 小视频
      */
-    SHORT_VIDEO,
+    SHORT_VIDEO(""),
     /**
      * 地理位置信息
      */
-    LOCATION,
+    LOCATION(""),
     /**
      * 链接
      */
-    LINK,
+    LINK(""),
     ;
+
+    /**
+     * 描述
+     */
+    private final String description;
+
+    WeiXinMessageTypeEnum(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
 }

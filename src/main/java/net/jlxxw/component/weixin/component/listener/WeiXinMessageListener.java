@@ -18,7 +18,7 @@ public abstract class WeiXinMessageListener {
     public abstract WeiXinMessageTypeEnum supportMessageType();
 
     /**
-     * 处理微信消息
+     * 处理微信消息 ,return null时，会转换为 "" 返回到微信服务器
      * @param weiXinMessage
      * @return
      */

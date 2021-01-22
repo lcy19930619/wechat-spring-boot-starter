@@ -150,6 +150,9 @@ public class EventBus {
             throw new IllegalArgumentException(weiXinMessageTypeEnum.name() +"事件监听器未注册");
         }
         WeiXinMessageResponse response = weiXinMessageListener.handler(weiXinMessage);
+        if(Objects.isNull(response)){
+            return "";
+        }
          String json = JSON.toJSONString(response);
          if(StringUtils.isBlank(json)){
              return json;
