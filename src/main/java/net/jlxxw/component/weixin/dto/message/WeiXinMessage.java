@@ -38,6 +38,10 @@ public abstract class WeiXinMessage {
      */
     private Long MsgId;
 
+
+
+
+
     public String getToUserName() {
         return ToUserName;
     }
