@@ -35,14 +35,14 @@ public class WeiXinCoreComponent {
         //new 一个主线程组
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         //new 一个工作线程组
-        EventLoopGroup workGroup = new NioEventLoopGroup(200);
+        EventLoopGroup workGroup = new NioEventLoopGroup(weiXinNettyServerProperties.getMaxThreadSize());
         bootstrap
                 .group(bossGroup, workGroup)
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new WeiXinChannel())
                 .localAddress(weiXinNettyServerProperties.getNettyPort())
                 //设置队列大小
-                .option(ChannelOption.SO_BACKLOG, 1024)
+                .option(ChannelOption.SO_BACKLOG, weiXinNettyServerProperties.getQueueSize())
                 // 两小时内没有数据的通信时,TCP会自动发送一个活动探测数据报文
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
         //绑定端口,开始接收进来的连接

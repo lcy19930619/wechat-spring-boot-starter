@@ -26,6 +26,11 @@ public class WeiXinNettyServerProperties {
      */
     private Integer queueSize = 500;
 
+    /**
+     * 工作组线程数
+     */
+    private Integer maxThreadSize = 200;
+
     public Boolean getEnableNetty() {
         return enableNetty;
     }
@@ -48,5 +53,13 @@ public class WeiXinNettyServerProperties {
 
     public void setQueueSize(Integer queueSize) {
         this.queueSize = queueSize;
+    }
+
+    public Integer getMaxThreadSize() {
+        return maxThreadSize;
+    }
+
+    public void setMaxThreadSize(Integer maxThreadSize) {
+        this.maxThreadSize = maxThreadSize;
     }
 }
