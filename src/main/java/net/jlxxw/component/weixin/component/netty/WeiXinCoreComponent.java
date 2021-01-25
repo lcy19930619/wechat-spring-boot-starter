@@ -12,7 +12,6 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import net.jlxxw.component.weixin.component.EventBus;
 import net.jlxxw.component.weixin.properties.WeiXinNettyServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,8 +32,6 @@ public class WeiXinCoreComponent {
     private static final Logger logger = LoggerFactory.getLogger(WeiXinCoreComponent.class);
     @Autowired
     private WeiXinNettyServerProperties weiXinNettyServerProperties;
-    @Autowired
-    private EventBus eventBus;
     @Autowired
     private WeiXinChannel weiXinChannel;
 
