@@ -138,6 +138,7 @@ public class EventBus {
             for (Element e : elementList) {
                 jsonObject.put(e.getName(), e.getText());
             }
+            inputStream.close();
             return handlerWeiXinMessage(jsonObject);
         });
         try {
@@ -177,6 +178,7 @@ public class EventBus {
             for (Element e : elementList) {
                 jsonObject.put(e.getName(), e.getText());
             }
+            inputStream.close();
             return handlerWeiXinMessage(jsonObject);
         });
         try {
