@@ -11,11 +11,18 @@ public enum WeiXinEventTypeEnum {
     /**
      * 事件类型：subscribe(订阅)
      */
-    SUBSCRIBE("subscribe","订阅"),
+    SUBSCRIBE("subscribe","用户关注"),
     /**
      * 事件类型：unsubscribe(取消订阅)
      */
-    UNSUBSCRIBE("unsubscribe","取消订阅"),
+    UNSUBSCRIBE("unsubscribe","用户取消关注"),
+
+    /**
+     * 用户未关注时，进行关注后的事件推送
+     */
+    SUBSCRIBE_QRSCENE("subscribe","用户未关注时，进行关注后的事件推送"),
+
+
     /**
      * 事件类型：scan(用户已关注时的扫描带参数二维码)
      */
