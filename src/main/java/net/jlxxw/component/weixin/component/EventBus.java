@@ -30,7 +30,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -72,14 +74,17 @@ public class EventBus {
 
     @PostConstruct
     public void postConstruct(){
-        Map<WeiXinMessageTypeEnum,List<WeiXinMessageListener>> map = weiXinMessageListeners.stream().collect(Collectors.groupingBy(WeiXinMessageListener::supportMessageType));
+        if(!CollectionUtils.isEmpty(weiXinMessageListeners)){
+            Map<WeiXinMessageTypeEnum,List<WeiXinMessageListener>> map = weiXinMessageListeners.stream().collect(Collectors.groupingBy(WeiXinMessageListener::supportMessageType));
 
-        map.forEach((k,v)->{
-            if(v.size()>1){
-                throw new BeanCreationException("微信messageListener不能注册多次");
-            }
-            messageListenerMap.put(k,v.get(0));
-        });
+            map.forEach((k,v)->{
+                if(v.size()>1){
+                    throw new BeanCreationException("微信messageListener不能注册多次");
+                }
+                messageListenerMap.put(k,v.get(0));
+            });
+        }
+
 
         final WeiXinMessageTypeEnum[] values = WeiXinMessageTypeEnum.values();
         for (WeiXinMessageTypeEnum value : values) {
@@ -88,19 +93,20 @@ public class EventBus {
             }
         }
 
-        Map<WeiXinEventTypeEnum,List<WeiXinEventListener>> eventMap = weiXinEventListeners.stream().collect(Collectors.groupingBy(WeiXinEventListener::supportEventType));
-
-        eventMap.forEach((k,v)->{
-            if(v.size()>1){
-                throw new BeanCreationException("微信eventListener不能注册多次");
-            }
-            eventListenerMap.put(k,v.get(0));
-        });
+        if(!CollectionUtils.isEmpty(weiXinEventListeners)){
+            Map<WeiXinEventTypeEnum,List<WeiXinEventListener>> eventMap = weiXinEventListeners.stream().collect(Collectors.groupingBy(WeiXinEventListener::supportEventType));
+            eventMap.forEach((k,v)->{
+                if(v.size()>1){
+                    throw new BeanCreationException("微信eventListener不能注册多次");
+                }
+                eventListenerMap.put(k,v.get(0));
+            });
+        }
 
         final WeiXinEventTypeEnum[] eventValues = WeiXinEventTypeEnum.values();
         for (WeiXinEventTypeEnum value : eventValues) {
             if(!eventListenerMap.containsKey(value)){
-                logger.warn(value.getDescription()+"消息处理器未注册!!!");
+                logger.warn(value.getDescription()+"事件处理器未注册!!!");
             }
         }
     }
@@ -124,51 +130,7 @@ public class EventBus {
             for (Element e : elementList) {
                 jsonObject.put(e.getName(), e.getText());
             }
-            WeiXinMessage weiXinMessage;
-            switch (jsonObject.getString("MsgType")) {
-                case "text":
-                    weiXinMessage = jsonObject.toJavaObject(TextMessage.class);
-                    return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.TEXT);
-                case "image":
-                    weiXinMessage = jsonObject.toJavaObject(ImageMessage.class);
-                    return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.IMAGE);
-                case "voice":
-                    weiXinMessage = jsonObject.toJavaObject(VoiceMessage.class);
-                    return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VOICE);
-                case "video":
-                    weiXinMessage = jsonObject.toJavaObject(VideoMessage.class);
-                    return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VIDEO);
-                case "shortvideo":
-                    weiXinMessage = jsonObject.toJavaObject(ShortVideoMessage.class);
-                    return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.SHORT_VIDEO);
-                case "location":
-                    weiXinMessage = jsonObject.toJavaObject(LocationMessage.class);
-                    return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LOCATION);
-                case "link":
-                    weiXinMessage = jsonObject.toJavaObject(LinkMessage.class);
-                    return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LINK);
-                case "event":
-                    String event = jsonObject.getString("Event");
-                    switch (event){
-                        // todo
-                        case "subscribe":
-
-                            break;
-                        case "unsubscribe": break;
-                        case "SCAN": break;
-                        case "LOCATION": break;
-                        case "CLICK": break;
-                        case "TEMPLATESENDJOBFINISH": break;
-                        case "VIEW": break;
-                        default: throw new IllegalArgumentException("未知的请求信息类型");
-                    }
-                    // todo
-                    break;
-
-                default:
-                    throw new IllegalArgumentException("未知的请求信息类型");
-            }
-            return null;
+            return handlerWeiXinMessage(jsonObject);
         });
         try{
             return future.get(5, TimeUnit.SECONDS);
@@ -181,8 +143,91 @@ public class EventBus {
             }
             logger.error("事件分发处理出现异常,微信参数:{},异常信息:{}",jsonObject.toJSONString(),e);
             return "";
+
         }
     }
+
+
+    /**
+     * 微信请求处理结果
+     */
+    public String dispatcher(byte[] bytes)  {
+        final Future<String> future = eventBusThreadPool.submit(() -> {
+
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+            // 将解析结果存储在HashMap中
+            JSONObject jsonObject = new JSONObject();
+
+            // 读取输入流
+            SAXReader reader = new SAXReader();
+            Document document = reader.read(inputStream);
+            // 得到xml根元素
+            Element root = document.getRootElement();
+            // 得到根元素的所有子节点
+            List<Element> elementList = root.elements();
+            // 遍历所有子节点
+            for (Element e : elementList) {
+                jsonObject.put(e.getName(), e.getText());
+            }
+            return handlerWeiXinMessage(jsonObject);
+        });
+        try{
+            return future.get(5, TimeUnit.SECONDS);
+        }catch (Exception e){
+            logger.error("事件分发处理出现异常,微信参数:{},异常信息:{}",new String(bytes, StandardCharsets.UTF_8),e);
+            return "";
+
+        }
+    }
+
+    private String handlerWeiXinMessage(JSONObject jsonObject){
+        WeiXinMessage weiXinMessage;
+        switch (jsonObject.getString("MsgType")) {
+            case "text":
+                weiXinMessage = jsonObject.toJavaObject(TextMessage.class);
+                return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.TEXT);
+            case "image":
+                weiXinMessage = jsonObject.toJavaObject(ImageMessage.class);
+                return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.IMAGE);
+            case "voice":
+                weiXinMessage = jsonObject.toJavaObject(VoiceMessage.class);
+                return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VOICE);
+            case "video":
+                weiXinMessage = jsonObject.toJavaObject(VideoMessage.class);
+                return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VIDEO);
+            case "shortvideo":
+                weiXinMessage = jsonObject.toJavaObject(ShortVideoMessage.class);
+                return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.SHORT_VIDEO);
+            case "location":
+                weiXinMessage = jsonObject.toJavaObject(LocationMessage.class);
+                return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LOCATION);
+            case "link":
+                weiXinMessage = jsonObject.toJavaObject(LinkMessage.class);
+                return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LINK);
+            case "event":
+                String event = jsonObject.getString("Event");
+                switch (event){
+                    // todo
+                    case "subscribe":
+
+                        break;
+                    case "unsubscribe": break;
+                    case "SCAN": break;
+                    case "LOCATION": break;
+                    case "CLICK": break;
+                    case "TEMPLATESENDJOBFINISH": break;
+                    case "VIEW": break;
+                    default: throw new IllegalArgumentException("未知的请求信息类型");
+                }
+                // todo
+                break;
+
+            default:
+                throw new IllegalArgumentException("未知的请求信息类型");
+        }
+        return null;
+    }
+
 
     /**
      * 处理常规消息

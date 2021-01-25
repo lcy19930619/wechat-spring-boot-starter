@@ -12,6 +12,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import net.jlxxw.component.weixin.component.EventBus;
 import net.jlxxw.component.weixin.properties.WeiXinNettyServerProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ import javax.annotation.PostConstruct;
 
 /**
  * 通过netty接口提升微信核心接口性能
- * todo
+ *
  * @author chunyang.leng
  * @date 2021/1/25 9:31 上午
  */
@@ -32,7 +33,8 @@ public class WeiXinCoreComponent {
     private static final Logger logger = LoggerFactory.getLogger(WeiXinCoreComponent.class);
     @Autowired
     private WeiXinNettyServerProperties weiXinNettyServerProperties;
-
+    @Autowired
+    private EventBus eventBus;
     @PostConstruct
     public void postConstruct(){
         if(!weiXinNettyServerProperties.getEnableNetty()){
@@ -57,7 +59,7 @@ public class WeiXinCoreComponent {
                         // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
                         socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
                         // 自定义处理handler
-                        socketChannel.pipeline().addLast("http-server", new WeiXinChannel());
+                        socketChannel.pipeline().addLast("http-server", new WeiXinChannel(eventBus));
                     }
                 })
                 .localAddress(weiXinNettyServerProperties.getNettyPort())
@@ -68,10 +70,10 @@ public class WeiXinCoreComponent {
         //绑定端口,开始接收进来的连接
         try {
             ChannelFuture future = bootstrap.bind(weiXinNettyServerProperties.getNettyPort()).sync();
-            logger.info("服务器启动开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
+            logger.info("微信netty服务启动，开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("微信netty服务启动失败！！！",e);
         } finally {
             //关闭主线程组
             bossGroup.shutdownGracefully();
