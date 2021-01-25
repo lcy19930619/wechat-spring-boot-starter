@@ -35,6 +35,9 @@ public class WeiXinCoreComponent {
     private WeiXinNettyServerProperties weiXinNettyServerProperties;
     @Autowired
     private EventBus eventBus;
+    @Autowired
+    private WeiXinChannel weiXinChannel;
+
     @PostConstruct
     public void postConstruct(){
         if(!weiXinNettyServerProperties.getEnableNetty()){
@@ -59,7 +62,7 @@ public class WeiXinCoreComponent {
                         // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
                         socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
                         // 自定义处理handler
-                        socketChannel.pipeline().addLast("http-server", new WeiXinChannel(eventBus));
+                        socketChannel.pipeline().addLast("http-server", weiXinChannel);
                     }
                 })
                 .localAddress(weiXinNettyServerProperties.getNettyPort())

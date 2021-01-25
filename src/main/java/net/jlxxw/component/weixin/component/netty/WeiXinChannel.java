@@ -11,9 +11,14 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.component.weixin.component.EventBus;
+import net.jlxxw.component.weixin.properties.WeiXinProperties;
+import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 
 import static io.netty.buffer.Unpooled.copiedBuffer;
@@ -22,16 +27,30 @@ import static io.netty.buffer.Unpooled.copiedBuffer;
  * @author chunyang.leng
  * @date 2021/1/25 9:46 上午
  */
+@Component
 public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> {
     private static final Logger logger = LoggerFactory.getLogger(WeiXinChannel.class);
+    @Autowired
     private EventBus eventBus;
-
-    public WeiXinChannel(EventBus eventBus){
-        this.eventBus = eventBus;
-    }
+    @Autowired(required = false)
+    private WeiXinServerSecurityCheck weiXinServerSecurityCheck;
+    @Autowired
+    private WeiXinProperties weiXinProperties;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
+
+        if(weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null){
+            // 开启微信回调ip安全检查时执行
+            InetSocketAddress insocket = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
+            String ipAddress = insocket.getAddress().getHostAddress();
+            if(!weiXinServerSecurityCheck.isSecurity(ipAddress)){
+                // 非法ip，不予处理
+                channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN,copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);
+                return;
+            }
+        }
+
         ByteBuf content = fullHttpRequest.content();
         byte[] reqContent = new byte[content.readableBytes()];
         content.readBytes(reqContent);

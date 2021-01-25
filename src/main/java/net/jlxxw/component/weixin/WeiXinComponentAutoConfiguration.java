@@ -5,7 +5,11 @@ import net.jlxxw.component.weixin.function.token.WeiXinTokenManagerImpl;
 import net.jlxxw.component.weixin.mapper.TokenMapper;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.schedul.ScheduledUpdateToken;
+import net.jlxxw.component.weixin.schedul.ScheduledUpdateWeiXinServerIp;
+import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +31,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @ComponentScan("net.jlxxw.component.weixin")
 @EnableScheduling
 public class WeiXinComponentAutoConfiguration {
-
+    private static final Logger logger = LoggerFactory.getLogger(WeiXinComponentAutoConfiguration.class);
     @Bean
     @ConditionalOnMissingBean(RestTemplate.class)
     public RestTemplate restTemplate() {
@@ -111,6 +115,7 @@ public class WeiXinComponentAutoConfiguration {
     public WeiXinTokenManager weiXinTokenManager(WeiXinProperties weiXinProperties,
                                                  RestTemplate restTemplate,
                                                  TokenMapper tokenMapper){
+        logger.info("启用默认token管理器");
         return new WeiXinTokenManagerImpl(weiXinProperties,restTemplate,tokenMapper);
     }
 
@@ -121,4 +126,16 @@ public class WeiXinComponentAutoConfiguration {
         return new ScheduledUpdateToken(tokenMapper,weiXinTokenManager);
     }
 
+    @Bean
+    @ConditionalOnProperty(prefix = "weixin",name = "enableWeiXinCallBackServerSecurityCheck",havingValue = "true")
+    public ScheduledUpdateWeiXinServerIp scheduledUpdateWeiXinServerIp(){
+        return new ScheduledUpdateWeiXinServerIp();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "weixin",name = "enableWeiXinCallBackServerSecurityCheck",havingValue = "true")
+    public WeiXinServerSecurityCheck weiXinServerSecurityCheck(){
+        logger.info("启用微信回调ip白名单管理器");
+        return new WeiXinServerSecurityCheck();
+    }
 }

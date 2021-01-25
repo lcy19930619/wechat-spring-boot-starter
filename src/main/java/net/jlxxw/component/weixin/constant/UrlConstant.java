@@ -22,4 +22,8 @@ public interface UrlConstant {
      */
     String TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type={0}l&appid={1}&secret={2}";
 
+    /**
+     * 微信回调白名单url
+     */
+    String WEIXIN_CALL_BACK_SERVER_IP_PREFIX = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=";
 }

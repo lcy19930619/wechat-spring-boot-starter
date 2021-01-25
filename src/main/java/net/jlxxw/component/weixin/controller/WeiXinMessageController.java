@@ -1,6 +1,9 @@
 package net.jlxxw.component.weixin.controller;
 
 import net.jlxxw.component.weixin.component.EventBus;
+import net.jlxxw.component.weixin.properties.WeiXinProperties;
+import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
+import net.jlxxw.component.weixin.util.NetworkUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +23,22 @@ import java.io.PrintWriter;
 public class WeiXinMessageController {
     @Autowired
     private EventBus eventBus;
+    @Autowired(required = false)
+    private WeiXinServerSecurityCheck weiXinServerSecurityCheck;
+    @Autowired
+    private WeiXinProperties weiXinProperties;
 
     @RequestMapping("core")
     public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if(weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null){
+            // 开启微信回调ip安全检查时执行
+            final String ipAddress = NetworkUtil.getIpAddress(request);
+            if(!weiXinServerSecurityCheck.isSecurity(ipAddress)){
+                // 非法ip，不予处理
+                return;
+            }
+        }
+
         String result = eventBus.dispatcher(request);
         response.setCharacterEncoding("UTF-8");
         final PrintWriter writer = response.getWriter();

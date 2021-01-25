@@ -32,6 +32,11 @@ public class WeiXinProperties {
      */
     private boolean enableDefaultTokenManager = false;
 
+    /**
+     * 是否开启微信回调服务器安全检查，防止非法ip调用回信回调接口
+     */
+    private boolean enableWeiXinCallBackServerSecurityCheck = true;
+
     public String getAppId() {
         return appId;
     }
@@ -62,5 +67,13 @@ public class WeiXinProperties {
 
     public void setEnableDefaultTokenManager(boolean enableDefaultTokenManager) {
         this.enableDefaultTokenManager = enableDefaultTokenManager;
+    }
+
+    public boolean isEnableWeiXinCallBackServerSecurityCheck() {
+        return enableWeiXinCallBackServerSecurityCheck;
+    }
+
+    public void setEnableWeiXinCallBackServerSecurityCheck(boolean enableWeiXinCallBackServerSecurityCheck) {
+        this.enableWeiXinCallBackServerSecurityCheck = enableWeiXinCallBackServerSecurityCheck;
     }
 }
