@@ -29,19 +29,25 @@ weixin:
 ### 注册普通信息事件处理器
 
 1、新建class
+
 2、继承 net.jlxxw.component.weixin.component.listener.WeiXinMessageListener
+
 3、添加 @Component注解
 
 ### 注册微信回调事件处理器
 1、新建class
+
 2、继承 net.jlxxw.component.weixin.component.listener.WeiXinEventListener
+
 3、添加 @Component注解
 
 ## 推送相关内容
 ### 客服接口信息推送
 注入 net.jlxxw.component.weixin.function.push.PushCustomer
+
 调用内置方法即可，可单个推送，或者批量推送
 
 ### 微信模版推送
 注入 net.jlxxw.component.weixin.function.push.PushTemplate
+
 调用内置方法即可，可单个推送，或者批量推送

@@ -70,13 +70,13 @@ public class EventBus {
      * key 支持的消息类型
      * value 消息监听器
      */
-    private Map<WeiXinMessageTypeEnum, WeiXinMessageListener> messageListenerMap = new HashMap<>();
+    private final Map<WeiXinMessageTypeEnum, WeiXinMessageListener> messageListenerMap = new HashMap<>();
     /**
      * 消息处理监听器
      * key 支持的消息类型
      * value 消息监听器
      */
-    private Map<WeiXinEventTypeEnum, WeiXinEventListener> eventListenerMap = new HashMap<>();
+    private final Map<WeiXinEventTypeEnum, WeiXinEventListener> eventListenerMap = new HashMap<>();
 
 
     @PostConstruct
