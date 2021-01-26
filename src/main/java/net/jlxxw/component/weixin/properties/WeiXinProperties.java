@@ -28,6 +28,10 @@ public class WeiXinProperties {
     private String grantType;
 
     /**
+     * 绑定开发者服务器用的验证token
+     */
+    private String verifyToken;
+    /**
      * 是否启用默认的token管理器
      */
     private boolean enableDefaultTokenManager = false;
@@ -75,5 +79,13 @@ public class WeiXinProperties {
 
     public void setEnableWeiXinCallBackServerSecurityCheck(boolean enableWeiXinCallBackServerSecurityCheck) {
         this.enableWeiXinCallBackServerSecurityCheck = enableWeiXinCallBackServerSecurityCheck;
+    }
+
+    public String getVerifyToken() {
+        return verifyToken;
+    }
+
+    public void setVerifyToken(String verifyToken) {
+        this.verifyToken = verifyToken;
     }
 }
