@@ -36,7 +36,7 @@ public class UserManagerImpl implements UserManager {
     private static final Logger logger = LoggerFactory.getLogger(UserManagerImpl.class);
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
+    @Autowired(required = false)
     private WeiXinTokenManager weiXinTokenManager;
 
     /**

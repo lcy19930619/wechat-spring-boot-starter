@@ -36,49 +36,55 @@ public class WeiXinCoreComponent {
     private WeiXinChannel weiXinChannel;
 
     @PostConstruct
-    public void postConstruct(){
-        if(!weiXinNettyServerProperties.getEnableNetty()){
+    public void postConstruct() {
+        if (!weiXinNettyServerProperties.getEnableNetty()) {
             return;
         }
-        //new 一个主线程组
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        //new 一个工作线程组
-        EventLoopGroup workGroup = new NioEventLoopGroup(weiXinNettyServerProperties.getMaxThreadSize());
-        bootstrap
-                .group(bossGroup, workGroup)
-                .channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        // 请求解码器
-                        socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
-                        // 将HTTP消息的多个部分合成一条完整的HTTP消息
-                        socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(65535));
-                        // 响应转码器
-                        socketChannel.pipeline().addLast("http-encoder", new HttpResponseEncoder());
-                        // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
-                        socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
-                        // 自定义处理handler
-                        socketChannel.pipeline().addLast("http-server", weiXinChannel);
-                    }
-                })
-                .localAddress(weiXinNettyServerProperties.getNettyPort())
-                //设置队列大小
-                .option(ChannelOption.SO_BACKLOG, weiXinNettyServerProperties.getQueueSize())
-                // 两小时内没有数据的通信时,TCP会自动发送一个活动探测数据报文
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
-        //绑定端口,开始接收进来的连接
-        try {
-            ChannelFuture future = bootstrap.bind(weiXinNettyServerProperties.getNettyPort()).sync();
-            logger.info("微信netty服务启动，开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
-            future.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
-            logger.error("微信netty服务启动失败！！！",e);
-        } finally {
-            //关闭主线程组
-            bossGroup.shutdownGracefully();
-            //关闭工作线程组
-            workGroup.shutdownGracefully();
-        }
+        new Thread() {
+            @Override
+            public void run() {
+                //new 一个主线程组
+                EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+                //new 一个工作线程组
+                EventLoopGroup workGroup = new NioEventLoopGroup(weiXinNettyServerProperties.getMaxThreadSize());
+                bootstrap
+                        .group(bossGroup, workGroup)
+                        .channel(NioServerSocketChannel.class)
+                        .childHandler(new ChannelInitializer<SocketChannel>() {
+                            @Override
+                            protected void initChannel(SocketChannel socketChannel) throws Exception {
+                                // 请求解码器
+                                socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
+                                // 将HTTP消息的多个部分合成一条完整的HTTP消息
+                                socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(65535));
+                                // 响应转码器
+                                socketChannel.pipeline().addLast("http-encoder", new HttpResponseEncoder());
+                                // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
+                                socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
+                                // 自定义处理handler
+                                socketChannel.pipeline().addLast("http-server", weiXinChannel);
+                            }
+                        })
+                        .localAddress(weiXinNettyServerProperties.getNettyPort())
+                        //设置队列大小
+                        .option(ChannelOption.SO_BACKLOG, weiXinNettyServerProperties.getQueueSize())
+                        // 两小时内没有数据的通信时,TCP会自动发送一个活动探测数据报文
+                        .childOption(ChannelOption.SO_KEEPALIVE, true);
+                //绑定端口,开始接收进来的连接
+                try {
+                    ChannelFuture future = bootstrap.bind(weiXinNettyServerProperties.getNettyPort()).sync();
+                    logger.info("微信netty服务启动，开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
+                    future.channel().closeFuture().sync();
+                } catch (InterruptedException e) {
+                    logger.error("微信netty服务启动失败！！！", e);
+                } finally {
+                    //关闭主线程组
+                    bossGroup.shutdownGracefully();
+                    //关闭工作线程组
+                    workGroup.shutdownGracefully();
+                }
+            }
+        }.start();
     }
+
 }
