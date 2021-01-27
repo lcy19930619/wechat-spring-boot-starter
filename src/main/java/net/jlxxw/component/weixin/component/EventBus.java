@@ -281,6 +281,9 @@ public class EventBus {
         if (Objects.isNull(response)) {
             return "";
         }
+        String toUserName = weiXinMessage.getToUserName();
+        response.setFromUserName(toUserName);
+        response.setCreateTime(System.currentTimeMillis() / 1000);
         String json = JSON.toJSONString(response);
         if (StringUtils.isBlank(json)) {
             return json;
@@ -309,6 +312,9 @@ public class EventBus {
         if (Objects.isNull(response)) {
             return "";
         }
+        String toUserName = weiXinMessage.getToUserName();
+        response.setFromUserName(toUserName);
+        response.setCreateTime(System.currentTimeMillis() / 1000);
         String json = JSON.toJSONString(response);
         if (StringUtils.isBlank(json)) {
             return json;
