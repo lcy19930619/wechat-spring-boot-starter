@@ -6,6 +6,10 @@ import net.jlxxw.component.weixin.exception.WeiXinException;
 import net.jlxxw.component.weixin.mapper.TokenMapper;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.response.WeiXinResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -15,7 +19,10 @@ import java.text.MessageFormat;
  * @author chunyang.leng
  * @date 2021/1/19 5:30 下午
  */
+@ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
+@Configuration
 public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
+    private static final Logger logger = LoggerFactory.getLogger(WeiXinTokenManagerImpl.class);
     private WeiXinProperties weiXinProperties;
     private RestTemplate restTemplate;
     private TokenMapper tokenMapper;
@@ -24,6 +31,7 @@ public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
         this.weiXinProperties = weiXinProperties;
         this.restTemplate = restTemplate;
         this.tokenMapper = tokenMapper;
+        logger.info("启用默认token管理器");
     }
 
     /**

@@ -6,7 +6,11 @@ import net.jlxxw.component.weixin.constant.UrlConstant;
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +24,7 @@ import javax.annotation.PostConstruct;
  * @date 2021/1/25 4:25 下午
  */
 public class ScheduledUpdateWeiXinServerIp {
+    private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateWeiXinServerIp.class);
     private WeiXinTokenManager weiXinTokenManager;
     private RestTemplate restTemplate;
     private WeiXinServerSecurityCheck weiXinServerSecurityCheck;

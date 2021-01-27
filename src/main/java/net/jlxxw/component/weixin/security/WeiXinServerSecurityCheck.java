@@ -34,7 +34,6 @@ public class WeiXinServerSecurityCheck {
      */
     public void updateWeiXinServerIp(List<String> ipList){
         logger.info("更新ip白名单："+ipList);
-        ipWhitelist.clear();
         ipWhitelist.addAll(ipList);
     }
 }

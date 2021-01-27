@@ -1,7 +1,6 @@
 package net.jlxxw.component.weixin;
 
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
-import net.jlxxw.component.weixin.function.token.WeiXinTokenManagerImpl;
 import net.jlxxw.component.weixin.mapper.TokenMapper;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.schedul.ScheduledUpdateToken;
@@ -114,14 +113,6 @@ public class WeiXinComponentAutoConfiguration {
         return executor;
     }
 
-    @Bean
-    @ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
-    public WeiXinTokenManager weiXinTokenManager(WeiXinProperties weiXinProperties,
-                                                 RestTemplate restTemplate,
-                                                 TokenMapper tokenMapper) {
-        logger.info("启用默认token管理器");
-        return new WeiXinTokenManagerImpl(weiXinProperties, restTemplate, tokenMapper);
-    }
 
     @Bean
     @ConditionalOnProperty(prefix = "weixin", name = "enable-default-token-manager", havingValue = "true")

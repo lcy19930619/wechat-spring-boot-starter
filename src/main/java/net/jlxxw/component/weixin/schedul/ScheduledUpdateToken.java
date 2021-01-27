@@ -4,6 +4,8 @@ import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.mapper.TokenMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ import java.util.Date;
  * @author chunyang.leng
  * @date 2021/1/20 2:46 下午
  */
+@Configuration
+@ConditionalOnProperty(prefix = "weixin", name = "enable-default-token-manager", havingValue = "true")
 public class ScheduledUpdateToken {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateToken.class);
     private TokenMapper tokenMapper;
