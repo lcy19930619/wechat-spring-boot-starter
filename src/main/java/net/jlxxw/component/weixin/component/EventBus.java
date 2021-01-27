@@ -291,8 +291,10 @@ public class EventBus {
             return "";
         }
         String toUserName = weiXinMessage.getToUserName();
+        String fromUserName = weiXinMessage.getFromUserName();
         response.setFromUserName(toUserName);
         response.setCreateTime(System.currentTimeMillis() / 1000);
+        response.setToUserName(fromUserName);
         String json = JSON.toJSONString(response);
         if (StringUtils.isBlank(json)) {
             return json;
@@ -322,8 +324,10 @@ public class EventBus {
             return "";
         }
         String toUserName = weiXinMessage.getToUserName();
+        String fromUserName = weiXinMessage.getFromUserName();
         response.setFromUserName(toUserName);
         response.setCreateTime(System.currentTimeMillis() / 1000);
+        response.setToUserName(fromUserName);
         String json = JSON.toJSONString(response);
         if (StringUtils.isBlank(json)) {
             return json;
