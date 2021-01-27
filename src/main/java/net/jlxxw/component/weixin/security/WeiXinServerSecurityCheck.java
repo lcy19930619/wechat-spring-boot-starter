@@ -2,7 +2,6 @@ package net.jlxxw.component.weixin.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.Set;
  * @author chunyang.leng
  * @date 2021/1/25 4:20 下午
  */
-@Component
 public class WeiXinServerSecurityCheck {
     private static final Logger logger = LoggerFactory.getLogger(WeiXinServerSecurityCheck.class);
 

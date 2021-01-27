@@ -34,7 +34,7 @@ public class WeiXinProperties {
     /**
      * 是否启用默认的token管理器
      */
-    private boolean enableDefaultTokenManager = false;
+    private boolean enableDefaultTokenManager = true;
 
     /**
      * 是否开启微信回调服务器安全检查，防止非法ip调用回信回调接口

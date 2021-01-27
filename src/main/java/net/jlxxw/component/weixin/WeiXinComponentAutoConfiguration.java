@@ -8,6 +8,7 @@ import net.jlxxw.component.weixin.schedul.ScheduledUpdateToken;
 import net.jlxxw.component.weixin.schedul.ScheduledUpdateWeiXinServerIp;
 import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -30,8 +31,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 @ComponentScan("net.jlxxw.component.weixin")
 @EnableScheduling
+@MapperScan("net.jlxxw.component.weixin.mapper")
 public class WeiXinComponentAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(WeiXinComponentAutoConfiguration.class);
+
     @Bean
     @ConditionalOnMissingBean(RestTemplate.class)
     public RestTemplate restTemplate() {
@@ -88,10 +91,11 @@ public class WeiXinComponentAutoConfiguration {
 
     /**
      * 事件总线线程池
+     *
      * @return
      */
     @Bean("eventBusThreadPool")
-    public ThreadPoolTaskExecutor eventBusThreadPool(){
+    public ThreadPoolTaskExecutor eventBusThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //获取到服务器的cpu内核
         int i = Runtime.getRuntime().availableProcessors();
@@ -111,30 +115,34 @@ public class WeiXinComponentAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "weixin",name = "enableDefaultTokenManager",havingValue = "true")
+    @ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
     public WeiXinTokenManager weiXinTokenManager(WeiXinProperties weiXinProperties,
                                                  RestTemplate restTemplate,
-                                                 TokenMapper tokenMapper){
+                                                 TokenMapper tokenMapper) {
         logger.info("启用默认token管理器");
-        return new WeiXinTokenManagerImpl(weiXinProperties,restTemplate,tokenMapper);
+        return new WeiXinTokenManagerImpl(weiXinProperties, restTemplate, tokenMapper);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "weixin",name = "enableDefaultTokenManager",havingValue = "true")
+    @ConditionalOnProperty(prefix = "weixin", name = "enable-default-token-manager", havingValue = "true")
     public ScheduledUpdateToken weiXinTokenManager(TokenMapper tokenMapper,
-                                                   WeiXinTokenManager weiXinTokenManager){
-        return new ScheduledUpdateToken(tokenMapper,weiXinTokenManager);
+                                                   WeiXinTokenManager weiXinTokenManager) {
+        return new ScheduledUpdateToken(tokenMapper, weiXinTokenManager);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "weixin",name = "enableWeiXinCallBackServerSecurityCheck",havingValue = "true")
-    public ScheduledUpdateWeiXinServerIp scheduledUpdateWeiXinServerIp(){
-        return new ScheduledUpdateWeiXinServerIp();
+    @ConditionalOnProperty(prefix = "weixin", name = "enable-wei-xin-call-back-server-security-check", havingValue = "true")
+    public ScheduledUpdateWeiXinServerIp scheduledUpdateWeiXinServerIp(
+            WeiXinTokenManager weiXinTokenManager,
+            RestTemplate restTemplate,
+            WeiXinServerSecurityCheck weiXinServerSecurityCheck,
+            WeiXinProperties weiXinProperties) {
+        return new ScheduledUpdateWeiXinServerIp(weiXinTokenManager, restTemplate, weiXinServerSecurityCheck, weiXinProperties);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "weixin",name = "enableWeiXinCallBackServerSecurityCheck",havingValue = "true")
-    public WeiXinServerSecurityCheck weiXinServerSecurityCheck(){
+    @ConditionalOnProperty(prefix = "weixin", name = {"enable-wei-xin-call-back-server-security-check"}, havingValue = "true")
+    public WeiXinServerSecurityCheck weiXinServerSecurityCheck() {
         logger.info("启用微信回调ip白名单管理器");
         return new WeiXinServerSecurityCheck();
     }
