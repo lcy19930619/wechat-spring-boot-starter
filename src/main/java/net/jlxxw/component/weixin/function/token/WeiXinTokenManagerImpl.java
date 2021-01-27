@@ -9,7 +9,7 @@ import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
@@ -20,7 +20,7 @@ import java.text.MessageFormat;
  * @date 2021/1/19 5:30 下午
  */
 @ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
-@Configuration
+@Component
 public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
     private static final Logger logger = LoggerFactory.getLogger(WeiXinTokenManagerImpl.class);
     private WeiXinProperties weiXinProperties;
