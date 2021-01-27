@@ -180,7 +180,7 @@ public class EventBus {
             JSONObject jsonObject = new JSONObject();
 
             // 读取输入流
-            SAXReader reader = new SAXReader();
+            reader = new SAXReader();
             Document document = reader.read(inputStream);
             // 得到xml根元素
             Element root = document.getRootElement();
