@@ -38,6 +38,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -65,6 +66,7 @@ public class EventBus {
     private List<WeiXinEventListener> weiXinEventListeners;
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
+    private SAXReader reader;
     /**
      * 消息处理监听器
      * key 支持的消息类型
@@ -81,6 +83,17 @@ public class EventBus {
 
     @PostConstruct
     public void postConstruct() {
+
+        SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
+        factory.setValidating(false);
+        factory.setNamespaceAware(false);
+        reader = new SAXReader();
+        try {
+            reader.setXMLReader(factory.newSAXParser().getXMLReader());
+        } catch (Exception e) {
+            logger.error("SAXParser 创建失败",e);
+        }
+
         if (!CollectionUtils.isEmpty(weiXinMessageListeners)) {
             Map<WeiXinMessageTypeEnum, List<WeiXinMessageListener>> map = weiXinMessageListeners.stream().collect(Collectors.groupingBy(WeiXinMessageListener::supportMessageType));
 
@@ -128,7 +141,6 @@ public class EventBus {
             // 从request中取得输入流
             InputStream inputStream = request.getInputStream();
             // 读取输入流
-            SAXReader reader = new SAXReader();
             Document document = reader.read(inputStream);
             // 得到xml根元素
             Element root = document.getRootElement();
