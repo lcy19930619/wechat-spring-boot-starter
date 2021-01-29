@@ -2,6 +2,11 @@ package net.jlxxw.component.weixin.component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import net.jlxxw.component.weixin.component.listener.WeiXinEventListener;
 import net.jlxxw.component.weixin.component.listener.WeiXinMessageListener;
 import net.jlxxw.component.weixin.dto.message.ImageMessage;
@@ -23,8 +28,6 @@ import net.jlxxw.component.weixin.dto.message.event.UnSubscribeEventMessage;
 import net.jlxxw.component.weixin.enums.WeiXinEventTypeEnum;
 import net.jlxxw.component.weixin.enums.WeiXinMessageTypeEnum;
 import net.jlxxw.component.weixin.response.WeiXinMessageResponse;
-import net.jlxxw.component.weixin.util.JsonToXmlUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -67,7 +70,7 @@ public class EventBus {
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
     private SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
-
+    private XmlMapper xmlMapper;
     /**
      * 消息处理监听器
      * key 支持的消息类型
@@ -84,6 +87,10 @@ public class EventBus {
 
     @PostConstruct
     public void postConstruct() {
+        xmlMapper = new XmlMapper();
+        xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        xmlMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
 
         factory.setValidating(false);
         factory.setNamespaceAware(false);
@@ -295,12 +302,12 @@ public class EventBus {
         response.setFromUserName(toUserName);
         response.setCreateTime(System.currentTimeMillis() / 1000);
         response.setToUserName(fromUserName);
-        String json = JSON.toJSONString(response);
-        if (StringUtils.isBlank(json)) {
-            return json;
+        try {
+            return xmlMapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            logger.info("jackson bean to xml failed,input param:{}",JSON.toJSONString(response),e);
+            return "";
         }
-        final JSONObject jsonObject = JSONObject.parseObject(json);
-        return JsonToXmlUtils.jsonToXml(jsonObject);
     }
 
     /**
@@ -328,11 +335,11 @@ public class EventBus {
         response.setFromUserName(toUserName);
         response.setCreateTime(System.currentTimeMillis() / 1000);
         response.setToUserName(fromUserName);
-        String json = JSON.toJSONString(response);
-        if (StringUtils.isBlank(json)) {
-            return json;
+        try {
+            return xmlMapper.writeValueAsString(response);
+        } catch (JsonProcessingException e) {
+            logger.info("jackson bean to xml failed,input param:{}",JSON.toJSONString(response),e);
+            return "";
         }
-        final JSONObject jsonObject = JSONObject.parseObject(json);
-        return JsonToXmlUtils.jsonToXml(jsonObject);
     }
 }

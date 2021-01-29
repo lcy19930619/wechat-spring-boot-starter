@@ -1,5 +1,8 @@
 package net.jlxxw.component.weixin.response;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,37 +11,42 @@ import java.util.List;
  * @author chunyang.leng
  * @date 2021/1/20 11:51 上午
  */
+@JacksonXmlRootElement(localName="xml")
 public class WeiXinMessageResponse {
     /**
      * 接收方帐号（收到的OpenID）
      */
-    private String ToUserName;
+    @JacksonXmlCData
+    private String toUserName;
 
     /**
      * 开发者微信号
      */
-    private String FromUserName;
+    @JacksonXmlCData
+    private String fromUserName;
 
     /**
      * 消息创建时间 （整型）
      */
-    private Long CreateTime;
+    private Long createTime;
 
     /**
      * 消息类型，
      * 文本为text
      */
-    private String MsgType;
+    @JacksonXmlCData
+    private String msgType;
 
     /**
      * 回复的消息内容（换行：在content中能够换行，微信客户端就支持换行显示）
      */
-    private String Content;
+    @JacksonXmlCData
+    private String content;
 
     /**
      * 图文消息个数；当用户发送文本、图片、语音、视频、图文、地理位置这六种消息时，开发者只能回复1条图文消息；其余场景最多可回复8条图文消息
      */
-    private Integer ArticleCount;
+    private Integer articleCount;
 
     /**
      * 图文
@@ -62,51 +70,51 @@ public class WeiXinMessageResponse {
     private Voice voice;
 
     public String getToUserName() {
-        return ToUserName;
+        return toUserName;
     }
 
     public void setToUserName(String toUserName) {
-        ToUserName = toUserName;
+        this.toUserName = toUserName;
     }
 
     public String getFromUserName() {
-        return FromUserName;
+        return fromUserName;
     }
 
     public void setFromUserName(String fromUserName) {
-        FromUserName = fromUserName;
+        this.fromUserName = fromUserName;
     }
 
     public Long getCreateTime() {
-        return CreateTime;
+        return createTime;
     }
 
     public void setCreateTime(Long createTime) {
-        CreateTime = createTime;
+        this.createTime = createTime;
     }
 
     public String getMsgType() {
-        return MsgType;
+        return msgType;
     }
 
     public void setMsgType(String msgType) {
-        MsgType = msgType;
+        this.msgType = msgType;
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
     public void setContent(String content) {
-        Content = content;
+        this.content = content;
     }
 
     public Integer getArticleCount() {
-        return ArticleCount;
+        return articleCount;
     }
 
     public void setArticleCount(Integer articleCount) {
-        ArticleCount = articleCount;
+        this.articleCount = articleCount;
     }
 
     public List<Article> getArticles() {
@@ -223,7 +231,7 @@ public class WeiXinMessageResponse {
         music.setTitle(title);
         music.setDescription(description);
         music.setMusicURL(musicUrl);
-        music.setHQMusicUrl(hqMusicUrl);
+        music.sethQMusicUrl(hqMusicUrl);
         music.setThumbMediaId(thumbMediaId);
         weiXinMessageResponse.setMusic(music);
         return weiXinMessageResponse;
@@ -247,14 +255,15 @@ class Image{
     /**
      * 通过素材管理中的接口上传多媒体文件，得到的id。
      */
-    private String MediaId;
+    @JacksonXmlCData
+    private String mediaId;
 
     public String getMediaId() {
-        return MediaId;
+        return mediaId;
     }
 
     public void setMediaId(String mediaId) {
-        MediaId = mediaId;
+        this.mediaId = mediaId;
     }
 }
 
@@ -262,14 +271,15 @@ class Voice{
     /**
      * 通过素材管理中的接口上传多媒体文件，得到的id。
      */
-    private String MediaId;
+    @JacksonXmlCData
+    private String mediaId;
 
     public String getMediaId() {
-        return MediaId;
+        return mediaId;
     }
 
     public void setMediaId(String mediaId) {
-        MediaId = mediaId;
+        this.mediaId = mediaId;
     }
 }
 
@@ -277,15 +287,26 @@ class Video{
     /**
      * 通过素材管理中的接口上传多媒体文件，得到的id。
      */
-    private String MediaId;
+    @JacksonXmlCData
+    private String mediaId;
     /**
      * 视频消息的标题
      */
+    @JacksonXmlCData
     private String title;
     /**
      * 视频消息的描述
      */
-    private String Description;
+    @JacksonXmlCData
+    private String description;
+
+    public String getMediaId() {
+        return mediaId;
+    }
+
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
 
     public String getTitle() {
         return title;
@@ -296,19 +317,11 @@ class Video{
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
-    }
-
-    public String getMediaId() {
-        return MediaId;
-    }
-
-    public void setMediaId(String mediaId) {
-        MediaId = mediaId;
+        this.description = description;
     }
 }
 
@@ -316,26 +329,31 @@ class Music{
     /**
      * 音乐标题
      */
+    @JacksonXmlCData
     private String title;
     /**
      * 音乐描述
      */
-    private String Description;
+    @JacksonXmlCData
+    private String description;
 
     /**
      * 音乐链接
      */
-    private String MusicURL;
+    @JacksonXmlCData
+    private String musicURL;
 
     /**
      * 高质量音乐链接，WIFI环境优先使用该链接播放音乐
      */
-    private String HQMusicUrl;
+    @JacksonXmlCData
+    private String hQMusicUrl;
 
     /**
      * 缩略图的媒体id，通过素材管理中的接口上传多媒体文件，得到的id
      */
-    private String ThumbMediaId;
+    @JacksonXmlCData
+    private String thumbMediaId;
 
     public String getTitle() {
         return title;
@@ -346,35 +364,35 @@ class Music{
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getMusicURL() {
-        return MusicURL;
+        return musicURL;
     }
 
     public void setMusicURL(String musicURL) {
-        MusicURL = musicURL;
+        this.musicURL = musicURL;
     }
 
-    public String getHQMusicUrl() {
-        return HQMusicUrl;
+    public String gethQMusicUrl() {
+        return hQMusicUrl;
     }
 
-    public void setHQMusicUrl(String HQMusicUrl) {
-        this.HQMusicUrl = HQMusicUrl;
+    public void sethQMusicUrl(String hQMusicUrl) {
+        this.hQMusicUrl = hQMusicUrl;
     }
 
     public String getThumbMediaId() {
-        return ThumbMediaId;
+        return thumbMediaId;
     }
 
     public void setThumbMediaId(String thumbMediaId) {
-        ThumbMediaId = thumbMediaId;
+        this.thumbMediaId = thumbMediaId;
     }
 }
 
@@ -382,22 +400,26 @@ class Article{
     /**
      * 图文消息标题
      */
+    @JacksonXmlCData
     private String Title;
 
     /**
      * 图文消息描述
      */
+    @JacksonXmlCData
     private String Description;
 
     /**
      * 图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200
      *
      */
+    @JacksonXmlCData
     private String PicUrl;
 
     /**
      * 点击图文消息跳转链接
      */
+    @JacksonXmlCData
     private String Url;
 
     public String getTitle() {
