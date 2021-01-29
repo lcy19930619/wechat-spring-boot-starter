@@ -17,7 +17,7 @@
 weixin:
   app-id: xxx
   secret: xxxx
-  grant-type: xxx
+  grant-type: client_credential
   # 是否启用回调接口安全检查，如果启用，每3小时更新一次微信回调接口ip白名单
   enable-wei-xin-call-back-server-security-check: true
   # 是否启用默认的token管理策略，如果使用自定义策略，需要实现 net.jlxxw.component.weixin.function.token.WeiXinTokenManager 接口
