@@ -33,6 +33,13 @@ public class ScheduledUpdateToken {
     @Scheduled(cron = "0 0 */2 * * ?")
     public void updateToken(){
         Date date = tokenMapper.lockSelectMaxDate();
+        if(date == null){
+            // 第一次操作的时候，数据库没数据
+            String token = weiXinTokenManager.getToken();
+            weiXinTokenManager.saveToken(token);
+            logger.info("更新token成功，当前时间:{}", LocalDateTime.now().toString());
+            return;
+        }
         long dbTime = date.getTime();
         long current = System.currentTimeMillis();
         if((current - dbTime) <3*60*60){
