@@ -143,7 +143,6 @@ public class EventBus {
             // 从request中取得输入流
             InputStream inputStream = request.getInputStream();
 			Reader reader =new InputStreamReader(inputStream);
-            inputStream.close();
             return handlerWeiXinMessage(reader);
         });
         try {
@@ -169,7 +168,6 @@ public class EventBus {
 
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
 			Reader reader = new InputStreamReader(inputStream);
-			inputStream.close();
             return handlerWeiXinMessage(reader);
         });
         try {
