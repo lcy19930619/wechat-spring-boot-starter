@@ -1,11 +1,31 @@
 package net.jlxxw.component.weixin.component;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.SAXParserFactory;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import net.jlxxw.component.weixin.component.listener.WeiXinEventListener;
 import net.jlxxw.component.weixin.component.listener.WeiXinMessageListener;
@@ -28,31 +48,14 @@ import net.jlxxw.component.weixin.dto.message.event.UnSubscribeEventMessage;
 import net.jlxxw.component.weixin.enums.WeiXinEventTypeEnum;
 import net.jlxxw.component.weixin.enums.WeiXinMessageTypeEnum;
 import net.jlxxw.component.weixin.response.WeiXinMessageResponse;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * 事件总线
@@ -137,24 +140,11 @@ public class EventBus {
      */
     public String dispatcher(HttpServletRequest request) {
         final Future<String> future = eventBusThreadPool.submit(() -> {
-            // 将解析结果存储在HashMap中
-            JSONObject jsonObject = new JSONObject();
             // 从request中取得输入流
             InputStream inputStream = request.getInputStream();
-            SAXReader reader = new SAXReader();
-            reader.setXMLReader(factory.newSAXParser().getXMLReader());
-            // 读取输入流
-            Document document = reader.read(inputStream);
-            // 得到xml根元素
-            Element root = document.getRootElement();
-            // 得到根元素的所有子节点
-            List<Element> elementList = root.elements();
-            // 遍历所有子节点
-            for (Element e : elementList) {
-                jsonObject.put(e.getName(), e.getText());
-            }
+			Reader reader =new InputStreamReader(inputStream);
             inputStream.close();
-            return handlerWeiXinMessage(jsonObject);
+            return handlerWeiXinMessage(reader);
         });
         try {
             return future.get(5, TimeUnit.SECONDS);
@@ -167,7 +157,6 @@ public class EventBus {
             }
             logger.error("事件分发处理出现异常,微信参数:{},异常信息:{}", jsonObject.toJSONString(), e);
             return "";
-
         }
     }
 
@@ -179,23 +168,9 @@ public class EventBus {
         final Future<String> future = eventBusThreadPool.submit(() -> {
 
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-            // 将解析结果存储在HashMap中
-            JSONObject jsonObject = new JSONObject();
-
-            // 读取输入流
-            SAXReader reader = new SAXReader();
-            reader.setXMLReader(factory.newSAXParser().getXMLReader());
-            Document document = reader.read(inputStream);
-            // 得到xml根元素
-            Element root = document.getRootElement();
-            // 得到根元素的所有子节点
-            List<Element> elementList = root.elements();
-            // 遍历所有子节点
-            for (Element e : elementList) {
-                jsonObject.put(e.getName(), e.getText());
-            }
-            inputStream.close();
-            return handlerWeiXinMessage(jsonObject);
+			Reader reader = new InputStreamReader(inputStream);
+			inputStream.close();
+            return handlerWeiXinMessage(reader);
         });
         try {
             return future.get(5, TimeUnit.SECONDS);
@@ -206,66 +181,69 @@ public class EventBus {
         }
     }
 
-    private String handlerWeiXinMessage(JSONObject jsonObject) {
-        WeiXinMessage weiXinMessage;
-        switch (jsonObject.getString("MsgType")) {
+    private String handlerWeiXinMessage(Reader reader) throws IOException {
+		ObjectNode objectNode = xmlMapper.readValue(reader, ObjectNode.class);
+		final String msgType = objectNode.get("MsgType").textValue();
+
+		WeiXinMessage weiXinMessage;
+        switch (msgType) {
             case "text":
-                weiXinMessage = jsonObject.toJavaObject(TextMessage.class);
+                weiXinMessage = xmlMapper.readValue(objectNode.toString(),TextMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.TEXT);
             case "image":
-                weiXinMessage = jsonObject.toJavaObject(ImageMessage.class);
+				weiXinMessage = xmlMapper.readValue(objectNode.toString(),ImageMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.IMAGE);
             case "voice":
-                weiXinMessage = jsonObject.toJavaObject(VoiceMessage.class);
+				weiXinMessage = xmlMapper.readValue(objectNode.toString(),VoiceMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VOICE);
             case "video":
-                weiXinMessage = jsonObject.toJavaObject(VideoMessage.class);
+				weiXinMessage = xmlMapper.readValue(objectNode.toString(),VideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VIDEO);
             case "shortvideo":
-                weiXinMessage = jsonObject.toJavaObject(ShortVideoMessage.class);
+				weiXinMessage = xmlMapper.readValue(objectNode.toString(),ShortVideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.SHORT_VIDEO);
             case "location":
-                weiXinMessage = jsonObject.toJavaObject(LocationMessage.class);
+				weiXinMessage = xmlMapper.readValue(objectNode.toString(),LocationMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LOCATION);
             case "link":
-                weiXinMessage = jsonObject.toJavaObject(LinkMessage.class);
+				weiXinMessage = xmlMapper.readValue(objectNode.toString(),LinkMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LINK);
             case "event":
-                String event = jsonObject.getString("Event");
+                String event = objectNode.get("Event").textValue();
 
                 switch (event) {
                     // todo
                     case "subscribe":
-                        String eventKey = jsonObject.getString("EventKey");
+                        String eventKey = objectNode.get("EventKey").textValue();
                         if (eventKey != null && eventKey.contains("qrscene_")) {
                             // 用户未关注时，进行关注后的事件推送
-                            weiXinMessage = jsonObject.toJavaObject(SubscribeQrsceneEventMessage.class);
+							weiXinMessage = xmlMapper.readValue(objectNode.toString(),SubscribeQrsceneEventMessage.class);
                             return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE_QRSCENE);
                         }
-                        weiXinMessage = jsonObject.toJavaObject(SubscribeEventMessage.class);
+						weiXinMessage = xmlMapper.readValue(objectNode.toString(),SubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
                     case "unsubscribe":
                         // 取消订阅
-                        weiXinMessage = jsonObject.toJavaObject(UnSubscribeEventMessage.class);
+						weiXinMessage = xmlMapper.readValue(objectNode.toString(),UnSubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.UNSUBSCRIBE);
                     case "SCAN":
-                        weiXinMessage = jsonObject.toJavaObject(SubscribeScanEventMessage.class);
+						weiXinMessage = xmlMapper.readValue(objectNode.toString(),SubscribeScanEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SCAN);
                     case "LOCATION":
-                        weiXinMessage = jsonObject.toJavaObject(LocationEventMessage.class);
+						weiXinMessage = xmlMapper.readValue(objectNode.toString(),LocationEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.LOCATION);
 
                     case "CLICK":
                         // 点击菜单拉取消息时的事件推送
-                        weiXinMessage = jsonObject.toJavaObject(ClickMenuGetInfoEventMessage.class);
+						weiXinMessage = xmlMapper.readValue(objectNode.toString(),ClickMenuGetInfoEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.CLICK);
                     case "TEMPLATESENDJOBFINISH":
-                        weiXinMessage = jsonObject.toJavaObject(TemplateEventMessage.class);
+						weiXinMessage = xmlMapper.readValue(objectNode.toString(),TemplateEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.TEMPLATESENDJOBFINISH);
 
                     case "VIEW":
                         // 点击菜单跳转链接时的事件推送
-                        weiXinMessage = jsonObject.toJavaObject(ClickMenuGotoLinkEventMessage.class);
+						weiXinMessage = xmlMapper.readValue(objectNode.toString(),ClickMenuGotoLinkEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     default:
