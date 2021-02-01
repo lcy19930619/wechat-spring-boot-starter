@@ -23,6 +23,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -74,7 +75,9 @@ public class EventBus {
     private ThreadPoolTaskExecutor eventBusThreadPool;
     private SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
     private XmlMapper xmlMapper;
-    /**
+	ObjectMapper objectMapper = new ObjectMapper();
+
+	/**
      * 消息处理监听器
      * key 支持的消息类型
      * value 消息监听器
@@ -95,7 +98,11 @@ public class EventBus {
         xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         xmlMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
 
-        factory.setValidating(false);
+		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
+
+		factory.setValidating(false);
         factory.setNamespaceAware(false);
 
         if (!CollectionUtils.isEmpty(weiXinMessageListeners)) {
@@ -186,25 +193,25 @@ public class EventBus {
 		WeiXinMessage weiXinMessage;
         switch (msgType) {
             case "text":
-                weiXinMessage = xmlMapper.readValue(reader,TextMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(),TextMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.TEXT);
             case "image":
-				weiXinMessage = xmlMapper.readValue(reader,ImageMessage.class);
+				weiXinMessage = objectMapper.readValue(objectNode.toString(),ImageMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.IMAGE);
             case "voice":
-				weiXinMessage = xmlMapper.readValue(reader,VoiceMessage.class);
+				weiXinMessage = objectMapper.readValue(objectNode.toString(),VoiceMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VOICE);
             case "video":
-				weiXinMessage = xmlMapper.readValue(reader,VideoMessage.class);
+				weiXinMessage = objectMapper.readValue(objectNode.toString(),VideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VIDEO);
             case "shortvideo":
-				weiXinMessage = xmlMapper.readValue(reader,ShortVideoMessage.class);
+				weiXinMessage = objectMapper.readValue(objectNode.toString(),ShortVideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.SHORT_VIDEO);
             case "location":
-				weiXinMessage = xmlMapper.readValue(reader,LocationMessage.class);
+				weiXinMessage = objectMapper.readValue(objectNode.toString(),LocationMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LOCATION);
             case "link":
-				weiXinMessage = xmlMapper.readValue(reader,LinkMessage.class);
+				weiXinMessage = objectMapper.readValue(objectNode.toString(),LinkMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LINK);
             case "event":
                 String event = objectNode.get("Event").textValue();
@@ -215,33 +222,33 @@ public class EventBus {
                         String eventKey = objectNode.get("EventKey").textValue();
                         if (eventKey != null && eventKey.contains("qrscene_")) {
                             // 用户未关注时，进行关注后的事件推送
-							weiXinMessage = xmlMapper.readValue(reader,SubscribeQrsceneEventMessage.class);
+							weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeQrsceneEventMessage.class);
                             return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE_QRSCENE);
                         }
-						weiXinMessage = xmlMapper.readValue(reader,SubscribeEventMessage.class);
+						weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
                     case "unsubscribe":
                         // 取消订阅
-						weiXinMessage = xmlMapper.readValue(reader,UnSubscribeEventMessage.class);
+						weiXinMessage = objectMapper.readValue(objectNode.toString(),UnSubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.UNSUBSCRIBE);
                     case "SCAN":
-						weiXinMessage = xmlMapper.readValue(reader,SubscribeScanEventMessage.class);
+						weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeScanEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SCAN);
                     case "LOCATION":
-						weiXinMessage = xmlMapper.readValue(reader,LocationEventMessage.class);
+						weiXinMessage = objectMapper.readValue(objectNode.toString(),LocationEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.LOCATION);
 
                     case "CLICK":
                         // 点击菜单拉取消息时的事件推送
-						weiXinMessage = xmlMapper.readValue(reader,ClickMenuGetInfoEventMessage.class);
+						weiXinMessage = objectMapper.readValue(objectNode.toString(),ClickMenuGetInfoEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.CLICK);
                     case "TEMPLATESENDJOBFINISH":
-						weiXinMessage = xmlMapper.readValue(reader,TemplateEventMessage.class);
+						weiXinMessage = objectMapper.readValue(objectNode.toString(),TemplateEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.TEMPLATESENDJOBFINISH);
 
                     case "VIEW":
                         // 点击菜单跳转链接时的事件推送
-						weiXinMessage = xmlMapper.readValue(reader,ClickMenuGotoLinkEventMessage.class);
+						weiXinMessage = objectMapper.readValue(objectNode.toString(),ClickMenuGotoLinkEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     default:
