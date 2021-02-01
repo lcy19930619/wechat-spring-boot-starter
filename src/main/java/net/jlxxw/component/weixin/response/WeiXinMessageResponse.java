@@ -1,10 +1,10 @@
 package net.jlxxw.component.weixin.response;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 /**
  * 微信消息应答对象
@@ -401,57 +401,57 @@ class Article{
      * 图文消息标题
      */
     @JacksonXmlCData
-    private String Title;
+    private String title;
 
     /**
      * 图文消息描述
      */
     @JacksonXmlCData
-    private String Description;
+    private String description;
 
     /**
      * 图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200
      *
      */
     @JacksonXmlCData
-    private String PicUrl;
+    private String picUrl;
 
     /**
      * 点击图文消息跳转链接
      */
     @JacksonXmlCData
-    private String Url;
+    private String url;
 
-    public String getTitle() {
-        return Title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        Title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getDescription() {
-        return Description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        Description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public String getPicUrl() {
-        return PicUrl;
-    }
+	public String getPicUrl() {
+		return picUrl;
+	}
 
-    public void setPicUrl(String picUrl) {
-        PicUrl = picUrl;
-    }
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
 
-    public String getUrl() {
-        return Url;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public void setUrl(String url) {
-        Url = url;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }
 
