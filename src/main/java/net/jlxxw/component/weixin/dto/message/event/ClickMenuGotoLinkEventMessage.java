@@ -12,13 +12,13 @@ public class ClickMenuGotoLinkEventMessage extends WeiXinMessage {
     /**
      * 事件KEY值，设置的跳转URL
      */
-    private String EventKey;
+    private String eventKey;
 
-    public String getEventKey() {
-        return EventKey;
-    }
+	public String getEventKey() {
+		return eventKey;
+	}
 
-    public void setEventKey(String eventKey) {
-        EventKey = eventKey;
-    }
+	public void setEventKey(String eventKey) {
+		this.eventKey = eventKey;
+	}
 }

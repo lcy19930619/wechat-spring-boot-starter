@@ -12,13 +12,13 @@ public class ClickMenuGetInfoEventMessage extends WeiXinMessage {
     /**
      * 事件KEY值，与自定义菜单接口中KEY值对应
      */
-    private String EventKey;
+    private String eventKey;
 
-    public String getEventKey() {
-        return EventKey;
-    }
+	public String getEventKey() {
+		return eventKey;
+	}
 
-    public void setEventKey(String eventKey) {
-        EventKey = eventKey;
-    }
+	public void setEventKey(String eventKey) {
+		this.eventKey = eventKey;
+	}
 }

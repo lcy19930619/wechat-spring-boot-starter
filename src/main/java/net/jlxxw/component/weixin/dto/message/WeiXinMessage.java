@@ -9,17 +9,17 @@ public abstract class WeiXinMessage {
     /**
      * 开发者微信号
      */
-    private String ToUserName;
+    private String toUserName;
 
     /**
      * 发送方帐号（一个OpenID）
      */
-    private String FromUserName;
+    private String fromUserName;
 
     /**
      * 消息创建时间 （整型）
      */
-    private Long CreateTime;
+    private Long createTime;
 
     /**
      * 消息类型，
@@ -31,54 +31,50 @@ public abstract class WeiXinMessage {
      * 地理位置为location
      * 链接为link
      */
-    private String MsgType;
+    private String msgType;
 
     /**
      * 消息id，64位整型
      */
-    private Long MsgId;
+    private Long msgId;
 
+	public String getToUserName() {
+		return toUserName;
+	}
 
+	public void setToUserName(String toUserName) {
+		this.toUserName = toUserName;
+	}
 
+	public String getFromUserName() {
+		return fromUserName;
+	}
 
+	public void setFromUserName(String fromUserName) {
+		this.fromUserName = fromUserName;
+	}
 
-    public String getToUserName() {
-        return ToUserName;
-    }
+	public Long getCreateTime() {
+		return createTime;
+	}
 
-    public void setToUserName(String toUserName) {
-        ToUserName = toUserName;
-    }
+	public void setCreateTime(Long createTime) {
+		this.createTime = createTime;
+	}
 
-    public String getFromUserName() {
-        return FromUserName;
-    }
+	public String getMsgType() {
+		return msgType;
+	}
 
-    public void setFromUserName(String fromUserName) {
-        FromUserName = fromUserName;
-    }
+	public void setMsgType(String msgType) {
+		this.msgType = msgType;
+	}
 
-    public Long getCreateTime() {
-        return CreateTime;
-    }
+	public Long getMsgId() {
+		return msgId;
+	}
 
-    public void setCreateTime(Long createTime) {
-        CreateTime = createTime;
-    }
-
-    public String getMsgType() {
-        return MsgType;
-    }
-
-    public void setMsgType(String msgType) {
-        MsgType = msgType;
-    }
-
-    public Long getMsgId() {
-        return MsgId;
-    }
-
-    public void setMsgId(Long msgId) {
-        MsgId = msgId;
-    }
+	public void setMsgId(Long msgId) {
+		this.msgId = msgId;
+	}
 }

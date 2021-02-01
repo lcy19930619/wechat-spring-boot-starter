@@ -7,29 +7,29 @@ import net.jlxxw.component.weixin.dto.message.WeiXinMessage;
  * @date 2021/1/25 1:35 下午
  */
 public class TemplateEventMessage extends WeiXinMessage {
-    /**
-     * 消息id
-     */
-    private Integer MsgID;
+	/**
+	 * 消息id
+	 */
+	private Integer msgID;
 
-    /**
-     * 发送状态为成功
-     */
-    private String Status;
+	/**
+	 * 发送状态为成功
+	 */
+	private String status;
 
-    public Integer getMsgID() {
-        return MsgID;
-    }
+	public Integer getMsgID() {
+		return msgID;
+	}
 
-    public void setMsgID(Integer msgID) {
-        MsgID = msgID;
-    }
+	public void setMsgID(Integer msgID) {
+		this.msgID = msgID;
+	}
 
-    public String getStatus() {
-        return Status;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public void setStatus(String status) {
-        Status = status;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 }

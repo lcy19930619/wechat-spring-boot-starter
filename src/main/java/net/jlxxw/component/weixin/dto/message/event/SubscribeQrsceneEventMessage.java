@@ -12,26 +12,26 @@ public class SubscribeQrsceneEventMessage extends WeiXinMessage {
     /**
      * 事件KEY值，qrscene_为前缀，后面为二维码的参数值
      */
-    private String EventKey;
+    private String eventKey;
 
     /**
      *  二维码的ticket，可用来换取二维码图片
      */
-    private String Ticket;
+    private String ticket;
 
-    public String getTicket() {
-        return Ticket;
-    }
+	public String getEventKey() {
+		return eventKey;
+	}
 
-    public void setTicket(String ticket) {
-        Ticket = ticket;
-    }
+	public void setEventKey(String eventKey) {
+		this.eventKey = eventKey;
+	}
 
-    public String getEventKey() {
-        return EventKey;
-    }
+	public String getTicket() {
+		return ticket;
+	}
 
-    public void setEventKey(String eventKey) {
-        EventKey = eventKey;
-    }
+	public void setTicket(String ticket) {
+		this.ticket = ticket;
+	}
 }

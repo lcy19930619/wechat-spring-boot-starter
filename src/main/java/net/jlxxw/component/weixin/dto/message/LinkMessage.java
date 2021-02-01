@@ -10,39 +10,39 @@ public class LinkMessage extends WeiXinMessage{
     /**
      * 消息标题
      */
-    private String Title;
+    private String title;
 
     /**
      * 消息描述
      */
-    private String Description;
+    private String description;
 
     /**
      * 消息链接
      */
-    private String Url;
+    private String url;
 
-    public String getTitle() {
-        return Title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        Title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public String getDescription() {
-        return Description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        Description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public String getUrl() {
-        return Url;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public void setUrl(String url) {
-        Url = url;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 }

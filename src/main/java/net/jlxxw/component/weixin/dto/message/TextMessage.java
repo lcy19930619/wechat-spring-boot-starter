@@ -10,13 +10,13 @@ public class TextMessage extends WeiXinMessage{
     /**
      * 文本消息内容
      */
-    private String Content;
+    private String content;
 
-    public String getContent() {
-        return Content;
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public void setContent(String content) {
-        Content = content;
-    }
+	public void setContent(String content) {
+		this.content = content;
+	}
 }

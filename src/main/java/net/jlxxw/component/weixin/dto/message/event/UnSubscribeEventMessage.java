@@ -12,13 +12,13 @@ public class UnSubscribeEventMessage extends WeiXinMessage {
     /**
      * 事件类型
      */
-    private String EventKey;
+    private String eventKey;
 
-    public String getEventKey() {
-        return EventKey;
-    }
+	public String getEventKey() {
+		return eventKey;
+	}
 
-    public void setEventKey(String eventKey) {
-        EventKey = eventKey;
-    }
+	public void setEventKey(String eventKey) {
+		this.eventKey = eventKey;
+	}
 }

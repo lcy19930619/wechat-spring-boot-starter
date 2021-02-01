@@ -9,26 +9,26 @@ public class ImageMessage extends WeiXinMessage{
     /**
      * 图片链接（由微信系统生成）
      */
-    private String PicUrl;
+    private String picUrl;
 
     /**
      * 图片消息媒体id，可以调用获取临时素材接口拉取数据
      */
-    private String MediaId;
+    private String mediaId;
 
-    public String getPicUrl() {
-        return PicUrl;
-    }
+	public String getPicUrl() {
+		return picUrl;
+	}
 
-    public void setPicUrl(String picUrl) {
-        PicUrl = picUrl;
-    }
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
 
-    public String getMediaId() {
-        return MediaId;
-    }
+	public String getMediaId() {
+		return mediaId;
+	}
 
-    public void setMediaId(String mediaId) {
-        MediaId = mediaId;
-    }
+	public void setMediaId(String mediaId) {
+		this.mediaId = mediaId;
+	}
 }
