@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.jlxxw.component</groupId>
     <artifactId>weiXin</artifactId>
-    <version>1.0.0.20210118</version>
+    <version>1.0.0.20210201</version>
     <name>WeiXinComponent</name>
     <description>Demo project for Spring Boot</description>
 
@@ -69,11 +69,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
