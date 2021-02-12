@@ -1,5 +1,9 @@
 package net.jlxxw.component.weixin.function.token;
 
+import java.text.MessageFormat;
+
+import javax.annotation.PostConstruct;
+
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.component.weixin.constant.UrlConstant;
 import net.jlxxw.component.weixin.exception.WeiXinException;
@@ -8,12 +12,10 @@ import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import javax.annotation.PostConstruct;
-import java.text.MessageFormat;
 
 /**
  * @author chunyang.leng
@@ -51,9 +53,11 @@ public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
      */
     @Override
     public String getToken() {
-        String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getGrantType(),weiXinProperties.getAppId(),weiXinProperties.getSecret());
+        String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getAppId(),weiXinProperties.getSecret());
+        logger.info("获取token的url:{}",url);
         WeiXinResponse response = restTemplate.getForObject(url, WeiXinResponse.class);
         if(response.getErrcode()!=0){
+        	logger.info("微信获取token返回值:{}",JSON.toJSONString(response));
             throw new WeiXinException(JSON.toJSONString(response));
         }
         return response.getAccess_token();
