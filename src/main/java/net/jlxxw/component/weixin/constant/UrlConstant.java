@@ -20,7 +20,7 @@ public interface UrlConstant {
     /**
      * 获取token的URL
      */
-    String TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={1}&secret={2}";
+    String TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid={0}&secret={1}";
 
     /**
      * 微信回调白名单url
