@@ -33,13 +33,6 @@ public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
     @Autowired
     private TokenMapper tokenMapper;
 
-    public WeiXinTokenManagerImpl(WeiXinProperties weiXinProperties, RestTemplate restTemplate, TokenMapper tokenMapper) {
-        this.weiXinProperties = weiXinProperties;
-        this.restTemplate = restTemplate;
-        this.tokenMapper = tokenMapper;
-        logger.info("启用默认token管理器");
-    }
-
     /**
      * 保存token
      *

@@ -1,15 +1,18 @@
 package net.jlxxw.component.weixin.schedul;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
+
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.mapper.TokenMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * @author chunyang.leng
@@ -26,7 +29,10 @@ public class ScheduledUpdateToken {
         this.tokenMapper = tokenMapper;
         this.weiXinTokenManager = weiXinTokenManager;
     }
-
+	@PostConstruct
+    public void postConstruct(){
+    	updateToken();
+	}
     /**
      * 每两个小时执行一次，更新数据库token
      */
