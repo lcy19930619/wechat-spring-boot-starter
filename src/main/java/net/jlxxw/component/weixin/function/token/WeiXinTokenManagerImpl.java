@@ -1,6 +1,7 @@
 package net.jlxxw.component.weixin.function.token;
 
 import java.text.MessageFormat;
+import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 
@@ -50,11 +51,10 @@ public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
      */
     @Override
     public String getToken() {
-		String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+weiXinProperties.getAppId()+"&secret=" +weiXinProperties.getSecret();
-        logger.info("获取token的url:{}",url);
+        String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getAppId(),weiXinProperties.getSecret());
         WeiXinResponse response = restTemplate.getForObject(url, WeiXinResponse.class);
-        if(response.getErrcode()!=0){
-        	logger.info("微信获取token返回值:{}",JSON.toJSONString(response));
+        if(Objects.nonNull(response.getErrcode())){
+        	logger.error("微信获取token返回值:{}",JSON.toJSONString(response));
             throw new WeiXinException(JSON.toJSONString(response));
         }
         return response.getAccess_token();
