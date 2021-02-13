@@ -50,7 +50,7 @@ public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
      */
     @Override
     public String getToken() {
-        String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getAppId(),weiXinProperties.getSecret());
+		String url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+weiXinProperties.getAppId()+"&secret=" +weiXinProperties.getSecret();
         logger.info("获取token的url:{}",url);
         WeiXinResponse response = restTemplate.getForObject(url, WeiXinResponse.class);
         if(response.getErrcode()!=0){
