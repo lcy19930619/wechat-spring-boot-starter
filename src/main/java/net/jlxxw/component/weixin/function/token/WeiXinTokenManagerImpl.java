@@ -13,6 +13,7 @@ import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -25,8 +26,11 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
     private static final Logger logger = LoggerFactory.getLogger(WeiXinTokenManagerImpl.class);
+    @Autowired
     private WeiXinProperties weiXinProperties;
+    @Autowired
     private RestTemplate restTemplate;
+    @Autowired
     private TokenMapper tokenMapper;
 
     public WeiXinTokenManagerImpl(WeiXinProperties weiXinProperties, RestTemplate restTemplate, TokenMapper tokenMapper) {
