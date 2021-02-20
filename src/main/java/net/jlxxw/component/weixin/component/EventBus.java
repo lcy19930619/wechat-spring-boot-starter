@@ -1,24 +1,5 @@
 package net.jlxxw.component.weixin.component;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.SAXParserFactory;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -30,33 +11,28 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import net.jlxxw.component.weixin.component.listener.WeiXinEventListener;
 import net.jlxxw.component.weixin.component.listener.WeiXinMessageListener;
-import net.jlxxw.component.weixin.dto.message.ImageMessage;
-import net.jlxxw.component.weixin.dto.message.LinkMessage;
-import net.jlxxw.component.weixin.dto.message.LocationMessage;
-import net.jlxxw.component.weixin.dto.message.ShortVideoMessage;
-import net.jlxxw.component.weixin.dto.message.TextMessage;
-import net.jlxxw.component.weixin.dto.message.VideoMessage;
-import net.jlxxw.component.weixin.dto.message.VoiceMessage;
-import net.jlxxw.component.weixin.dto.message.WeiXinMessage;
-import net.jlxxw.component.weixin.dto.message.event.ClickMenuGetInfoEventMessage;
-import net.jlxxw.component.weixin.dto.message.event.ClickMenuGotoLinkEventMessage;
-import net.jlxxw.component.weixin.dto.message.event.LocationEventMessage;
-import net.jlxxw.component.weixin.dto.message.event.SubscribeEventMessage;
-import net.jlxxw.component.weixin.dto.message.event.SubscribeQrsceneEventMessage;
-import net.jlxxw.component.weixin.dto.message.event.SubscribeScanEventMessage;
-import net.jlxxw.component.weixin.dto.message.event.TemplateEventMessage;
-import net.jlxxw.component.weixin.dto.message.event.UnSubscribeEventMessage;
+import net.jlxxw.component.weixin.dto.message.*;
+import net.jlxxw.component.weixin.dto.message.event.*;
 import net.jlxxw.component.weixin.enums.WeiXinEventTypeEnum;
 import net.jlxxw.component.weixin.enums.WeiXinMessageTypeEnum;
 import net.jlxxw.component.weixin.response.WeiXinMessageResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * 事件总线
@@ -219,6 +195,10 @@ public class EventBus {
                 switch (event) {
                     // todo
                     case "subscribe":
+                        if(Objects.isNull(objectNode.get("EventKey"))){
+                            weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeEventMessage.class);
+                            return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
+                        }
                         String eventKey = objectNode.get("EventKey").textValue();
                         if (eventKey != null && eventKey.contains("qrscene_")) {
                             // 用户未关注时，进行关注后的事件推送

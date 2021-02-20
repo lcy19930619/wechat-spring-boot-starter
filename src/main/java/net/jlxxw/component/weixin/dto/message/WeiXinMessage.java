@@ -38,6 +38,11 @@ public abstract class WeiXinMessage {
      */
     private Long msgId;
 
+	/**
+	 * 事件
+	 */
+	private String event;
+
 	public String getToUserName() {
 		return toUserName;
 	}
@@ -76,5 +81,13 @@ public abstract class WeiXinMessage {
 
 	public void setMsgId(Long msgId) {
 		this.msgId = msgId;
+	}
+
+	public String getEvent() {
+		return event;
+	}
+
+	public void setEvent(String event) {
+		this.event = event;
 	}
 }
