@@ -147,18 +147,13 @@ public class EventBus {
      * 微信请求处理结果
      */
     public String dispatcher(byte[] bytes) {
-        final Future<String> future = eventBusThreadPool.submit(() -> {
-
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-			Reader reader = new InputStreamReader(inputStream);
-            return handlerWeiXinMessage(reader);
-        });
         try {
-            return future.get(5, TimeUnit.SECONDS);
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+            Reader reader = new InputStreamReader(inputStream);
+            return handlerWeiXinMessage(reader);
         } catch (Exception e) {
             logger.error("事件分发处理出现异常,微信参数:{},异常信息:{}", new String(bytes, StandardCharsets.UTF_8), e);
             return "";
-
         }
     }
 
