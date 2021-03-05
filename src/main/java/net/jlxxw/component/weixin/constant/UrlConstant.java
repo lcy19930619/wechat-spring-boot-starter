@@ -41,4 +41,14 @@ public interface UrlConstant {
      * 获取帐号的关注者列表
      */
     String FIND_ALL_USER_OPENID="https://api.weixin.qq.com/cgi-bin/user/get?access_token={0}&next_openid={1}";
+
+    /**
+     * 上传临时素材
+     */
+    String UPLOAD_TEMP_MATERIAL = "https https://api.weixin.qq.com/cgi-bin/media/upload?access_token={0}&type={1}";
+
+    /**
+     * 下载临时素材
+     */
+    String DOWN_TEMP_MATERIAL = "https://api.weixin.qq.com/cgi-bin/media/get/jssdk?access_token={0}&media_id={1}";
 }

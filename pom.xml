@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.jlxxw.component</groupId>
     <artifactId>weiXin</artifactId>
-    <version>1.0.0.20210201</version>
+    <version>1.0.1.20210305</version>
     <name>WeiXinComponent</name>
     <description>Demo project for Spring Boot</description>
 
@@ -100,6 +100,16 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.6</version>
         </dependency>
     </dependencies>
 
