@@ -16,6 +16,7 @@ import net.jlxxw.component.weixin.dto.message.event.*;
 import net.jlxxw.component.weixin.enums.WeiXinEventTypeEnum;
 import net.jlxxw.component.weixin.enums.WeiXinMessageTypeEnum;
 import net.jlxxw.component.weixin.response.WeiXinMessageResponse;
+import net.jlxxw.component.weixin.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
@@ -49,9 +50,9 @@ public class EventBus {
     private List<WeiXinEventListener> weiXinEventListeners;
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
-    private SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
-    private XmlMapper xmlMapper;
-	ObjectMapper objectMapper = new ObjectMapper();
+    private final SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
+    private final XmlMapper xmlMapper = new XmlMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
 	/**
      * 消息处理监听器
@@ -69,7 +70,6 @@ public class EventBus {
 
     @PostConstruct
     public void postConstruct() {
-        xmlMapper = new XmlMapper();
         xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         xmlMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
@@ -251,6 +251,8 @@ public class EventBus {
         if (Objects.isNull(weiXinMessageListener)) {
             throw new IllegalArgumentException(weiXinMessageTypeEnum.name() + "消息监听器未注册");
         }
+
+        LoggerUtils.debug(logger,"接收到微信请求，请求类型:{},请求参数:{}",weiXinMessageTypeEnum.getDescription(),JSON.toJSONString(weiXinMessage));
         WeiXinMessageResponse response = weiXinMessageListener.handler(weiXinMessage);
         if (Objects.isNull(response)) {
             return "";
@@ -261,7 +263,9 @@ public class EventBus {
         response.setCreateTime(System.currentTimeMillis() / 1000);
         response.setToUserName(fromUserName);
         try {
-            return xmlMapper.writeValueAsString(response);
+            String res = xmlMapper.writeValueAsString(response);
+            LoggerUtils.debug(logger,"返回微信应答信息，参数:{}",res);
+            return res;
         } catch (JsonProcessingException e) {
             logger.info("jackson bean to xml failed,input param:{}",JSON.toJSONString(response),e);
             return "";
