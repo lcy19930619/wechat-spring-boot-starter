@@ -60,7 +60,7 @@ public class WeiXinDevelopmentCertification {
         return true;
     }
 
-    public static String sha1Sign(String token, String timestamp, String nonce) throws NoSuchAlgorithmException {
+    private static String sha1Sign(String token, String timestamp, String nonce) throws NoSuchAlgorithmException {
         if(StringUtils.isBlank(token)){
             throw new IllegalArgumentException("verify-token不能为空");
         }

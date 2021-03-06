@@ -33,24 +33,25 @@ import static net.jlxxw.component.weixin.constant.UrlConstant.DOWN_TEMP_MATERIAL
 import static net.jlxxw.component.weixin.constant.UrlConstant.UPLOAD_TEMP_MATERIAL;
 
 /**
- * 素材管理
+ * 临时素材管理
  *
  * @author chunyang.leng
  * @date 2021-03-05 5:53 下午
  */
 @Component
-public class MaterialManager {
-    private static final Logger logger = LoggerFactory.getLogger(MaterialManager.class);
+public class TempMaterialManager {
+    private static final Logger logger = LoggerFactory.getLogger(TempMaterialManager.class);
     @Autowired
     private WebClient webClient;
     @Autowired
     private WeiXinTokenManager weiXinTokenManager;
 
     @PostConstruct
-    public void postConstruct(){
+    public void postConstruct() {
         Objects.requireNonNull(webClient);
         Objects.requireNonNull(weiXinTokenManager);
     }
+
     /**
      * 上传临时素材
      *
@@ -86,8 +87,10 @@ public class MaterialManager {
 
         mono.subscribe(obj -> {
             if (obj.getInteger("errcode") != null) {
-                // 证明上传出错
-                throw new WeiXinException(JSON.toJSONString(obj));
+                // 存在错误码，说明上传出错
+                WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
+                weiXinException.setErrorCode(obj.getInteger("errcode"));
+                throw weiXinException;
             }
             LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象
@@ -106,7 +109,7 @@ public class MaterialManager {
      * 上传临时素材
      *
      * @param materialEnum   素材类型
-     * @param uri           uri链接
+     * @param uri            uri链接
      * @param callbackMethod 回调方法
      */
     public void upload(MaterialEnum materialEnum, URI uri, Consumer<TempMaterialVO> callbackMethod) {
@@ -136,8 +139,10 @@ public class MaterialManager {
 
         mono.subscribe(obj -> {
             if (obj.getInteger("errcode") != null) {
-                // 证明上传出错
-                throw new WeiXinException(JSON.toJSONString(obj));
+                // 存在错误码，说明上传出错上传出错
+                WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
+                weiXinException.setErrorCode(obj.getInteger("errcode"));
+                throw weiXinException;
             }
             LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象
@@ -158,7 +163,7 @@ public class MaterialManager {
      */
     public void download(String mediaId, MediaType mediaType, Consumer<InputStream> callback) {
         String token = weiXinTokenManager.getTokenFromLocal();
-        String url = MessageFormat.format(DOWN_TEMP_MATERIAL,token,mediaId);
+        String url = MessageFormat.format(DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时素材,不含视频url:{}", url);
 
         Mono<Resource> mono = webClient
@@ -176,12 +181,11 @@ public class MaterialManager {
             try (InputStream inputStream = resource.getInputStream();) {
                 callback.accept(inputStream);
             } catch (Exception e) {
-                LoggerUtils.error(logger, "下载临时素材出现异常", e);
+                LoggerUtils.error(logger, "下载临时素材出现异常,mediaId:" + mediaId + ",mediaType:" + mediaType, e);
                 throw new WeiXinException(e.getMessage());
             }
         });
     }
-
 
 
     /**
@@ -189,9 +193,9 @@ public class MaterialManager {
      *
      * @param mediaId 媒体文件ID
      */
-    public void downloadVideo(String mediaId,  Consumer<String> callback) {
+    public void downloadVideo(String mediaId, Consumer<String> callback) {
         String token = weiXinTokenManager.getTokenFromLocal();
-        String url = MessageFormat.format(DOWN_TEMP_MATERIAL,token,mediaId);
+        String url = MessageFormat.format(DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时视频素材url:{}", url);
 
         Mono<JSONObject> mono = webClient
@@ -207,7 +211,7 @@ public class MaterialManager {
 
         mono.subscribe(obj -> {
             String videoUrl = obj.getString("video_url");
-            LoggerUtils.debug(logger, "下载视频临时素材微信返回:{}", JSON.toJSONString(obj));
+            LoggerUtils.debug(logger, "下载视频临时素材微信出现异常，mediaId:{},返回:{}", mediaId, JSON.toJSONString(obj));
             callback.accept(videoUrl);
         });
     }

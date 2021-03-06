@@ -77,6 +77,7 @@ public class WeiXinCoreComponent {
                     future.channel().closeFuture().sync();
                 } catch (InterruptedException e) {
                     logger.error("微信netty服务启动失败！！！", e);
+                    System.exit(0);
                 } finally {
                     //关闭主线程组
                     bossGroup.shutdownGracefully();

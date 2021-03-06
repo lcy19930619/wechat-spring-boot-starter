@@ -70,7 +70,9 @@ public class UserManagerImpl implements UserManager {
                     });
                 }
             } else {
-                throw new WeiXinException("获取全部openId失败，微信返回值:" + resultData.toJSONString() );
+                WeiXinException weiXinException = new WeiXinException("获取全部openId失败，微信返回值:" + resultData.toJSONString());
+                weiXinException.setErrorCode(resultData.getInteger("errcode"));
+                throw weiXinException;
             }
         }
         return openIdSet;
@@ -124,7 +126,9 @@ public class UserManagerImpl implements UserManager {
                 result.addAll(subscriptionUsers);
                 logger.info("用户数量总计:{},当前执行数量:{}",openIdList.size(),end);
             } else {
-                throw new WeiXinException("批量获取用户信息失败，微信返回值:" + resultData.toJSONString() + ",用户openId列表:" + JSON.toJSONString(tempList));
+                WeiXinException weiXinException = new WeiXinException("批量获取用户信息失败，微信返回值:" + resultData.toJSONString() + ",用户openId列表:" + JSON.toJSONString(tempList));
+                weiXinException.setErrorCode(resultData.getInteger("errcode"));
+                throw weiXinException;
             }
         }
 
@@ -151,7 +155,9 @@ public class UserManagerImpl implements UserManager {
             // 执行成功
             return body.toJavaObject(SubscriptionUser.class);
         }
-        throw new WeiXinException("获取用户信息失败，微信返回值:" + body.toJSONString() + ",用户openId:" + openId);
+        WeiXinException weiXinException = new WeiXinException("获取用户信息失败，微信返回值:" + body.toJSONString() + ",用户openId:" + openId);
+        weiXinException.setErrorCode(body.getInteger("errcode"));
+        throw weiXinException;
     }
 
 

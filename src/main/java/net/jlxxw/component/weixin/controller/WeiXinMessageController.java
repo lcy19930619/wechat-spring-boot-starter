@@ -5,6 +5,7 @@ import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
 import net.jlxxw.component.weixin.util.NetworkUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -20,6 +21,7 @@ import java.io.PrintWriter;
  */
 @Controller
 @RequestMapping("weixin")
+@ConditionalOnProperty(value = "weixin.netty.server.enable-netty",havingValue = "false")
 public class WeiXinMessageController {
     @Autowired
     private EventBus eventBus;
