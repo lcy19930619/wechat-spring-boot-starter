@@ -51,4 +51,19 @@ public interface UrlConstant {
      * 下载临时素材
      */
     String DOWN_TEMP_MATERIAL = "https://api.weixin.qq.com/cgi-bin/media/get/jssdk?access_token={0}&media_id={1}";
+
+    /**
+     * 上传永久素材
+     */
+    String UPLOAD_PERMANENT_MATERIAL = "https https://api.weixin.qq.com/cgi-bin/material/add_material?access_token={0}&type={1}";
+
+    /**
+     * 下载永久素材
+     */
+    String DOWNLOAD_PERMANENT_MATERIAL = "https://api.weixin.qq.com/cgi-bin/material/get_material?access_token={0}";
+
+    /**
+     * 删除永久素材
+     */
+    String DELETE_PERMANENT_MATERIAL = "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token={0}";
 }

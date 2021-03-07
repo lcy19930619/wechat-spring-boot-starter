@@ -57,9 +57,9 @@ public class WeiXinComponentAutoConfiguration {
         //获取到服务器的cpu内核
         int i = Runtime.getRuntime().availableProcessors();
         //核心池大小
-        executor.setCorePoolSize(i);
+        executor.setCorePoolSize(i *2);
         //最大线程数
-        executor.setMaxPoolSize(i * 2);
+        executor.setMaxPoolSize(i * 4);
         //队列长度
         executor.setQueueCapacity(60000);
         //线程空闲时间
