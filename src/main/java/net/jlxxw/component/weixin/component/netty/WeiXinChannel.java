@@ -36,14 +36,14 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
-        logger.info("netty 开始处理");
+        logger.debug("netty 开始处理");
         if(weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null){
-            logger.info("微信回调ip安全检查时执行");
+            logger.debug("微信回调ip安全检查时执行");
             // 开启微信回调ip安全检查时执行
-            InetSocketAddress insocket = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
-            String ipAddress = insocket.getAddress().getHostAddress();
+            InetSocketAddress socketAddress = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
+            String ipAddress = socketAddress.getAddress().getHostAddress();
             if(!weiXinServerSecurityCheck.isSecurity(ipAddress)){
-                logger.info("非法ip，不予处理");
+                logger.warn("非法ip，不予处理:{}",ipAddress);
                 // 非法ip，不予处理
                 channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN,copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);
                 return;
