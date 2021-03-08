@@ -15,6 +15,8 @@ import net.jlxxw.component.weixin.dto.message.*;
 import net.jlxxw.component.weixin.dto.message.event.*;
 import net.jlxxw.component.weixin.enums.WeiXinEventTypeEnum;
 import net.jlxxw.component.weixin.enums.WeiXinMessageTypeEnum;
+import net.jlxxw.component.weixin.exception.AesException;
+import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.response.WeiXinMessageResponse;
 import net.jlxxw.component.weixin.util.LoggerUtils;
 import org.slf4j.Logger;
@@ -48,6 +50,11 @@ public class EventBus {
     private List<WeiXinMessageListener> weiXinMessageListeners;
     @Autowired(required = false)
     private List<WeiXinEventListener> weiXinEventListeners;
+    @Autowired(required = false)
+    private WeiXinMsgCodec weiXinMsgCodec;
+    @Autowired
+    private WeiXinProperties weiXinProperties;
+
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
     private final SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
@@ -142,12 +149,42 @@ public class EventBus {
         }
     }
 
+    /**
+     * 处理微信加解密分发
+     */
+    public String dispatcher(byte[] bytes,String uri) throws AesException {
+        if(weiXinProperties.isEnableMessageEnc()){
+            // 微信发送进来的xml
+            String inputXML = new String(bytes, StandardCharsets.UTF_8);
 
+            int index = uri.indexOf("?");
+            String str = uri.substring(index +1);
+            String[] split = str.split("&");
+            Map<String,String> map = new HashMap<>(16);
+            for (String s : split) {
+                String[] arr = s.split("=");
+                map.put(arr[0],arr[1]);
+            }
+            String msgSignature = map.get("msg_signature");
+            String timestamp = map.get("timestamp");
+            String nonce = map.get("nonce");
+            String decryptMsg = weiXinMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
+            logger.debug("微信消息解密成功，信息为:{}",decryptMsg);
+            bytes = decryptMsg.getBytes(StandardCharsets.UTF_8);
+        }
+        String result = dispatcher(bytes);
+        if(weiXinProperties.isEnableMessageEnc()){
+            result =  weiXinMsgCodec.encrypt(result);
+            logger.debug("微信消息加密成功，信息为:{}",result);
+        }
+        return result;
+    }
     /**
      * 微信请求处理结果
      */
     public String dispatcher(byte[] bytes) {
         try {
+            // jackson会自动关闭流，不需要手动关闭
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
             Reader reader = new InputStreamReader(inputStream);
             return handlerWeiXinMessage(reader);

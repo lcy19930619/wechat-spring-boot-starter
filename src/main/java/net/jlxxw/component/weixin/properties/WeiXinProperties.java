@@ -28,9 +28,19 @@ public class WeiXinProperties {
     private String grantType;
 
     /**
-     * 绑定开发者服务器用的验证token
+     * 绑定开发者服务器用的验证token,即公众平台上，开发者设置的token
      */
     private String verifyToken;
+
+    /**
+     * 公众平台上，开发者设置的EncodingAesKey
+     */
+    private String encodingAesKey;
+
+    /**
+     * 是否启用消息加解密,启用加解密时，必须配置encodingAESKey
+     */
+    private boolean enableMessageEnc = false;
     /**
      * 是否启用默认的token管理器
      */
@@ -87,5 +97,21 @@ public class WeiXinProperties {
 
     public void setVerifyToken(String verifyToken) {
         this.verifyToken = verifyToken;
+    }
+
+    public String getEncodingAesKey() {
+        return encodingAesKey;
+    }
+
+    public void setEncodingAesKey(String encodingAesKey) {
+        this.encodingAesKey = encodingAesKey;
+    }
+
+    public boolean isEnableMessageEnc() {
+        return enableMessageEnc;
+    }
+
+    public void setEnableMessageEnc(boolean enableMessageEnc) {
+        this.enableMessageEnc = enableMessageEnc;
     }
 }

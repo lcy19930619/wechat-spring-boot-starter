@@ -5,11 +5,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.*;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.component.weixin.component.EventBus;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
@@ -20,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 
 import static io.netty.buffer.Unpooled.copiedBuffer;
 /**
@@ -54,15 +49,11 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
                 return;
             }
         }
-
         ByteBuf content = fullHttpRequest.content();
         byte[] reqContent = new byte[content.readableBytes()];
         content.readBytes(reqContent);
-        // 微信发送进来的xml
-        String inputXML = new String(reqContent, StandardCharsets.UTF_8);
-        logger.info("接收到微信到请求数据:{}",inputXML);
-        final String resultData = eventBus.dispatcher(reqContent);
-        logger.info("响应数据:{}",resultData);
+        String uri = fullHttpRequest.uri();
+        final String resultData = eventBus.dispatcher(reqContent,uri);
         // 发送响应
         ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
 
