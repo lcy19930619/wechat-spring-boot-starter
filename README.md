@@ -18,12 +18,17 @@ weixin:
   app-id: xxx
   secret: xxxx
   grant-type: client_credential
+  # 是否启用微信加密传输
+  enable-message-enc: true
+  # 公众平台配置的加密参数，长度43位
+  encoding-aes-key: xxxx
+  # 微信服务器认证时配置的token,https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
+  verify-token: xxxxxxxxxxx
+ 
   # 是否启用回调接口安全检查，如果启用，每3小时更新一次微信回调接口ip白名单
   enable-wei-xin-call-back-server-security-check: true
   # 是否启用默认的token管理策略，如果使用自定义策略，需要实现 net.jlxxw.component.weixin.function.token.WeiXinTokenManager 接口
   enable-default-token-manager: true
-  # 微信服务器认证时配置的token,https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
-  verify-token: xxx
   netty:
     server:
       # 是否启用netty作为微信回调接口处理器，如果启用，可移栽nginx中配置相关转发策略
