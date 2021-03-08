@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import net.jlxxw.component.weixin.component.listener.UnKnowWeiXinEventListener;
+import net.jlxxw.component.weixin.component.listener.UnKnowWeiXinMessageListener;
 import net.jlxxw.component.weixin.component.listener.WeiXinEventListener;
 import net.jlxxw.component.weixin.component.listener.WeiXinMessageListener;
 import net.jlxxw.component.weixin.dto.message.*;
@@ -54,14 +56,17 @@ public class EventBus {
     private WeiXinMsgCodec weiXinMsgCodec;
     @Autowired
     private WeiXinProperties weiXinProperties;
-
+    @Autowired(required = false)
+    private UnKnowWeiXinEventListener unKnowWeiXinEventListener;
+    @Autowired(required = false)
+    private UnKnowWeiXinMessageListener unKnowWeiXinMessageListener;
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
     private final SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
     private final XmlMapper xmlMapper = new XmlMapper();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-	/**
+    /**
      * 消息处理监听器
      * key 支持的消息类型
      * value 消息监听器
@@ -81,11 +86,11 @@ public class EventBus {
         xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         xmlMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
 
-		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-		objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
 
-		factory.setValidating(false);
+        factory.setValidating(false);
         factory.setNamespaceAware(false);
 
         if (!CollectionUtils.isEmpty(weiXinMessageListeners)) {
@@ -132,7 +137,7 @@ public class EventBus {
         final Future<String> future = eventBusThreadPool.submit(() -> {
             // 从request中取得输入流
             InputStream inputStream = request.getInputStream();
-			Reader reader =new InputStreamReader(inputStream);
+            Reader reader = new InputStreamReader(inputStream);
             return handlerWeiXinMessage(reader);
         });
         try {
@@ -152,33 +157,34 @@ public class EventBus {
     /**
      * 处理微信加解密分发
      */
-    public String dispatcher(byte[] bytes,String uri) throws AesException {
-        if(weiXinProperties.isEnableMessageEnc()){
+    public String dispatcher(byte[] bytes, String uri) throws AesException {
+        if (weiXinProperties.isEnableMessageEnc()) {
             // 微信发送进来的xml
             String inputXML = new String(bytes, StandardCharsets.UTF_8);
 
             int index = uri.indexOf("?");
-            String str = uri.substring(index +1);
+            String str = uri.substring(index + 1);
             String[] split = str.split("&");
-            Map<String,String> map = new HashMap<>(16);
+            Map<String, String> map = new HashMap<>(16);
             for (String s : split) {
                 String[] arr = s.split("=");
-                map.put(arr[0],arr[1]);
+                map.put(arr[0], arr[1]);
             }
             String msgSignature = map.get("msg_signature");
             String timestamp = map.get("timestamp");
             String nonce = map.get("nonce");
             String decryptMsg = weiXinMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
-            logger.debug("微信消息解密成功，信息为:{}",decryptMsg);
+            logger.debug("微信消息解密成功，信息为:{}", decryptMsg);
             bytes = decryptMsg.getBytes(StandardCharsets.UTF_8);
         }
         String result = dispatcher(bytes);
-        if(weiXinProperties.isEnableMessageEnc()){
-            result =  weiXinMsgCodec.encrypt(result);
-            logger.debug("微信消息加密成功，信息为:{}",result);
+        if (weiXinProperties.isEnableMessageEnc()) {
+            result = weiXinMsgCodec.encrypt(result);
+            logger.debug("微信消息加密成功，信息为:{}", result);
         }
         return result;
     }
+
     /**
      * 微信请求处理结果
      */
@@ -195,79 +201,84 @@ public class EventBus {
     }
 
     private String handlerWeiXinMessage(Reader reader) throws IOException {
-		ObjectNode objectNode = xmlMapper.readValue(reader, ObjectNode.class);
-		final String msgType = objectNode.get("MsgType").textValue();
+        ObjectNode objectNode = xmlMapper.readValue(reader, ObjectNode.class);
+        final String msgType = objectNode.get("MsgType").textValue();
 
-		WeiXinMessage weiXinMessage;
+        WeiXinMessage weiXinMessage;
         switch (msgType) {
             case "text":
-                weiXinMessage = objectMapper.readValue(objectNode.toString(),TextMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(), TextMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.TEXT);
             case "image":
-				weiXinMessage = objectMapper.readValue(objectNode.toString(),ImageMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(), ImageMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.IMAGE);
             case "voice":
-				weiXinMessage = objectMapper.readValue(objectNode.toString(),VoiceMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(), VoiceMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VOICE);
             case "video":
-				weiXinMessage = objectMapper.readValue(objectNode.toString(),VideoMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(), VideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VIDEO);
             case "shortvideo":
-				weiXinMessage = objectMapper.readValue(objectNode.toString(),ShortVideoMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(), ShortVideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.SHORT_VIDEO);
             case "location":
-				weiXinMessage = objectMapper.readValue(objectNode.toString(),LocationMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(), LocationMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LOCATION);
             case "link":
-				weiXinMessage = objectMapper.readValue(objectNode.toString(),LinkMessage.class);
+                weiXinMessage = objectMapper.readValue(objectNode.toString(), LinkMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LINK);
             case "event":
                 String event = objectNode.get("Event").textValue();
 
                 switch (event) {
-                    // todo
                     case "subscribe":
-                        if(Objects.isNull(objectNode.get("EventKey"))){
-                            weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeEventMessage.class);
+                        if (Objects.isNull(objectNode.get("EventKey"))) {
+                            weiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeEventMessage.class);
                             return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
                         }
                         String eventKey = objectNode.get("EventKey").textValue();
                         if (eventKey != null && eventKey.contains("qrscene_")) {
                             // 用户未关注时，进行关注后的事件推送
-							weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeQrsceneEventMessage.class);
+                            weiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeQrsceneEventMessage.class);
                             return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE_QRSCENE);
                         }
-						weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeEventMessage.class);
+                        weiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
                     case "unsubscribe":
                         // 取消订阅
-						weiXinMessage = objectMapper.readValue(objectNode.toString(),UnSubscribeEventMessage.class);
+                        weiXinMessage = objectMapper.readValue(objectNode.toString(), UnSubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.UNSUBSCRIBE);
                     case "SCAN":
-						weiXinMessage = objectMapper.readValue(objectNode.toString(),SubscribeScanEventMessage.class);
+                        weiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeScanEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SCAN);
                     case "LOCATION":
-						weiXinMessage = objectMapper.readValue(objectNode.toString(),LocationEventMessage.class);
+                        weiXinMessage = objectMapper.readValue(objectNode.toString(), LocationEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.LOCATION);
 
                     case "CLICK":
                         // 点击菜单拉取消息时的事件推送
-						weiXinMessage = objectMapper.readValue(objectNode.toString(),ClickMenuGetInfoEventMessage.class);
+                        weiXinMessage = objectMapper.readValue(objectNode.toString(), ClickMenuGetInfoEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.CLICK);
                     case "TEMPLATESENDJOBFINISH":
-						weiXinMessage = objectMapper.readValue(objectNode.toString(),TemplateEventMessage.class);
+                        weiXinMessage = objectMapper.readValue(objectNode.toString(), TemplateEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.TEMPLATESENDJOBFINISH);
 
                     case "VIEW":
                         // 点击菜单跳转链接时的事件推送
-						weiXinMessage = objectMapper.readValue(objectNode.toString(),ClickMenuGotoLinkEventMessage.class);
+                        weiXinMessage = objectMapper.readValue(objectNode.toString(), ClickMenuGotoLinkEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     default:
-                        throw new IllegalArgumentException("未知的请求信息类型");
+                        if(Objects.isNull(unKnowWeiXinEventListener)){
+                            throw new IllegalArgumentException("未知的事件请求信息类型，event:"+event);
+                        }
+                        return unKnowWeiXinEventListener.handlerOtherType(objectNode);
                 }
             default:
-                throw new IllegalArgumentException("未知的请求信息类型");
+                if(Objects.isNull(unKnowWeiXinMessageListener)){
+                    throw new IllegalArgumentException("未知的消息请求信息类型,messageType:"+msgType);
+                }
+                return  unKnowWeiXinMessageListener.handlerOtherType(objectNode);
         }
     }
 
@@ -289,7 +300,7 @@ public class EventBus {
             throw new IllegalArgumentException(weiXinMessageTypeEnum.name() + "消息监听器未注册");
         }
 
-        LoggerUtils.debug(logger,"接收到微信请求，请求类型:{},请求参数:{}",weiXinMessageTypeEnum.getDescription(),JSON.toJSONString(weiXinMessage));
+        LoggerUtils.debug(logger, "接收到微信请求，请求类型:{},请求参数:{}", weiXinMessageTypeEnum.getDescription(), JSON.toJSONString(weiXinMessage));
         WeiXinMessageResponse response = weiXinMessageListener.handler(weiXinMessage);
         if (Objects.isNull(response)) {
             return "";
@@ -301,10 +312,10 @@ public class EventBus {
         response.setToUserName(fromUserName);
         try {
             String res = xmlMapper.writeValueAsString(response);
-            LoggerUtils.debug(logger,"返回微信应答信息，参数:{}",res);
+            LoggerUtils.debug(logger, "返回微信应答信息，参数:{}", res);
             return res;
         } catch (JsonProcessingException e) {
-            logger.info("jackson bean to xml failed,input param:{}",JSON.toJSONString(response),e);
+            logger.info("jackson bean to xml failed,input param:{}", JSON.toJSONString(response), e);
             return "";
         }
     }
@@ -337,7 +348,7 @@ public class EventBus {
         try {
             return xmlMapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
-            logger.info("jackson bean to xml failed,input param:{}",JSON.toJSONString(response),e);
+            logger.info("jackson bean to xml failed,input param:{}", JSON.toJSONString(response), e);
             return "";
         }
     }
