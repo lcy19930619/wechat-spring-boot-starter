@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.jlxxw.component</groupId>
     <artifactId>weiXin</artifactId>
-    <version>1.0.1.20210308</version>
+    <version>1.0.1.202100410</version>
     <name>WeiXinComponent</name>
     <description>微信快速开发组件</description>
 

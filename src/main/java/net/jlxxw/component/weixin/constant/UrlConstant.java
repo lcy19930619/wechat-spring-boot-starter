@@ -66,4 +66,9 @@ public interface UrlConstant {
      * 删除永久素材
      */
     String DELETE_PERMANENT_MATERIAL = "https://api.weixin.qq.com/cgi-bin/material/del_material?access_token={0}";
+
+    /**
+     * JSAPI_V3 统一下单API url
+     */
+    String JSAPI_V3_PRE_PAY_URL= "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
 }
