@@ -52,7 +52,6 @@ public class WeiXinDevelopmentCertification {
      * @return 是否为安全签名
      */
     private boolean verify(String msgSignature, String timeStamp, String nonce) throws NoSuchAlgorithmException {
-        // 这里的 WXPublicConstants.TOKEN 填写你自己设置的Token就可以了
         String signature = sha1Sign(weiXinProperties.getVerifyToken(), timeStamp, nonce);
         if (!signature.equals(msgSignature)) {
             throw new RuntimeException("token认证失败");
