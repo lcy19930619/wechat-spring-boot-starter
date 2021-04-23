@@ -2,7 +2,9 @@ package net.jlxxw.component.weixin.function.pay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.jlxxw.component.weixin.context.SpringContextHolder;
 import net.jlxxw.component.weixin.dto.pay.jsapi.v3.OrderInfoDTO;
+import net.jlxxw.component.weixin.event.CreatePrePayEvent;
 import net.jlxxw.component.weixin.exception.WeiXinPayException;
 import net.jlxxw.component.weixin.properties.WeiXinPayProperties;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
@@ -35,7 +37,8 @@ public class WeiXinPay {
     private WeiXinProperties weiXinProperties;
     @Autowired
     private WeiXinPayProperties weiXinPayProperties;
-
+    @Autowired
+    private SpringContextHolder springContextHolder;
     /**
      * 创建预支付订单
      *
@@ -71,6 +74,8 @@ public class WeiXinPay {
         List<String> strings = responseHeaders.get("Request-ID");
         vo.setRequestId(strings.get(0));
 
+        // 发布一个预支付事件
+        springContextHolder.publishEvent(new CreatePrePayEvent(vo));
         return vo;
     }
 
