@@ -71,4 +71,9 @@ public interface UrlConstant {
      * JSAPI_V3 统一下单API url
      */
     String JSAPI_V3_PRE_PAY_URL= "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
+
+    /**
+     * 创建临时二维码url
+     */
+    String CREATE_TEMP_QRCODE_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}";
 }
