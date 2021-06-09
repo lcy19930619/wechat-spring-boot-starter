@@ -1,0 +1,26 @@
+spring:
+  # 连接池相关配置
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+weixin:
+  # 需要替换为真实数据
+  app-id: xxxxx
+  # 需要替换为真实数据
+  secret: xxxxxx
+  grant-type: client_credential
+  verify-token: mytoken123456
+  netty:
+    server:
+      enable-netty: true
+      max-thread-size: 200
+      netty-port: 19191
+      queue-size: 200
+  enable-message-enc: true
+  enable-default-token-manager: true
+  enable-wei-xin-call-back-server-security-check: false
+  # 需要替换为真实数据
+  encoding-aes-key: 9hFP1tCoPIRB8rFk4ukaYn6bw1Gbxs53yIGVplNsxxx
