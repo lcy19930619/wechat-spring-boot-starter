@@ -10,6 +10,7 @@ import io.netty.util.CharsetUtil;
 import net.jlxxw.component.weixin.component.EventBus;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
+import net.jlxxw.component.weixin.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,31 +37,46 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
-        logger.debug("netty 开始处理");
+        LoggerUtils.debug(logger,"netty 开始处理");
         if(weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null){
-            logger.debug("微信回调ip安全检查时执行");
             // 开启微信回调ip安全检查时执行
+
+            // 获取远程socket信息
             InetSocketAddress socketAddress = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
+            // 获取远程ip地址信息
             String ipAddress = socketAddress.getAddress().getHostAddress();
+            LoggerUtils.debug(logger,"微信回调ip安全检查执行,远程ip:{}",ipAddress);
             if(!weiXinServerSecurityCheck.isSecurity(ipAddress)){
-                logger.warn("非法ip，不予处理:{}",ipAddress);
+                LoggerUtils.warn(logger,"非法ip，不予处理:{}",ipAddress);
                 // 非法ip，不予处理
                 channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN,copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);
                 return;
             }
         }
+        // 获取请求体数据缓存
         ByteBuf content = fullHttpRequest.content();
+        // 请求体数据转byte数组
         byte[] reqContent = new byte[content.readableBytes()];
+        // 缓存数据加载至byte数组中
         content.readBytes(reqContent);
+        // 获取请求的uri
         String uri = fullHttpRequest.uri();
+        // 事件总线开始执行处理逻辑
         final String resultData = eventBus.dispatcher(reqContent,uri);
-        // 发送响应
+        // 响应数据刷新到缓冲区
         ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
-
+        // 包装响应结果
         FullHttpResponse response = responseOK(HttpResponseStatus.OK, responseData);
+        // 发送响应
         channelHandlerContext.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
     }
 
+    /**
+     * 包装响应结果，使用http1.1协议格式
+     * @param status 响应状态码
+     * @param content 响应内容
+     * @return 包装后到对象
+     */
     private FullHttpResponse responseOK(HttpResponseStatus status, ByteBuf content) {
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);
         if (content != null) {

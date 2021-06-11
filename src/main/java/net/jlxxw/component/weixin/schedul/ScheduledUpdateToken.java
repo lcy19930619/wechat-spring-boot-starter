@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -27,11 +26,7 @@ public class ScheduledUpdateToken {
         this.tokenMapper = tokenMapper;
         this.weiXinTokenManager = weiXinTokenManager;
     }
-	@PostConstruct
-    public void postConstruct(){
-        String token = weiXinTokenManager.getToken();
-        weiXinTokenManager.saveToken(token);
-	}
+
     /**
      * 每两个小时执行一次，更新数据库token
      */
@@ -40,7 +35,7 @@ public class ScheduledUpdateToken {
         Date date = tokenMapper.lockSelectMaxDate();
         if(date == null){
             // 第一次操作的时候，数据库没数据
-            String token = weiXinTokenManager.getToken();
+            String token = weiXinTokenManager.getTokenFromWeiXin();
             weiXinTokenManager.saveToken(token);
             logger.info("更新token成功，当前时间:{}", LocalDateTime.now().toString());
             return;
@@ -51,7 +46,7 @@ public class ScheduledUpdateToken {
             // 误差时间小于3分钟时，不做任何处理
             return;
         }
-        String token = weiXinTokenManager.getToken();
+        String token = weiXinTokenManager.getTokenFromWeiXin();
         weiXinTokenManager.saveToken(token);
         logger.info("更新token成功，当前时间:{}", LocalDateTime.now().toString());
     }

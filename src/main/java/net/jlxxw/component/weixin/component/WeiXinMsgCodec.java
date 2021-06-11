@@ -17,6 +17,7 @@
  */
 package net.jlxxw.component.weixin.component;
 
+import net.jlxxw.component.weixin.enums.AesExceptionEnum;
 import net.jlxxw.component.weixin.exception.AesException;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.util.ByteGroup;
@@ -84,7 +85,7 @@ public class WeiXinMsgCodec {
         String encodingAesKey = weiXinProperties.getEncodingAesKey();
         // 消息加密密钥由43位字符组成
         if (encodingAesKey.length() != 43) {
-            throw new AesException(AesException.IllegalAesKey);
+            throw new AesException(AesExceptionEnum.ILLEGAL_AES_KEY);
         }
 
         this.token = weiXinProperties.getVerifyToken();
@@ -120,7 +121,7 @@ public class WeiXinMsgCodec {
 
         // 和URL中的签名比较是否相等
         if (!signature.equals(msgSignature)) {
-            throw new AesException(AesException.ValidateSignatureError);
+            throw new AesException(AesExceptionEnum.VALIDATE_SIGNATURE_ERROR);
         }
 
         // 解密
@@ -255,8 +256,7 @@ public class WeiXinMsgCodec {
 
             return base64.encodeToString(encrypted);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AesException(AesException.EncryptAESError);
+            throw new AesException(AesExceptionEnum.ENCRYPT_AES_ERROR,e);
         }
     }
 
@@ -272,9 +272,9 @@ public class WeiXinMsgCodec {
         try {
             // 设置解密模式为AES的CBC模式
             Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
-            SecretKeySpec key_spec = new SecretKeySpec(aesKey, "AES");
+            SecretKeySpec keySpec = new SecretKeySpec(aesKey, "AES");
             IvParameterSpec iv = new IvParameterSpec(Arrays.copyOfRange(aesKey, 0, 16));
-            cipher.init(Cipher.DECRYPT_MODE, key_spec, iv);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
 
             // 使用BASE64对密文进行解码
             byte[] encrypted = Base64.decodeBase64(text);
@@ -282,11 +282,11 @@ public class WeiXinMsgCodec {
             // 解密
             original = cipher.doFinal(encrypted);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AesException(AesException.DecryptAESError);
+            throw new AesException(AesExceptionEnum.DECRYPT_AES_ERROR,e);
         }
 
-        String xmlContent, from_appid;
+        String xmlContent;
+        String fromAppid;
         try {
             // 去除补位字符
             byte[] bytes = PKCS7Encoder.decode(original);
@@ -297,16 +297,15 @@ public class WeiXinMsgCodec {
             int xmlLength = recoverNetworkBytesOrder(networkOrder);
 
             xmlContent = new String(Arrays.copyOfRange(bytes, 20, 20 + xmlLength), CHARSET);
-            from_appid = new String(Arrays.copyOfRange(bytes, 20 + xmlLength, bytes.length),
+            fromAppid = new String(Arrays.copyOfRange(bytes, 20 + xmlLength, bytes.length),
                     CHARSET);
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new AesException(AesException.IllegalBuffer);
+            throw new AesException(AesExceptionEnum.ILLEGAL_BUFFER,e);
         }
 
         // appid不相同的情况
-        if (!from_appid.equals(appId)) {
-            throw new AesException(AesException.ValidateAppidError);
+        if (!fromAppid.equals(appId)) {
+            throw new AesException(AesExceptionEnum.VALIDATE_APPID_ERROR);
         }
         return xmlContent;
 

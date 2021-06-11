@@ -31,7 +31,6 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -62,7 +61,6 @@ public class EventBus {
     private UnKnowWeiXinMessageListener unKnowWeiXinMessageListener;
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
-    private final SAXParserFactory factory = new org.apache.xerces.jaxp.SAXParserFactoryImpl();
     private final XmlMapper xmlMapper = new XmlMapper();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -82,56 +80,62 @@ public class EventBus {
 
     @PostConstruct
     public void postConstruct() {
+        // 初始化xmlMapper相关配置
         xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
         xmlMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         xmlMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
 
+        // 初始化objectMapper相关配置
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
 
-        factory.setValidating(false);
-        factory.setNamespaceAware(false);
-
         if (!CollectionUtils.isEmpty(weiXinMessageListeners)) {
+            // 如果已经配置了微信监听器，则按照支持到类型枚举，进行分类
             Map<WeiXinMessageTypeEnum, List<WeiXinMessageListener>> map = weiXinMessageListeners.stream().collect(Collectors.groupingBy(WeiXinMessageListener::supportMessageType));
 
             map.forEach((k, v) -> {
                 if (v.size() > 1) {
+                    // 因为每个消息都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
                     throw new BeanCreationException("微信messageListener不能注册多次");
                 }
                 messageListenerMap.put(k, v.get(0));
             });
         }
 
-
+        // 警告信息打印，提示未注册的监听器
         final WeiXinMessageTypeEnum[] values = WeiXinMessageTypeEnum.values();
         for (WeiXinMessageTypeEnum value : values) {
             if (!messageListenerMap.containsKey(value)) {
-                logger.warn(value.getDescription() + "消息处理器未注册!!!");
+                LoggerUtils.warn(logger, value.getDescription() + "消息处理器未注册!!!");
             }
         }
 
         if (!CollectionUtils.isEmpty(weiXinEventListeners)) {
+            // 如果已经配置了微信监听器，则按照支持到类型枚举，进行分类
             Map<WeiXinEventTypeEnum, List<WeiXinEventListener>> eventMap = weiXinEventListeners.stream().collect(Collectors.groupingBy(WeiXinEventListener::supportEventType));
             eventMap.forEach((k, v) -> {
                 if (v.size() > 1) {
+                    // 因为每个事件都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
                     throw new BeanCreationException("微信eventListener不能注册多次");
                 }
                 eventListenerMap.put(k, v.get(0));
             });
         }
 
+        // 警告信息打印，提示未注册的监听器
         final WeiXinEventTypeEnum[] eventValues = WeiXinEventTypeEnum.values();
         for (WeiXinEventTypeEnum value : eventValues) {
             if (!eventListenerMap.containsKey(value)) {
-                logger.warn(value.getDescription() + "事件处理器未注册!!!");
+                LoggerUtils.warn(logger, value.getDescription() + "事件处理器未注册!!!");
             }
         }
     }
 
     /**
-     * 微信请求处理结果
+     * 微信请求事件分发处理，用于controller接口处理
+     * @param request request全部信息
+     * @return 返回给微信的数据
      */
     public String dispatcher(HttpServletRequest request) {
         final Future<String> future = eventBusThreadPool.submit(() -> {
@@ -155,38 +159,51 @@ public class EventBus {
     }
 
     /**
-     * 处理微信加解密分发
+     * 微信消息加解密处理，netty使用
+     * @param bytes 微信请求的全部数据
+     * @param uri 微信携带的uri，用于获取加解密参数内容
+     *
      */
     public String dispatcher(byte[] bytes, String uri) throws AesException {
         if (weiXinProperties.isEnableMessageEnc()) {
             // 微信发送进来的xml
             String inputXML = new String(bytes, StandardCharsets.UTF_8);
 
+            /*
+                处理微信uri参数，并封装到map中
+             */
+            Map<String, String> map = new HashMap<>(16);
             int index = uri.indexOf("?");
             String str = uri.substring(index + 1);
             String[] split = str.split("&");
-            Map<String, String> map = new HashMap<>(16);
             for (String s : split) {
                 String[] arr = s.split("=");
                 map.put(arr[0], arr[1]);
             }
+            // 获取签名
             String msgSignature = map.get("msg_signature");
+            // 获取时间戳
             String timestamp = map.get("timestamp");
+            // 获取随机串
             String nonce = map.get("nonce");
+            // 消息解密
             String decryptMsg = weiXinMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
-            logger.debug("微信消息解密成功，信息为:{}", decryptMsg);
+            LoggerUtils.debug(logger, "微信消息解密成功，信息为:{}", decryptMsg);
+            // 将解密后的数据，转换为byte数组，用于协议的具体处理
             bytes = decryptMsg.getBytes(StandardCharsets.UTF_8);
         }
+        // 调用具体的分发器，实现数据的处理
         String result = dispatcher(bytes);
         if (weiXinProperties.isEnableMessageEnc()) {
+            // 如果启用了信息加解密功能，则对返回值进行加密处理
             result = weiXinMsgCodec.encrypt(result);
-            logger.debug("微信消息加密成功，信息为:{}", result);
+            LoggerUtils.debug(logger, "微信消息加密成功，信息为:{}", result);
         }
         return result;
     }
 
     /**
-     * 微信请求处理结果
+     * 处理微信请求信息，无加密，netty使用
      */
     public String dispatcher(byte[] bytes) {
         try {
@@ -200,37 +217,54 @@ public class EventBus {
         }
     }
 
+    /**
+     * 具体对微信信息处理
+     * @param reader 微信输入的数据
+     * @return 微信处理的结果
+     * @throws IOException
+     */
     private String handlerWeiXinMessage(Reader reader) throws IOException {
+        // 将输入的内容转换为ObjectNode统一处理
         ObjectNode objectNode = xmlMapper.readValue(reader, ObjectNode.class);
+        // 获取消息类型，根据类型寻找对应监听器进行处理
         final String msgType = objectNode.get("MsgType").textValue();
 
         WeiXinMessage weiXinMessage;
         switch (msgType) {
             case "text":
+                // 文本信息
                 weiXinMessage = objectMapper.readValue(objectNode.toString(), TextMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.TEXT);
             case "image":
+                // 图片信息
                 weiXinMessage = objectMapper.readValue(objectNode.toString(), ImageMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.IMAGE);
             case "voice":
+                // 音频信息
                 weiXinMessage = objectMapper.readValue(objectNode.toString(), VoiceMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VOICE);
             case "video":
+                // 视频信息
                 weiXinMessage = objectMapper.readValue(objectNode.toString(), VideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.VIDEO);
             case "shortvideo":
+                // 短视频信息
                 weiXinMessage = objectMapper.readValue(objectNode.toString(), ShortVideoMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.SHORT_VIDEO);
             case "location":
+                // 地理位置信息
                 weiXinMessage = objectMapper.readValue(objectNode.toString(), LocationMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LOCATION);
             case "link":
+                // 链接信息
                 weiXinMessage = objectMapper.readValue(objectNode.toString(), LinkMessage.class);
                 return handlerMessage(weiXinMessage, WeiXinMessageTypeEnum.LINK);
             case "event":
+                // 事件类型的请求内容
                 String event = objectNode.get("Event").textValue();
 
                 switch (event) {
+                    // 订阅事件
                     case "subscribe":
                         if (Objects.isNull(objectNode.get("EventKey"))) {
                             weiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeEventMessage.class);
@@ -244,47 +278,56 @@ public class EventBus {
                         }
                         weiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
+
+                    // 取消订阅
                     case "unsubscribe":
-                        // 取消订阅
                         weiXinMessage = objectMapper.readValue(objectNode.toString(), UnSubscribeEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.UNSUBSCRIBE);
+
+                    // 扫描二维码事件
                     case "SCAN":
                         weiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeScanEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.SCAN);
+
+                    // 地理为之信息上报事件
                     case "LOCATION":
                         weiXinMessage = objectMapper.readValue(objectNode.toString(), LocationEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.LOCATION);
 
+                    // 点击菜单拉取消息时的事件推送
                     case "CLICK":
-                        // 点击菜单拉取消息时的事件推送
                         weiXinMessage = objectMapper.readValue(objectNode.toString(), ClickMenuGetInfoEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.CLICK);
+
+                    // 模版推送回调事件
                     case "TEMPLATESENDJOBFINISH":
                         weiXinMessage = objectMapper.readValue(objectNode.toString(), TemplateEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.TEMPLATESENDJOBFINISH);
 
+                    // 点击菜单跳转链接时的事件推送
                     case "VIEW":
-                        // 点击菜单跳转链接时的事件推送
                         weiXinMessage = objectMapper.readValue(objectNode.toString(), ClickMenuGotoLinkEventMessage.class);
                         return handlerEvent(weiXinMessage, WeiXinEventTypeEnum.VIEW);
-
+                    // 未知的事件，用户可自行扩展
                     default:
-                        if(Objects.isNull(unKnowWeiXinEventListener)){
-                            throw new IllegalArgumentException("未知的事件请求信息类型，event:"+event);
+                        if (Objects.isNull(unKnowWeiXinEventListener)) {
+                            throw new IllegalArgumentException("未知的事件请求信息类型，event:" + event + ",请求数据信息:" + objectNode.toString());
                         }
                         return unKnowWeiXinEventListener.handlerOtherType(objectNode);
                 }
+
+            // 未知的消息，用户可自行扩展
             default:
-                if(Objects.isNull(unKnowWeiXinMessageListener)){
-                    throw new IllegalArgumentException("未知的消息请求信息类型,messageType:"+msgType);
+                if (Objects.isNull(unKnowWeiXinMessageListener)) {
+                    throw new IllegalArgumentException("未知的消息请求信息类型,messageType:" + msgType + ",请求数据信息:" + objectNode.toString());
                 }
-                return  unKnowWeiXinMessageListener.handlerOtherType(objectNode);
+                return unKnowWeiXinMessageListener.handlerOtherType(objectNode);
         }
     }
 
 
     /**
-     * 处理常规消息
+     * 处理微信信息
      *
      * @param weiXinMessage         微信消息
      * @param weiXinMessageTypeEnum 消息类型枚举
@@ -292,7 +335,7 @@ public class EventBus {
      */
     private String handlerMessage(WeiXinMessage weiXinMessage, WeiXinMessageTypeEnum weiXinMessageTypeEnum) {
         if (CollectionUtils.isEmpty(weiXinMessageListeners)) {
-            throw new IllegalArgumentException("未注册相关消息监听器");
+            throw new IllegalArgumentException("未注册任何相关消息监听器，或监听器未加入到ioc容器中");
         }
         final WeiXinMessageListener weiXinMessageListener = messageListenerMap.get(weiXinMessageTypeEnum);
 
@@ -315,7 +358,7 @@ public class EventBus {
             LoggerUtils.debug(logger, "返回微信应答信息，参数:{}", res);
             return res;
         } catch (JsonProcessingException e) {
-            logger.info("jackson bean to xml failed,input param:{}", JSON.toJSONString(response), e);
+            LoggerUtils.error(logger,"jackson 转xml失败，输入参数:"+JSON.toJSONString(response),e);
             return "";
         }
     }
@@ -323,13 +366,13 @@ public class EventBus {
     /**
      * 处理微信事件
      *
-     * @param weiXinMessage
-     * @param weiXinEventTypeEnum
-     * @return
+     * @param weiXinMessage 微信事件信息
+     * @param weiXinEventTypeEnum 微信事件枚举
+     * @return 处理结果
      */
     private String handlerEvent(WeiXinMessage weiXinMessage, WeiXinEventTypeEnum weiXinEventTypeEnum) {
         if (CollectionUtils.isEmpty(weiXinEventListeners)) {
-            throw new IllegalArgumentException("未注册相关事件监听器");
+            throw new IllegalArgumentException("未注册相关事件监听器，或监听器未加入到ioc容器中");
         }
         final WeiXinEventListener weiXinEventListener = eventListenerMap.get(weiXinEventTypeEnum);
 
@@ -348,7 +391,7 @@ public class EventBus {
         try {
             return xmlMapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
-            logger.info("jackson bean to xml failed,input param:{}", JSON.toJSONString(response), e);
+            LoggerUtils.error(logger,"jackson 转xml失败，输入参数:"+JSON.toJSONString(response),e);
             return "";
         }
     }

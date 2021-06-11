@@ -8,6 +8,7 @@
 
 package net.jlxxw.component.weixin.util;
 
+import net.jlxxw.component.weixin.enums.AesExceptionEnum;
 import net.jlxxw.component.weixin.exception.AesException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,7 @@ public class SHA1 {
             return hexstr.toString();
         } catch (Exception e) {
             LoggerUtils.error(logger,"sha1 error",e);
-            throw new AesException(AesException.ComputeSignatureError);
+            throw new AesException(AesExceptionEnum.COMPUTE_SIGNATURE_ERROR);
         }
     }
 }

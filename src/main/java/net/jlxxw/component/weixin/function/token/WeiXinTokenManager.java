@@ -16,7 +16,7 @@ public interface WeiXinTokenManager {
      * 定时从微信获取token
      * @return token
      */
-    String getToken();
+    String getTokenFromWeiXin();
 
     /**
      * 获取保存在本地的token

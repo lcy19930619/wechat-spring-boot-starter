@@ -1,10 +1,5 @@
 package net.jlxxw.component.weixin.function.token;
 
-import java.text.MessageFormat;
-import java.util.Objects;
-
-import javax.annotation.PostConstruct;
-
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.component.weixin.constant.UrlConstant;
 import net.jlxxw.component.weixin.exception.WeiXinException;
@@ -13,11 +8,14 @@ import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.PostConstruct;
+import java.text.MessageFormat;
+import java.util.Objects;
 
 /**
  * @author chunyang.leng
@@ -50,7 +48,7 @@ public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
      * @return token
      */
     @Override
-    public String getToken() {
+    public String getTokenFromWeiXin() {
         String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getAppId(),weiXinProperties.getSecret());
         WeiXinResponse response = restTemplate.getForObject(url, WeiXinResponse.class);
         if(Objects.nonNull(response.getErrcode())){

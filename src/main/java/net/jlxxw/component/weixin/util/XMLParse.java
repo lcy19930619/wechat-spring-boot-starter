@@ -7,6 +7,7 @@
 // ------------------------------------------------------------------------
 
 package net.jlxxw.component.weixin.util;
+import net.jlxxw.component.weixin.enums.AesExceptionEnum;
 import net.jlxxw.component.weixin.exception.AesException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,8 +48,7 @@ public class XMLParse {
 			result[2] = nodelist2.item(0).getTextContent();
 			return result;
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AesException(AesException.ParseXmlError);
+			throw new AesException(AesExceptionEnum.PARSE_XML_ERROR,e);
 		}
 	}
 
