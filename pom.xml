@@ -10,7 +10,7 @@
     </parent>
     <groupId>net.jlxxw.component</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>1.0.1.20210423</version>
+    <version>1.0.1.20210612</version>
     <name>WeiXinComponent</name>
     <description>微信快速开发组件</description>
 
