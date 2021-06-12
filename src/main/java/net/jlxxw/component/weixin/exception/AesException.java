@@ -12,16 +12,15 @@ import java.util.Objects;
 @SuppressWarnings("serial")
 public class AesException extends Exception {
 
-
-    private int code;
-
+    /**
+     * 错误码
+     */
+    private final int code;
     public int getCode() {
         return code;
     }
 
-
-
-    public AesException(AesExceptionEnum exceptionEnum,Exception e) {
+    public AesException(AesExceptionEnum exceptionEnum, Exception e) {
         super(exceptionEnum.getMessage());
         this.code = exceptionEnum.getCode();
         if(Objects.nonNull(e)){

@@ -9,6 +9,7 @@ import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.schedul.ScheduledUpdateToken;
 import net.jlxxw.component.weixin.schedul.ScheduledUpdateWeiXinServerIp;
 import net.jlxxw.component.weixin.security.WeiXinServerSecurityCheck;
+import net.jlxxw.component.weixin.util.LoggerUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -57,9 +58,9 @@ public class WeiXinComponentAutoConfiguration {
         //获取到服务器的cpu内核
         int i = Runtime.getRuntime().availableProcessors();
         //核心池大小
-        executor.setCorePoolSize(i *2);
+        executor.setCorePoolSize(i + 1);
         //最大线程数
-        executor.setMaxPoolSize(i * 4);
+        executor.setMaxPoolSize(i * 2);
         //队列长度
         executor.setQueueCapacity(60000);
         //线程空闲时间
@@ -127,7 +128,7 @@ public class WeiXinComponentAutoConfiguration {
     @ConditionalOnProperty(prefix = "weixin", name = "enable-default-token-manager", havingValue = "true")
     public ScheduledUpdateToken weiXinTokenManager(TokenMapper tokenMapper,
                                                    WeiXinTokenManager weiXinTokenManager) {
-        logger.info("初始化默认token管理器");
+        LoggerUtils.info(logger,"初始化默认token管理器");
         return new ScheduledUpdateToken(tokenMapper, weiXinTokenManager);
     }
 
@@ -138,14 +139,14 @@ public class WeiXinComponentAutoConfiguration {
             RestTemplate restTemplate,
             WeiXinServerSecurityCheck weiXinServerSecurityCheck,
             WeiXinProperties weiXinProperties) {
-        logger.info("初始化微信安全检查组件");
+        LoggerUtils.info(logger,"初始化微信安全检查组件");
         return new ScheduledUpdateWeiXinServerIp(weiXinTokenManager, restTemplate, weiXinServerSecurityCheck, weiXinProperties);
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "weixin", name = {"enable-wei-xin-call-back-server-security-check"}, havingValue = "true")
     public WeiXinServerSecurityCheck weiXinServerSecurityCheck() {
-        logger.info("启用微信回调ip白名单管理器");
+        LoggerUtils.info(logger,"启用微信回调ip白名单管理器");
         return new WeiXinServerSecurityCheck();
     }
 
@@ -154,7 +155,7 @@ public class WeiXinComponentAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(WebClient.class)
     public WebClient webClient(){
-        logger.info("初始化WebClient");
+        LoggerUtils.info(logger,"初始化WebClient");
         TcpClient tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)

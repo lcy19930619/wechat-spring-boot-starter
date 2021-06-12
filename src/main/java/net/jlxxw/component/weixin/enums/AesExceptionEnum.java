@@ -41,17 +41,20 @@ public enum AesExceptionEnum {
      */
     ILLEGAL_BUFFER(-40008,"解密后得到的buffer非法"),
 
-
-
-
     /**
      * sha加密生成签名失败
      */
     COMPUTE_SIGNATURE_ERROR(-40003,"sha加密生成签名失败"),
 
     ;
+    /**
+     * 错误码
+     */
     private final int code;
 
+    /**
+     * 错误信息描述
+     */
     private final String message;
 
     AesExceptionEnum(int code, String message) {

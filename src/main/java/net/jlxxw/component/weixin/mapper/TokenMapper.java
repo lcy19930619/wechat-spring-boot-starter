@@ -14,6 +14,10 @@ import java.util.Date;
 @Repository
 public interface TokenMapper {
 
+    /**
+     * 创建一个token管理表
+     * @return
+     */
     @Insert("create table if not exists wei_xin_token\n" +
             "(\n" +
             "    id          bigint(20) auto_increment primary key comment '数据自增主键',\n" +

@@ -26,7 +26,7 @@ public enum MaterialEnum {
     /**
      * 描述信息
      */
-    private String desc;
+    private final String desc;
 
     MaterialEnum(String desc) {
         this.desc = desc;

@@ -20,7 +20,7 @@ public enum LanguageEnum {
     EN("en");
 
 
-    String code;
+    private final String code;
 
     LanguageEnum(String code) {
         this.code = code;

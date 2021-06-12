@@ -46,9 +46,9 @@ public enum WeiXinEventTypeEnum {
     VIEW("VIEW","点击菜单跳转链接时的事件推送"),
 
     ;
-    String eventCode;
+    private final String eventCode;
 
-    String description;
+    private final String description;
 
     WeiXinEventTypeEnum(String eventCode, String description) {
         this.eventCode = eventCode;
