@@ -60,8 +60,4 @@ public class PushCustomerTest extends BaseTest {
         List<WeiXinResponse> weiXinResponse = pushCustomer.pushCustomer(dtoList, token);
         Assert.assertTrue(!CollectionUtils.isEmpty(weiXinResponse));
     }
-
-
-
-
 }
