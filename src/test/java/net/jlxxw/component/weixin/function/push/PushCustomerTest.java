@@ -14,6 +14,7 @@ import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class PushCustomerTest extends BaseTest {
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
         dtoList.add(dto);
         List<WeiXinResponse> weiXinResponse = pushCustomer.pushCustomer(dtoList, token);
-       // Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse),0L, (int) weiXinResponse.getErrcode());
+        Assert.assertTrue(!CollectionUtils.isEmpty(weiXinResponse));
     }
 
 

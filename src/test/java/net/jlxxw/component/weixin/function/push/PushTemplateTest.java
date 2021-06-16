@@ -9,6 +9,7 @@ import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,11 +78,7 @@ public class PushTemplateTest extends BaseTest {
         templateList.add(wxTemplate);
         volatileToken.get();
         List<WeiXinResponse>  weiXinResponse = pushTemplate.pushTemplate(templateList, token,volatileToken);
-        WeiXinResponse weiXinResponse1 =new WeiXinResponse();
-        weiXinResponse1.getErrcode();
-        weiXinResponse.add(weiXinResponse1);
-        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse),0L,weiXinResponse1 );
-
+        Assert.assertTrue(!CollectionUtils.isEmpty(weiXinResponse));
     }
 
 

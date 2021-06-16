@@ -1,16 +1,16 @@
 spring:
   # 连接池相关配置
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/cy?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
 
 weixin:
   # 需要替换为真实数据
-  app-id: xxxxx
+  app-id: wx97562dcec7e78aca
   # 需要替换为真实数据
-  secret: xxxxxx
+  secret: 995bc3e1c1e0d30884f3d2e1f033eced
   grant-type: client_credential
   verify-token: mytoken123456
   netty:
