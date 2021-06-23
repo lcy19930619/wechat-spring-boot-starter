@@ -1,4 +1,4 @@
-# WeiXinComponent
+
 微信相关组件  
 感谢 JetBrains 的对这个项目的认可，给了我一个全家桶激活码～～
 
