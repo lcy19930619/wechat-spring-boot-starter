@@ -1,4 +1,4 @@
-# WeiXinComponent
+
 微信相关组件  
 感谢 JetBrains 的对这个项目的认可，给了我一个全家桶激活码～～
 
@@ -22,18 +22,18 @@ UnKnowWeiXinMessageListener
 ## 执行流程
 ### netty模式  
 1、WeiXinCoreComponent 随着系统启动进行初始化，启动netty server  
-2、微信请求到达时，WeiXinChannel 开始工作，并进行白名单认证
+2、微信请求到达时，WeiXinChannel 开始工作，并进行白名单认证  
 3、请求转发到EventBus  
 4、解析微信请求数据，根据event以及MsgType 查找注册到ioc容器中到监听器（即自己写的业务监听器）  
 5、调用监听器的handler方法，执行相关业务  
 6、向微信服务器返回数据  
 
 ### 传统模式
-1、微信数据请求发送到WeiXinMessageController，并进行白名单认证
-3、请求转发到EventBus  
-4、解析微信请求数据，根据event以及MsgType 查找注册到ioc容器中到监听器（即自己写的业务监听器）  
-5、调用监听器的handler方法，执行相关业务  
-6、向微信服务器返回数据
+1、微信数据请求发送到WeiXinMessageController，并进行白名单认证。
+2、请求转发到EventBus  
+3、解析微信请求数据，根据event以及MsgType 查找注册到ioc容器中到监听器（即自己写的业务监听器）  
+4、调用监听器的handler方法，执行相关业务  
+5、向微信服务器返回数据
 
 ## 基本功能（还在不断完善中）
 1、客服接口推送  

@@ -14,6 +14,10 @@ import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PushCustomerTest extends BaseTest {
     /**
@@ -40,4 +44,20 @@ public class PushCustomerTest extends BaseTest {
 
     }
 
+    /**
+     * 批量推送
+     */
+    public void pushCustomerListTest(){
+        String token = weiXinTokenManager.getTokenFromLocal();
+        ArticlesDTO articlesDTO = new ArticlesDTO();
+        articlesDTO.setPicurl("测试图片url");
+        articlesDTO.setTitle("这里一个测试的标题");
+        articlesDTO.setUrl("测试跳转链接");
+        articlesDTO.setDescription("测试描述信息");
+        List<CustomerMessageDTO> dtoList =new ArrayList<>();
+        CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
+        dtoList.add(dto);
+        List<WeiXinResponse> weiXinResponse = pushCustomer.pushCustomer(dtoList, token);
+        Assert.assertTrue(!CollectionUtils.isEmpty(weiXinResponse));
+    }
 }

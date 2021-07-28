@@ -140,4 +140,108 @@ public class OrderInfoDTO {
      */
     @JSONField(name = "payer")
     private PayerDTO payerDTO;
+
+    public String getSpAppId() {
+        return spAppId;
+    }
+
+    public void setSpAppId(String spAppId) {
+        this.spAppId = spAppId;
+    }
+
+    public String getSpMchId() {
+        return spMchId;
+    }
+
+    public void setSpMchId(String spMchId) {
+        this.spMchId = spMchId;
+    }
+
+    public String getSubAppId() {
+        return subAppId;
+    }
+
+    public void setSubAppId(String subAppId) {
+        this.subAppId = subAppId;
+    }
+
+    public String getSubMchId() {
+        return subMchId;
+    }
+
+    public void setSubMchId(String subMchId) {
+        this.subMchId = subMchId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    public String getTimeExpire() {
+        return timeExpire;
+    }
+
+    public void setTimeExpire(String timeExpire) {
+        this.timeExpire = timeExpire;
+    }
+
+    public String getAttach() {
+        return attach;
+    }
+
+    public void setAttach(String attach) {
+        this.attach = attach;
+    }
+
+    public String getNotifyUrl() {
+        return notifyUrl;
+    }
+
+    public void setNotifyUrl(String notifyUrl) {
+        this.notifyUrl = notifyUrl;
+    }
+
+    public String getGoodsTag() {
+        return goodsTag;
+    }
+
+    public void setGoodsTag(String goodsTag) {
+        this.goodsTag = goodsTag;
+    }
+
+    public SettleInfoDTO getSettleInfoDTO() {
+        return settleInfoDTO;
+    }
+
+    public void setSettleInfoDTO(SettleInfoDTO settleInfoDTO) {
+        this.settleInfoDTO = settleInfoDTO;
+    }
+
+    public AmountDTO getAmountDTO() {
+        return amountDTO;
+    }
+
+    public void setAmountDTO(AmountDTO amountDTO) {
+        this.amountDTO = amountDTO;
+    }
+
+    public PayerDTO getPayerDTO() {
+        return payerDTO;
+    }
+
+    public void setPayerDTO(PayerDTO payerDTO) {
+        this.payerDTO = payerDTO;
+    }
 }
