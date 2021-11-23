@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.component.weixin.constant.UrlConstant;
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
-import net.jlxxw.component.weixin.response.qrcode.QrCodeResult;
-import net.jlxxw.component.weixin.response.qrcode.TempQrCodeResult;
+import net.jlxxw.component.weixin.dto.qrcode.QrCodeDTO;
+import net.jlxxw.component.weixin.dto.qrcode.TempQrCodeDTO;
 import net.jlxxw.component.weixin.util.WebClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class QrcodeManager {
      * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createTempStringQrcode(String eventKey, Long expireSecond, Consumer<TempQrCodeResult> consumer){
+    public void createTempStringQrcode(String eventKey, Long expireSecond, Consumer<TempQrCodeDTO> consumer){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -46,7 +46,7 @@ public class QrcodeManager {
         object.put("action_info",actionInfo);
 
 
-        Mono<TempQrCodeResult> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeResult.class);
+        Mono<TempQrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeDTO.class);
         mono.subscribe(consumer);
     }
 
@@ -57,7 +57,7 @@ public class QrcodeManager {
      * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createTempIdQrcode(Long id, Long expireSecond, Consumer<TempQrCodeResult> consumer){
+    public void createTempIdQrcode(Long id, Long expireSecond, Consumer<TempQrCodeDTO> consumer){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -69,7 +69,7 @@ public class QrcodeManager {
         actionInfo.put("scene",scene);
         object.put("action_info",actionInfo);
 
-        Mono<TempQrCodeResult> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeResult.class);
+        Mono<TempQrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeDTO.class);
         mono.subscribe(consumer);
     }
 
@@ -80,7 +80,7 @@ public class QrcodeManager {
      * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createStringQrcode(String eventKey, Consumer<QrCodeResult> consumer){
+    public void createStringQrcode(String eventKey, Consumer<QrCodeDTO> consumer){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -91,7 +91,7 @@ public class QrcodeManager {
         actionInfo.put("scene",scene);
         object.put("action_info",actionInfo);
 
-        Mono<QrCodeResult> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeResult.class);
+        Mono<QrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeDTO.class);
         mono.subscribe(consumer);
     }
 
@@ -102,7 +102,7 @@ public class QrcodeManager {
      * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createIdQrcode(Long id,  Consumer<QrCodeResult> consumer){
+    public void createIdQrcode(Long id,  Consumer<QrCodeDTO> consumer){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -113,7 +113,7 @@ public class QrcodeManager {
         actionInfo.put("scene",scene);
         object.put("action_info",actionInfo);
 
-        Mono<QrCodeResult> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeResult.class);
+        Mono<QrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeDTO.class);
         mono.subscribe(consumer);
     }
 

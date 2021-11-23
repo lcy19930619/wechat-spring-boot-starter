@@ -70,10 +70,19 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!-- 解决m1芯片使用webclient报错问题-->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
+            <version>4.1.70.Final</version>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>4.1.70.Final</version>
+        </dependency>
+        <!-- 解决m1芯片使用webclient报错问题-->
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
