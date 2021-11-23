@@ -29,7 +29,7 @@ import javax.annotation.PostConstruct;
  */
 @Component
 public class WeiXinCoreComponent {
-    private static final ServerBootstrap bootstrap = new ServerBootstrap();
+    private static final ServerBootstrap BOOTSTRAP = new ServerBootstrap();
     private static final Logger logger = LoggerFactory.getLogger(WeiXinCoreComponent.class);
     @Autowired
     private WeiXinNettyServerProperties weiXinNettyServerProperties;
@@ -49,7 +49,7 @@ public class WeiXinCoreComponent {
                 EventLoopGroup bossGroup = new NioEventLoopGroup(1);
                 //new 一个工作线程组
                 EventLoopGroup workGroup = new NioEventLoopGroup(weiXinNettyServerProperties.getMaxThreadSize());
-                bootstrap
+                BOOTSTRAP
                         .group(bossGroup, workGroup)
                         .channel(NioServerSocketChannel.class)
                         .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -84,7 +84,7 @@ public class WeiXinCoreComponent {
                         .childOption(ChannelOption.SO_KEEPALIVE, true);
                 //绑定端口,开始接收进来的连接
                 try {
-                    ChannelFuture future = bootstrap.bind(weiXinNettyServerProperties.getNettyPort()).sync();
+                    ChannelFuture future = BOOTSTRAP.bind(weiXinNettyServerProperties.getNettyPort()).sync();
                     LoggerUtils.info(logger,"微信netty服务启动，开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
                     future.channel().closeFuture().sync();
                 } catch (InterruptedException e) {

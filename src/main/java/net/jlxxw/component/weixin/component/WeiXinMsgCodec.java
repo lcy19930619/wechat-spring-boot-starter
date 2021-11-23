@@ -66,7 +66,7 @@ import java.util.Random;
 @ConditionalOnProperty(value = "weixin.enable-message-enc",havingValue = "true")
 public class WeiXinMsgCodec {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
-    private static final Base64 base64 = new Base64();
+    private static final Base64 BASE64 = new Base64();
     private byte[] aesKey;
     private String token;
     private String appId;
@@ -167,8 +167,6 @@ public class WeiXinMsgCodec {
 
         String signature = SHA1.getSHA1(token, timeStamp, nonce, encrypt);
 
-        // System.out.println("发送给平台的签名是: " + signature[1].toString());
-        // 生成发送的xml
         return XMLParse.generate(encrypt, signature, timeStamp, nonce);
     }
 
@@ -254,7 +252,7 @@ public class WeiXinMsgCodec {
 
             // 使用BASE64对加密后的字符串进行编码
 
-            return base64.encodeToString(encrypted);
+            return BASE64.encodeToString(encrypted);
         } catch (Exception e) {
             throw new AesException(AesExceptionEnum.ENCRYPT_AES_ERROR,e);
         }

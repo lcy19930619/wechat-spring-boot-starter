@@ -1,6 +1,7 @@
 package net.jlxxw.component.weixin.dto.template;
 
 
+import com.alibaba.fastjson.annotation.JSONField;
 import net.jlxxw.component.weixin.enums.Color;
 
 import java.util.HashMap;
@@ -15,17 +16,18 @@ public class WxTemplate {
     /**
      * 微信模版id
      */
-    private String template_id;
+    @JSONField(name = "template_id")
+    private String templateId;
     private String touser;
     private String url;
     private Map<String, TemplateData> data;
 
-    public String getTemplate_id() {
-        return template_id;
+    public String getTemplateId() {
+        return templateId;
     }
 
-    public void setTemplate_id(String template_id) {
-        this.template_id = template_id;
+    public void setTemplateId(String templateId) {
+        this.templateId = templateId;
     }
 
     public String getTouser() {
@@ -78,7 +80,7 @@ public class WxTemplate {
      * @return 当前操作的模版对象
      */
     public WxTemplate buildTemplateCode(String templateCode){
-        this.setTemplate_id(templateCode);
+        this.setTemplateId(templateCode);
         return this;
     }
 
@@ -90,7 +92,7 @@ public class WxTemplate {
      */
     public WxTemplate buildFirstData(String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put("first",TemplateData.build(value,color));
         return this;
@@ -103,7 +105,7 @@ public class WxTemplate {
      */
     public WxTemplate buildKeyWord1Data(String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put("keyword1",TemplateData.build(value,color));
         return this;
@@ -116,7 +118,7 @@ public class WxTemplate {
      */
     public WxTemplate buildKeyWord2Data(String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put("keyword2",TemplateData.build(value,color));
         return this;
@@ -129,7 +131,7 @@ public class WxTemplate {
      */
     public WxTemplate buildKeyWord3Data(String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put("keyword3",TemplateData.build(value,color));
         return this;
@@ -142,7 +144,7 @@ public class WxTemplate {
      */
     public WxTemplate buildKeyWord4Data(String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put("keyword4",TemplateData.build(value,color));
         return this;
@@ -155,7 +157,7 @@ public class WxTemplate {
      */
     public WxTemplate buildKeyWord5Data(String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put("keyword5",TemplateData.build(value,color));
         return this;
@@ -168,7 +170,7 @@ public class WxTemplate {
      */
     public WxTemplate buildRemarkData(String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put("remark",TemplateData.build(value,color));
         return this;
@@ -182,7 +184,7 @@ public class WxTemplate {
      */
     public WxTemplate buildOtherData(String key, String value, Color color){
         if(Objects.isNull(this.getData())){
-            this.setData(new HashMap<>());
+            this.setData(new HashMap<>(16));
         }
         this.getData().put(key,TemplateData.build(value,color));
         return this;

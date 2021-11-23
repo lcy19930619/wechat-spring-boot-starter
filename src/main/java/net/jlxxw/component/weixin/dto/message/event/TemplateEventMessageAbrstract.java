@@ -1,12 +1,12 @@
 package net.jlxxw.component.weixin.dto.message.event;
 
-import net.jlxxw.component.weixin.dto.message.WeiXinMessage;
+import net.jlxxw.component.weixin.dto.message.AbrstractWeiXinMessage;
 
 /**
  * @author chunyang.leng
  * @date 2021/1/25 1:35 下午
  */
-public class TemplateEventMessage extends WeiXinMessage {
+public class TemplateEventMessageAbrstract extends AbrstractWeiXinMessage {
 	/**
 	 * 消息id
 	 */

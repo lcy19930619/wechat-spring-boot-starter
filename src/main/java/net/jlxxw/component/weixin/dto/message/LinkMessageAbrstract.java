@@ -5,7 +5,7 @@ package net.jlxxw.component.weixin.dto.message;
  * @author chunyang.leng
  * @date 2021/1/20 11:29 上午
  */
-public class LinkMessage extends WeiXinMessage{
+public class LinkMessageAbrstract extends AbrstractWeiXinMessage {
 
     /**
      * 消息标题

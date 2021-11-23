@@ -248,7 +248,7 @@ weixin:
 参考枚举：```net.jlxxw.component.weixin.enums.WeiXinMessageTypeEnum```
 
 数据传输入参，即  
-```net.jlxxw.component.weixin.component.listener.WeiXinMessageListener.handler```方法参数  
+```net.jlxxw.component.weixin.component.listener.AbrstractWeiXinMessageListener.handler```方法参数  
 可以参考```net.jlxxw.component.weixin.dto.message.*Message``` 进行数据类型强制转换
 
 返回信息类型可使用```net.jlxxw.component.weixin.response.WeiXinMessageResponse``` 进行创建
@@ -270,7 +270,7 @@ weixin:
 #### 使用方法
 1、新建class
 
-2、继承 net.jlxxw.component.weixin.component.listener.WeiXinMessageListener
+2、继承 net.jlxxw.component.weixin.component.listener.AbrstractWeiXinMessageListener
 
 3、添加 @Component注解  
 例如，接收用户传输对文字内容
@@ -291,12 +291,12 @@ public class TextListener extends WeiXinMessageListener {
     /**
      * 处理微信消息 ,return null时，会转换为 "" 返回到微信服务器
      *
-     * @param weiXinMessage
+     * @param abrstractWeiXinMessage
      * @return
      */
     @Override
-    public WeiXinMessageResponse handler(WeiXinMessage weiXinMessage) {
-        TextMessage textMessage = (TextMessage)weiXinMessage;
+    public WeiXinMessageResponse handler(WeiXinMessage abrstractWeiXinMessage) {
+        TextMessage textMessage = (TextMessage)abrstractWeiXinMessage;
         // 用户发送的内容
         String content = textMessage.getContent();
         // 用户的openId
@@ -318,7 +318,7 @@ public class TextListener extends WeiXinMessageListener {
 ### 注册微信回调事件处理器（同消息处理器）
 1、新建class
 
-2、继承 net.jlxxw.component.weixin.component.listener.WeiXinEventListener
+2、继承 net.jlxxw.component.weixin.component.listener.AbrstractWeiXinEventListener
 
 3、添加 @Component注解
 

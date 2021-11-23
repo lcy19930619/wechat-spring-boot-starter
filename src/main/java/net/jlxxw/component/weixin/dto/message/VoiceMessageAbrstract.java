@@ -5,7 +5,7 @@ package net.jlxxw.component.weixin.dto.message;
  * @author chunyang.leng
  * @date 2021/1/20 11:19 上午
  */
-public class VoiceMessage extends WeiXinMessage{
+public class VoiceMessageAbrstract extends AbrstractWeiXinMessage {
 
     /**
      * 语音消息媒体id，可以调用获取临时素材接口拉取数据。

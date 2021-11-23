@@ -4,7 +4,7 @@ package net.jlxxw.component.weixin.dto.message;
  * @author chunyang.leng
  * @date 2021/1/20 11:22 上午
  */
-public class ImageMessage extends WeiXinMessage{
+public class ImageMessageAbrstract extends AbrstractWeiXinMessage {
 
     /**
      * 图片链接（由微信系统生成）

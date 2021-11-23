@@ -28,9 +28,18 @@ public interface TokenMapper {
             )
     int createTable();
 
+    /**
+     * 从数据库中获取token
+     * @return
+     */
     @Select("select token from wei_xin_token order by id desc limit 1")
     String getToken();
 
+    /**
+     * 向数据库中存储token
+     * @param token
+     * @return
+     */
     @Insert("insert into wei_xin_token(token) values (#{token})")
     int insert(@Param("token") String token);
 

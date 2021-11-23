@@ -20,6 +20,7 @@ import java.util.Arrays;
  * SHA1 class
  *
  * 计算公众平台的消息签名接口.
+ * @author lcy
  */
 public class SHA1 {
     private static final  Logger logger = LoggerFactory.getLogger(SHA1.class);

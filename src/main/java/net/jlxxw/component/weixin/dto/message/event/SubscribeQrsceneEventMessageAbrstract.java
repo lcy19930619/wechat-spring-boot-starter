@@ -1,13 +1,13 @@
 package net.jlxxw.component.weixin.dto.message.event;
 
-import net.jlxxw.component.weixin.dto.message.WeiXinMessage;
+import net.jlxxw.component.weixin.dto.message.AbrstractWeiXinMessage;
 
 /**
  * 用户未关注时，进行关注后的事件推送
  * @author chunyang.leng
  * @date 2021/1/22 7:20 下午
  */
-public class SubscribeQrsceneEventMessage extends WeiXinMessage {
+public class SubscribeQrsceneEventMessageAbrstract extends AbrstractWeiXinMessage {
 
     /**
      * 事件KEY值，qrscene_为前缀，后面为二维码的参数值

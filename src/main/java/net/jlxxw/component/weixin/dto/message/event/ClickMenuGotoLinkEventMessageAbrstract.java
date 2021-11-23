@@ -1,16 +1,16 @@
 package net.jlxxw.component.weixin.dto.message.event;
 
-import net.jlxxw.component.weixin.dto.message.WeiXinMessage;
+import net.jlxxw.component.weixin.dto.message.AbrstractWeiXinMessage;
 
 /**
- * 点击菜单拉取消息时的事件推送
+ * 点击菜单跳转链接时的事件推送
  * @author chunyang.leng
  * @date 2021/1/22 7:25 下午
  */
-public class ClickMenuGetInfoEventMessage extends WeiXinMessage {
+public class ClickMenuGotoLinkEventMessageAbrstract extends AbrstractWeiXinMessage {
 
     /**
-     * 事件KEY值，与自定义菜单接口中KEY值对应
+     * 事件KEY值，设置的跳转URL
      */
     private String eventKey;
 

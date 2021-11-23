@@ -1,6 +1,6 @@
 package net.jlxxw.component.weixin.component.listener;
 
-import net.jlxxw.component.weixin.dto.message.WeiXinMessage;
+import net.jlxxw.component.weixin.dto.message.AbrstractWeiXinMessage;
 import net.jlxxw.component.weixin.enums.WeiXinEventTypeEnum;
 import net.jlxxw.component.weixin.response.WeiXinMessageResponse;
 
@@ -9,7 +9,7 @@ import net.jlxxw.component.weixin.response.WeiXinMessageResponse;
  * @author chunyang.leng
  * @date 2021/1/22 7:07 下午
  */
-public abstract class WeiXinEventListener {
+public abstract class AbrstractWeiXinEventListener {
 
 
     /**
@@ -20,8 +20,8 @@ public abstract class WeiXinEventListener {
 
     /**
      * 处理微信消息 ,return null时，会转换为 "" 返回到微信服务器
-     * @param weiXinMessage
+     * @param abrstractWeiXinMessage
      * @return
      */
-    public abstract WeiXinMessageResponse handler(WeiXinMessage weiXinMessage);
+    public abstract WeiXinMessageResponse handler(AbrstractWeiXinMessage abrstractWeiXinMessage);
 }
