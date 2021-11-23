@@ -276,7 +276,7 @@ weixin:
 例如，接收用户传输对文字内容
 ```
 @Component
-public class TextListener extends WeiXinMessageListener {
+public class TextListener extends AbrstractWeiXinMessageListener {
 
     /**
      * 支持的消息事件类型
