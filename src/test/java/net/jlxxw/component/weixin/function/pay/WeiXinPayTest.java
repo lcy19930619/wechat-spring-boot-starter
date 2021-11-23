@@ -49,7 +49,7 @@ public class WeiXinPayTest extends BaseTest {
         orderInfoDTO.setSubMchId("");
         weiXinPay.createPrePay(orderInfoDTO, userAgent);
 
-        Assert.assertTrue(!ObjectUtils.isEmpty(orderInfoDTO));
+        Assert.assertFalse(ObjectUtils.isEmpty(orderInfoDTO));
 
     }
 
@@ -58,6 +58,6 @@ public class WeiXinPayTest extends BaseTest {
     public void getExecutePayVOTest() throws Exception {
         String prePayId="";
         weiXinPay.getExecutePayVO(prePayId);
-        Assert.assertTrue(!StringUtils.isEmpty(prePayId));
+        Assert.assertFalse(StringUtils.isEmpty(prePayId));
     }
 }

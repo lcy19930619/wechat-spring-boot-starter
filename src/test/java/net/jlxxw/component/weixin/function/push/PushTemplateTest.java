@@ -21,14 +21,6 @@ import java.util.function.Supplier;
  */
 public class PushTemplateTest extends BaseTest {
 
-    /**
-     * 需要替换真实数据
-     */
-    private static final String openId = "xxxxx";
-    /**
-     * 需要替换真实数据
-     */
-    private static final String templateId = "xxxxx";
 
     @Autowired
     private PushTemplate pushTemplate;
@@ -38,7 +30,7 @@ public class PushTemplateTest extends BaseTest {
     /**
      * 多线程共享token
      */
-    private volatile Supplier<String>  volatileToken;
+    private final Supplier<String>  volatileToken = this::getToken;
 
     @Test
     public void pushTemplateTest(){
@@ -76,9 +68,8 @@ public class PushTemplateTest extends BaseTest {
                 .buildOtherData("abc","abc DATA的具体值",ColorEnums.ORANGE);
         List<WxTemplate> templateList =new ArrayList<>();
         templateList.add(wxTemplate);
-        volatileToken.get();
         List<WeiXinResponse>  weiXinResponse = pushTemplate.pushTemplate(templateList, token,volatileToken);
-        Assert.assertTrue(!CollectionUtils.isEmpty(weiXinResponse));
+        Assert.assertFalse("模版推送结果不应为空",CollectionUtils.isEmpty(weiXinResponse));
     }
 
 
