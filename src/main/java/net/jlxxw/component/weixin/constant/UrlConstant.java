@@ -76,4 +76,14 @@ public interface UrlConstant {
      * 创建临时二维码url
      */
     String CREATE_TEMP_QRCODE_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}";
+
+    /**
+     * 清空api的调用
+     */
+    String OPEN_API_CLEAN = "https://api.weixin.qq.com/cgi-bin/clear_quota?access_token={0}";
+
+    /**
+     * 查询api quota 调用情况
+     */
+    String OPEN_API_SELECT_QUOTA="https://api.weixin.qq.com/cgi-bin/openapi/quota/get?access_token={0}";
 }
