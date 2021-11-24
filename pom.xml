@@ -27,6 +27,11 @@
             <name>chunyang.leng</name>
             <url>https://github.com/lcy19930619</url>
         </developer>
+        <developer>
+            <email>1127537753@qq.com</email>
+            <name>xiumei.zhan</name>
+            <url>https://github.com/zhanxiumei</url>
+        </developer>
     </developers>
     <issueManagement>
         <system>Github Issue</system>
