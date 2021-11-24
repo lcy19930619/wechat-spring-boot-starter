@@ -114,7 +114,7 @@ public class OpenApiManager {
      * @param rid
      * @param callback
      */
-    private void selectRid(String rid,Consumer<ApiRequestRecord> callback){
+    public void selectRid(String rid,Consumer<ApiRequestRecord> callback){
         if (Objects.isNull(callback) || StringUtils.isBlank(rid)) {
             throw new NullPointerException();
         }
