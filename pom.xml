@@ -229,11 +229,19 @@
     <distributionManagement>
         <snapshotRepository>
             <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
             <id>sonatype</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+    <profiles>
+        <profile>
+            <id>sonatype</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 </project>
