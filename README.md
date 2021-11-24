@@ -7,8 +7,17 @@
 代码复用性也不高，所以写了这个组件，希望通用性好一些
 ## 使用方法  
 ### spring boot项目
-方法一：通过mvn install: 将依赖包安装到本地仓库，而后pom.xml加入依赖坐标即可
-方法二：通过私服，将本项目打包，部署扔到私服中，需要使用的项目部署maven坐标即可
+方法一：通过mvn install: 将依赖包安装到本地仓库，而后pom.xml加入依赖坐标即可  
+方法二：通过私服，将本项目打包，部署扔到私服中，需要使用的项目部署maven坐标即可  
+方法三：引入maven中央仓库坐标
+```
+<dependency>
+    <groupId>net.jlxxw</groupId>
+    <artifactId>wechat-spring-boot-starter</artifactId>
+    <version>1.0.1.20211123</version>
+</dependency>
+```
+
 ### spring mvc
 暂不支持
 ## 执行原理  
