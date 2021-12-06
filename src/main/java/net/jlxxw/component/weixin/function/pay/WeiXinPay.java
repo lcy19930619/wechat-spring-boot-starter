@@ -13,6 +13,8 @@ import net.jlxxw.component.weixin.vo.jsapi.v3.ExecutePayVO;
 import net.jlxxw.component.weixin.vo.jsapi.v3.PayResultVO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -26,6 +28,8 @@ import static net.jlxxw.component.weixin.constant.UrlConstant.JSAPI_V3_PRE_PAY_U
  * @author chunyang.leng
  * @date 2021-04-10 8:01 下午
  */
+@Lazy
+@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
 public class WeiXinPay {
     private static final int SUCCESS_CODE = 200;

@@ -10,6 +10,8 @@ import net.jlxxw.component.weixin.vo.PermanentMaterialVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -37,6 +39,8 @@ import static net.jlxxw.component.weixin.constant.UrlConstant.*;
  * @author chunyang.leng
  * @date 2021-03-05 5:53 下午
  */
+@Lazy
+@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
 public class PermanentMaterialManager {
     private static final Logger logger = LoggerFactory.getLogger(PermanentMaterialManager.class);

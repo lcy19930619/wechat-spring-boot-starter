@@ -8,6 +8,8 @@ import net.jlxxw.component.weixin.dto.qrcode.QrCodeDTO;
 import net.jlxxw.component.weixin.dto.qrcode.TempQrCodeDTO;
 import net.jlxxw.component.weixin.util.WebClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -19,6 +21,8 @@ import java.util.function.Consumer;
  * @author chunyang.leng
  * @date 2021-03-05 5:52 下午
  */
+@Lazy
+@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
 public class QrcodeManager {
     @Autowired

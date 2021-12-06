@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,13 +32,15 @@ import java.util.Set;
  * @author chunyang.leng
  * @date 2021/1/25 6:44 下午
  */
+@Lazy
+@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
 public class UserManagerImpl implements UserManager {
 
     private static final Logger logger = LoggerFactory.getLogger(UserManagerImpl.class);
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired(required = false)
+    @Autowired
     private WeiXinTokenManager weiXinTokenManager;
 
     /**

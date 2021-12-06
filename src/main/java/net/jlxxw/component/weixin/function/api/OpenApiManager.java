@@ -10,6 +10,8 @@ import net.jlxxw.component.weixin.response.api.ApiResult;
 import net.jlxxw.component.weixin.util.WebClientUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
@@ -23,6 +25,8 @@ import java.util.function.Consumer;
  * @author chunyang.leng
  * @date 2021-11-23 2:22 下午
  */
+@Lazy
+@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
 public class OpenApiManager {
     @Autowired

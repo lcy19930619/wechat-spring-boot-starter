@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -21,6 +22,7 @@ import java.util.Objects;
  * @author chunyang.leng
  * @date 2021/1/19 5:30 下午
  */
+@DependsOn({"tokenMapper","weiXinProperties"})
 @ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
 @Component
 public class WeiXinTokenManagerImpl implements WeiXinTokenManager{

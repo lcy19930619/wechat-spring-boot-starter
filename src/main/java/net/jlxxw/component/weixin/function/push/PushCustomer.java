@@ -7,6 +7,8 @@ import net.jlxxw.component.weixin.dto.customer.CustomerMessageDTO;
 import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,6 +25,8 @@ import java.util.Objects;
  * @author chunyang.leng
  * @date 2021/1/18 10:14 下午
  */
+@Lazy
+@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
 public class PushCustomer {
     @Autowired
