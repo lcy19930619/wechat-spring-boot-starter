@@ -1,18 +1,19 @@
 package net.jlxxw.component.weixin.dto.message;
 
 /**
- * 小视频信息
+ * 视频信息
  * @author chunyang.leng
- * @date 2021/1/20 11:26 上午
+ * @date 2021/1/20 11:25 上午
  */
-public class ShortVideoMessageAbrstract extends AbrstractWeiXinMessage {
+public class VideoMessageAbstract extends AbstractWeiXinMessage {
+
     /**
-     *视频消息媒体id，可以调用获取临时素材接口拉取数据。
+     * 视频消息媒体id，可以调用获取临时素材接口拉取数据。
      */
     private String mediaId;
 
     /**
-     *视频消息缩略图的媒体id，可以调用获取临时素材接口拉取数据。
+     * 视频消息缩略图的媒体id，可以调用多媒体文件下载接口拉取数据。
      */
     private String thumbMediaId;
 

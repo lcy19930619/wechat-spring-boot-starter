@@ -1,13 +1,13 @@
 package net.jlxxw.component.weixin.dto.message.event;
 
-import net.jlxxw.component.weixin.dto.message.AbrstractWeiXinMessage;
+import net.jlxxw.component.weixin.dto.message.AbstractWeiXinMessage;
 
 /**
  * 上报地理位置事件
  * @author chunyang.leng
  * @date 2021/1/22 7:24 下午
  */
-public class LocationEventMessageAbrstract extends AbrstractWeiXinMessage {
+public class LocationEventMessage extends AbstractWeiXinMessage {
 
     /**
      * 地理位置纬度

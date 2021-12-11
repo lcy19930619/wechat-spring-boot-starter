@@ -25,8 +25,8 @@ import java.util.Objects;
 @DependsOn({"tokenMapper","weiXinProperties"})
 @ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
 @Component
-public class WeiXinTokenManagerImpl implements WeiXinTokenManager{
-    private static final Logger logger = LoggerFactory.getLogger(WeiXinTokenManagerImpl.class);
+public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager{
+    private static final Logger logger = LoggerFactory.getLogger(DefaultWeiXinTokenManagerImpl.class);
     @Autowired
     private WeiXinProperties weiXinProperties;
     @Autowired

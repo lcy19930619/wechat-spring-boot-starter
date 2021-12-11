@@ -1,16 +1,16 @@
 package net.jlxxw.component.weixin.dto.message.event;
 
-import net.jlxxw.component.weixin.dto.message.AbrstractWeiXinMessage;
+import net.jlxxw.component.weixin.dto.message.AbstractWeiXinMessage;
 
 /**
- * 用户未关注时，进行关注后的事件推送
+ * 用户已关注时的事件推送
  * @author chunyang.leng
- * @date 2021/1/22 7:20 下午
+ * @date 2021/1/22 7:17 下午
  */
-public class SubscribeQrsceneEventMessageAbrstract extends AbrstractWeiXinMessage {
+public class SubscribeScanEventMessage extends AbstractWeiXinMessage {
 
     /**
-     * 事件KEY值，qrscene_为前缀，后面为二维码的参数值
+     * 事件KEY值，是一个32位无符号整数，即创建二维码时的二维码scene_id
      */
     private String eventKey;
 

@@ -4,7 +4,7 @@ package net.jlxxw.component.weixin.dto.message;
  * @author chunyang.leng
  * @date 2021/1/20 11:28 上午
  */
-public class LocationMessageAbrstract extends AbrstractWeiXinMessage {
+public class LocationMessageAbstract extends AbstractWeiXinMessage {
 
     /**
      * 地理位置纬度

@@ -20,7 +20,6 @@ import java.io.PrintWriter;
  * @date 2021/1/20 12:48 下午
  */
 @Controller
-@RequestMapping("weixin")
 @ConditionalOnProperty(value = "weixin.netty.server.enable-netty",havingValue = "false")
 public class WeiXinMessageController {
     @Autowired
@@ -30,7 +29,7 @@ public class WeiXinMessageController {
     @Autowired
     private WeiXinProperties weiXinProperties;
 
-    @RequestMapping("core")
+    @RequestMapping("weixin")
     public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if(weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null){
             // 开启微信回调ip安全检查时执行
