@@ -68,7 +68,9 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
         // 包装响应结果
         FullHttpResponse response = responseOK(HttpResponseStatus.OK, responseData);
         // 发送响应
-        channelHandlerContext.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+        channelHandlerContext
+                .writeAndFlush(response)
+                .addListener(ChannelFutureListener.CLOSE);
     }
 
     /**
@@ -79,10 +81,8 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
      */
     private FullHttpResponse responseOK(HttpResponseStatus status, ByteBuf content) {
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);
-        if (content != null) {
-            response.headers().set("Content-Type", "application/xml;charset=UTF-8");
-            response.headers().set("Content_Length", response.content().readableBytes());
-        }
+        response.headers().set("Content-Type", "application/xml;charset=UTF-8");
+        response.headers().set("Content_Length", response.content().readableBytes());
         return response;
     }
 
