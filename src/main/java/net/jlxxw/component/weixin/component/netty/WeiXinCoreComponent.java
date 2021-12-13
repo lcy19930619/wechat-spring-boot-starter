@@ -41,7 +41,7 @@ public class WeiXinCoreComponent {
         if (!weiXinNettyServerProperties.getEnableNetty()) {
             return;
         }
-        new Thread() {
+        Thread t =  new Thread() {
             @Override
             public void run() {
                 LoggerUtils.info(logger,"初始化 netty 组件");
@@ -97,7 +97,10 @@ public class WeiXinCoreComponent {
                     workGroup.shutdownGracefully();
                 }
             }
-        }.start();
+        };
+        t.setName("weixin-netty-thread-listener");
+        t.setDaemon(false);
+        t.start();
     }
 
 }
