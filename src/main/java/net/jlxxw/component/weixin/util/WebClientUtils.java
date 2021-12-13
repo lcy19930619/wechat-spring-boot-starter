@@ -41,4 +41,27 @@ public class WebClientUtils {
                 .bodyToMono(String.class)
                 .map(jsonString -> JSON.toJavaObject(JSON.parseObject(jsonString), result));
     }
+
+    /**
+     * 发送一个get请求
+     * @param url 请求地址
+     * @param result 应答数据类型
+     * @param <T> 转换应答类型
+     * @return 异步包装对象
+     */
+    public <T> Mono<T> sendGet(String url, Class<T> result) {
+        // 发送请求
+        return webClient
+                // POST 请求
+                .get()
+                // 请求路径
+                .uri(url)
+                // 获取响应体
+                .retrieve()
+                //响应数据类型转换
+                .bodyToMono(String.class)
+                .map(jsonString -> JSON.toJavaObject(JSON.parseObject(jsonString), result));
+
+    }
+
 }

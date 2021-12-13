@@ -50,12 +50,14 @@ public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager{
      * @return token
      */
     @Override
-    public String getTokenFromWeiXin() {
+    public String getTokenFromWeiXin() throws WeiXinException{
         String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getAppId(),weiXinProperties.getSecret());
         WeiXinResponse response = restTemplate.getForObject(url, WeiXinResponse.class);
-        if(Objects.nonNull(response.getErrcode())){
+        if(Objects.nonNull(response.getErrcode()) && 0!=response.getErrcode()){
         	logger.error("微信获取token返回值:{}",JSON.toJSONString(response));
-            throw new WeiXinException(JSON.toJSONString(response));
+            WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(response));
+            weiXinException.setErrorCode(response.getErrcode());
+            throw weiXinException;
         }
         return response.getAccess_token();
     }

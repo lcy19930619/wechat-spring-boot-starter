@@ -1,5 +1,6 @@
 package net.jlxxw.component.weixin.schedul;
 
+import net.jlxxw.component.weixin.exception.WeiXinException;
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.mapper.TokenMapper;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class ScheduledUpdateToken {
      * 每两个小时执行一次，更新数据库token
      */
     @Scheduled(cron = "0 0 */2 * * ?")
-    public void updateToken(){
+    public void updateToken()throws WeiXinException {
         Date date = tokenMapper.lockSelectMaxDate();
         if(date == null){
             // 第一次操作的时候，数据库没数据

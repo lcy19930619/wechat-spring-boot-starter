@@ -289,7 +289,7 @@ public class EventBus {
                         abstractWeiXinMessage = objectMapper.readValue(objectNode.toString(), SubscribeScanEventMessage.class);
                         return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.SCAN);
 
-                    // 地理为之信息上报事件
+                    // 地理位置信息上报事件
                     case "LOCATION":
                         abstractWeiXinMessage = objectMapper.readValue(objectNode.toString(), LocationEventMessage.class);
                         return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.LOCATION);

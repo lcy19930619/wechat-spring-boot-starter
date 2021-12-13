@@ -2,6 +2,7 @@ package net.jlxxw.component.weixin.function.api;
 
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.component.weixin.constant.UrlConstant;
+import net.jlxxw.component.weixin.exception.WeiXinException;
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.response.WeiXinResponse;
@@ -55,7 +56,7 @@ public class OpenApiManager {
      *                 40013	invalid appid	appid写错了；或者填入的appid与access_token代表的账号的appid不一致
      *
      */
-    public void clean(Consumer<WeiXinResponse> callback) {
+    public void clean(Consumer<WeiXinResponse> callback)  {
         if (Objects.isNull(callback)) {
             throw new NullPointerException();
         }
