@@ -26,9 +26,9 @@ import java.util.function.Consumer;
  */
 @DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
-public class MenuManager {
+public class AsyncMenuManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(MenuManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncMenuManager.class);
     @Autowired
     private WeiXinTokenManager weiXinTokenManager;
     @Autowired

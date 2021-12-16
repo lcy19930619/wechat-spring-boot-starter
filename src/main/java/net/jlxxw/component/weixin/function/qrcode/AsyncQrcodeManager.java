@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 @Lazy
 @DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
-public class QrcodeManager {
+public class AsyncQrcodeManager {
     @Autowired
     private WeiXinTokenManager weiXinTokenManager;
     @Autowired

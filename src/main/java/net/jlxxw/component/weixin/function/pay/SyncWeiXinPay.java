@@ -31,7 +31,7 @@ import static net.jlxxw.component.weixin.constant.UrlConstant.JSAPI_V3_PRE_PAY_U
 @Lazy
 @DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
-public class WeiXinPay {
+public class SyncWeiXinPay {
     private static final int SUCCESS_CODE = 200;
     private static final String STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -87,7 +87,7 @@ public class WeiXinPay {
      * 调起支付
      *
      * @param prePayId 预支付交易会话标识
-     * @see WeiXinPay#createPrePay(net.jlxxw.component.weixin.dto.pay.jsapi.v3.OrderInfoDTO, java.lang.String)
+     * @see SyncWeiXinPay#createPrePay(net.jlxxw.component.weixin.dto.pay.jsapi.v3.OrderInfoDTO, java.lang.String)
      * @exception Exception 签名异常
      * @return 返回给前端，用于调起支付的对象
      */

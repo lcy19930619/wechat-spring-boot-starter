@@ -18,10 +18,10 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PushCustomerTest extends BaseTest {
+public class SyncPushCustomerTest extends BaseTest {
 
     @Autowired
-    public PushCustomer pushCustomer;
+    public SyncPushCustomer syncPushCustomer;
     @Test
     public void pushCustomerTest(){
         ArticlesDTO articlesDTO = new ArticlesDTO();
@@ -30,7 +30,7 @@ public class PushCustomerTest extends BaseTest {
         articlesDTO.setUrl("测试跳转链接");
         articlesDTO.setDescription("测试描述信息");
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
-        WeiXinResponse weiXinResponse = pushCustomer.pushCustomer(dto, token);
+        WeiXinResponse weiXinResponse = syncPushCustomer.pushCustomer(dto, token);
 
         Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse),0L, (int) weiXinResponse.getErrcode());
 
@@ -48,7 +48,7 @@ public class PushCustomerTest extends BaseTest {
         List<CustomerMessageDTO> dtoList =new ArrayList<>();
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
         dtoList.add(dto);
-        List<WeiXinResponse> weiXinResponse = pushCustomer.pushCustomer(dtoList, token);
+        List<WeiXinResponse> weiXinResponse = syncPushCustomer.pushCustomer(dtoList, token);
         Assert.assertFalse("测试结果不应为空", CollectionUtils.isEmpty(weiXinResponse));
     }
 }

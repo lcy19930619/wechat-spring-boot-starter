@@ -2,7 +2,6 @@ package net.jlxxw.component.weixin.function.api;
 
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.component.weixin.constant.UrlConstant;
-import net.jlxxw.component.weixin.exception.WeiXinException;
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.properties.WeiXinProperties;
 import net.jlxxw.component.weixin.response.WeiXinResponse;
@@ -29,7 +28,7 @@ import java.util.function.Consumer;
 @Lazy
 @DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
-public class OpenApiManager {
+public class AsyncOpenApiManager {
     @Autowired
     private WeiXinProperties weiXinProperties;
     @Autowired

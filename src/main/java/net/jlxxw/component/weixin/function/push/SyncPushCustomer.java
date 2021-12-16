@@ -3,7 +3,7 @@ package net.jlxxw.component.weixin.function.push;
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.component.weixin.component.BatchExecutor;
 import net.jlxxw.component.weixin.constant.UrlConstant;
-import net.jlxxw.component.weixin.dto.template.WxTemplate;
+import net.jlxxw.component.weixin.dto.customer.CustomerMessageDTO;
 import net.jlxxw.component.weixin.response.WeiXinResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Supplier;
 
 /**
  * @author chunyang.leng
@@ -29,66 +28,52 @@ import java.util.function.Supplier;
 @Lazy
 @DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
-public class PushTemplate {
+public class SyncPushCustomer {
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
     private BatchExecutor batchExecutor;
 
     /**
-     * token 失效错误码
-     */
-    private static final int TOKEN_ERROR = 40001;
-
-    /**
-     * 多线程共享token
-     */
-    private volatile String volatileToken;
-    /**
-     * 推送一个模版信息
+     * 推送一个客服信息
      *
-     * @param template 模版信息
+     * @param messageDTO 客服信息
      * @param token    微信token
      * @return 微信返回结果, 如果微信返回为null, 则该方法返回null
      */
-    public WeiXinResponse pushTemplate(WxTemplate template, String token) {
-        Objects.requireNonNull(template);
+    public WeiXinResponse pushCustomer(CustomerMessageDTO messageDTO, String token) {
+        Objects.requireNonNull(messageDTO);
         if (StringUtils.isBlank(token)) {
             throw new IllegalArgumentException("token error");
         }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String json = JSON.toJSONString(template);
+        String json = JSON.toJSONString(messageDTO);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity(UrlConstant.PUSH_TEMPLATE_PREFIX + token, request, WeiXinResponse.class);
+        ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity(UrlConstant.PUSH_CUSTOMER_PREFIX + token, request, WeiXinResponse.class);
         WeiXinResponse body = responseEntity.getBody();
         if (Objects.isNull(body)) {
             return null;
         }
-        body.setOpenId(template.getTouser());
+        body.setOpenId(messageDTO.getTouser());
         return body;
     }
 
     /**
      * 批量推送
-     * @param templateList 多个模版信息
+     * @param messageList 多个客服信息
      * @param token 发送的token
-     * @param getTokenFunction 获取token的方法
      * @return
      */
-    public List<WeiXinResponse> pushTemplate(List<WxTemplate> templateList, String token, Supplier<String> getTokenFunction) {
-        if (CollectionUtils.isEmpty(templateList)) {
+    public List<WeiXinResponse> pushCustomer(List<CustomerMessageDTO> messageList, String token) {
+        if (CollectionUtils.isEmpty(messageList)) {
             return new ArrayList<>();
         }
         List<WeiXinResponse> responseList = new ArrayList<>();
-        volatileToken = token;
 
-        batchExecutor.batchExecute(true, templateList, (list) -> {
-            for (WxTemplate wxTemplate : list) {
-                WeiXinResponse weiXinResponse = pushTemplate(wxTemplate, volatileToken);
-                if(weiXinResponse != null && weiXinResponse.getErrcode() == TOKEN_ERROR){
-                    volatileToken =  getTokenFunction.get();
-                }
+        batchExecutor.batchExecute(true, messageList, (list) -> {
+            for (CustomerMessageDTO message : list) {
+                WeiXinResponse weiXinResponse = pushCustomer(message, token);
                 responseList.add(weiXinResponse);
             }
         });

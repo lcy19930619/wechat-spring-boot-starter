@@ -14,10 +14,10 @@ import org.springframework.util.StringUtils;
 /**
  * @author zhanxiumei
  */
-public class WeiXinPayTest extends BaseTest {
+public class SyncWeiXinPayTest extends BaseTest {
 
     @Autowired
-    private WeiXinPay weiXinPay;
+    private SyncWeiXinPay syncWeiXinPay;
 
     private static final String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36";
 
@@ -47,7 +47,7 @@ public class WeiXinPayTest extends BaseTest {
         orderInfoDTO.setSubAppId("");
         orderInfoDTO.setTimeExpire("");
         orderInfoDTO.setSubMchId("");
-        weiXinPay.createPrePay(orderInfoDTO, userAgent);
+        syncWeiXinPay.createPrePay(orderInfoDTO, userAgent);
 
         Assert.assertFalse(ObjectUtils.isEmpty(orderInfoDTO));
 
@@ -57,7 +57,7 @@ public class WeiXinPayTest extends BaseTest {
     @Test
     public void getExecutePayVOTest() throws Exception {
         String prePayId="";
-        weiXinPay.getExecutePayVO(prePayId);
+        syncWeiXinPay.getExecutePayVO(prePayId);
         Assert.assertFalse(StringUtils.isEmpty(prePayId));
     }
 }

@@ -42,8 +42,8 @@ import static net.jlxxw.component.weixin.constant.UrlConstant.*;
 @Lazy
 @DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
 @Component
-public class PermanentMaterialManager {
-    private static final Logger logger = LoggerFactory.getLogger(PermanentMaterialManager.class);
+public class AsyncPermanentMaterialManager {
+    private static final Logger logger = LoggerFactory.getLogger(AsyncPermanentMaterialManager.class);
     @Autowired
     private WebClient webClient;
     @Autowired

@@ -8,13 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author chunyang.leng
  * @date 2021-11-23 1:27 下午
  */
-public class QrcodeManagerTest extends BaseTest {
+public class AsyncQrcodeManagerTest extends BaseTest {
     @Autowired
-    public QrcodeManager qrcodeManager;
+    public AsyncQrcodeManager asyncQrcodeManager;
 
     @Test
     public void createTempStringQrcodeTest(){
-        qrcodeManager.createStringQrcode("a",(o)->{
+        asyncQrcodeManager.createStringQrcode("a",(o)->{
             String ticket = o.getTicket();
         });
     }

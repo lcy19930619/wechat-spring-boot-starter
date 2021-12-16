@@ -14,15 +14,15 @@ import java.util.List;
  * @author chunyang.leng
  * @date 2021-12-13 3:15 下午
  */
-public class MenuManagerTest extends BaseTest {
+public class AsyncMenuManagerTest extends BaseTest {
     @Autowired
-    private MenuManager menuManager;
+    private AsyncMenuManager asyncMenuManager;
 
     public void createMenuTest(){
         JSONObject jsonObject = JSON.parseObject(getMockMenuData());
         JSONArray jsonArray = jsonObject.getJSONArray("button");
         List<MenuDTO> menuList = jsonArray.toJavaList(MenuDTO.class);
-        menuManager.createMenu(menuList,(response)->{
+        asyncMenuManager.createMenu(menuList,(response)->{
             Integer errcode = response.getErrcode();
             Assert.assertEquals(0, (int) errcode);
         });

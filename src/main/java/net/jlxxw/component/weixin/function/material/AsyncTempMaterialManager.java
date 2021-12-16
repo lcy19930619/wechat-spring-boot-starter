@@ -39,8 +39,8 @@ import static net.jlxxw.component.weixin.constant.UrlConstant.UPLOAD_TEMP_MATERI
  * @date 2021-03-05 5:53 下午
  */
 @Component
-public class TempMaterialManager {
-    private static final Logger logger = LoggerFactory.getLogger(TempMaterialManager.class);
+public class AsyncTempMaterialManager {
+    private static final Logger logger = LoggerFactory.getLogger(AsyncTempMaterialManager.class);
     @Autowired
     private WebClient webClient;
     @Autowired
