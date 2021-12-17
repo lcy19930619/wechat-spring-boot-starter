@@ -95,10 +95,9 @@ public class AsyncQrcodeManager {
     /**
      * 创建一个永久二维码,参数为自定义id
      * @param id 自定义的id
-     * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createIdQrcode(Long id,  Consumer<QrCodeDTO> consumer){
+    public Mono<QrCodeDTO>  createIdQrcode(Long id){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -109,8 +108,7 @@ public class AsyncQrcodeManager {
         actionInfo.put("scene",scene);
         object.put("action_info",actionInfo);
 
-        Mono<QrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeDTO.class);
-        mono.subscribe(consumer);
+        return webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeDTO.class);
     }
 
 
