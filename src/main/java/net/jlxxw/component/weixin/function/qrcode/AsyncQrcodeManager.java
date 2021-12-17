@@ -3,9 +3,9 @@ package net.jlxxw.component.weixin.function.qrcode;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.component.weixin.constant.UrlConstant;
-import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.dto.qrcode.QrCodeDTO;
 import net.jlxxw.component.weixin.dto.qrcode.TempQrCodeDTO;
+import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.util.WebClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
-import java.util.function.Consumer;
 
 /**
  * 二维码管理
