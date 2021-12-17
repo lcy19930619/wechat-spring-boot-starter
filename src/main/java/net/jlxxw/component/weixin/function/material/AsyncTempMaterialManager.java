@@ -6,6 +6,7 @@ import net.jlxxw.component.weixin.enums.MaterialEnum;
 import net.jlxxw.component.weixin.exception.WeiXinException;
 import net.jlxxw.component.weixin.function.token.WeiXinTokenManager;
 import net.jlxxw.component.weixin.util.LoggerUtils;
+import net.jlxxw.component.weixin.util.WebClientUtils;
 import net.jlxxw.component.weixin.vo.TempMaterialVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +17,13 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 import static net.jlxxw.component.weixin.constant.UrlConstant.DOWN_TEMP_MATERIAL;
@@ -45,17 +43,14 @@ public class AsyncTempMaterialManager {
     @Autowired
     private WeiXinTokenManager weiXinTokenManager;
 
-    @PostConstruct
-    public void postConstruct() {
-        Objects.requireNonNull(webClient);
-        Objects.requireNonNull(weiXinTokenManager);
-    }
+    @Autowired
+    private WebClientUtils webClientUtils;
 
     /**
      * 上传临时素材
      *
-     * @param materialEnum   素材类型
-     * @param file           文件内容
+     * @param materialEnum 素材类型
+     * @param file         文件内容
      */
     public Mono<TempMaterialVO> upload(MaterialEnum materialEnum, File file) {
 
@@ -70,18 +65,7 @@ public class AsyncTempMaterialManager {
         String url = MessageFormat.format(UPLOAD_TEMP_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增临时素材url:{}", url);
 
-        // 发送请求
-        Mono<JSONObject> mono = webClient
-                // POST 请求
-                .post()
-                // 请求路径
-                .uri(url)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromMultipartData(param))
-                // 获取响应体
-                .retrieve()
-                //响应数据类型转换
-                .bodyToMono(JSONObject.class);
+        Mono<JSONObject> mono = webClientUtils.sendPostFormUrlEncoded(url, param, JSONObject.class);
 
         return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
@@ -121,17 +105,7 @@ public class AsyncTempMaterialManager {
         LoggerUtils.debug(logger, "新增临时素材url:{}", url);
 
         // 发送请求
-        Mono<JSONObject> mono = webClient
-                // POST 请求
-                .post()
-                // 请求路径
-                .uri(url)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters.fromMultipartData(param))
-                // 获取响应体
-                .retrieve()
-                //响应数据类型转换
-                .bodyToMono(JSONObject.class);
+        Mono<JSONObject> mono = webClientUtils.sendPostFormUrlEncoded(url, param, JSONObject.class);
 
         return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
@@ -159,18 +133,7 @@ public class AsyncTempMaterialManager {
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时素材,不含视频url:{}", url);
-
-        return webClient
-                // GET 请求
-                .get()
-                // 请求路径
-                .uri(url)
-                .accept(mediaType)
-                // 获取响应体
-                .retrieve()
-                //响应数据类型转换
-                .bodyToMono(Resource.class);
-
+        return webClientUtils.sendGet(url, Resource.class, mediaType);
     }
 
 
@@ -184,16 +147,7 @@ public class AsyncTempMaterialManager {
         String url = MessageFormat.format(DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时视频素材url:{}", url);
 
-        Mono<JSONObject> mono = webClient
-                // GET 请求
-                .get()
-                // 请求路径
-                .uri(url)
-                .accept(MediaType.APPLICATION_JSON)
-                // 获取响应体
-                .retrieve()
-                //响应数据类型转换
-                .bodyToMono(JSONObject.class);
+        Mono<JSONObject> mono =  webClientUtils.sendGet(url,JSONObject.class,MediaType.APPLICATION_JSON);
 
         return mono.map(obj -> {
             String videoUrl = obj.getString("video_url");
