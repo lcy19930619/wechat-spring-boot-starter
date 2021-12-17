@@ -18,7 +18,6 @@ import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @author chunyang.leng
@@ -38,19 +37,17 @@ public class AsyncMenuManager {
      * 创建菜单
      * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html
      * @param list 菜单列表
-     * @param callBack 回调函数
      */
-    public void createMenu(List<MenuDTO> list, Consumer<WeiXinResponse> callBack) {
+    public Mono<WeiXinResponse> createMenu(List<MenuDTO> list) {
         if(CollectionUtils.isEmpty(list)){
             LoggerUtils.debug(logger,"创建公众号菜单，输入列表信息为空");
-            return;
+            return Mono.error(new NullPointerException("创建公众号菜单，输入列表信息为空"));
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("button",list);
         String json = JSON.toJSONString(jsonObject);
         LoggerUtils.debug(logger,"创建公众号菜单，请求参数:{}",json);
         String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL,weiXinTokenManager.getTokenFromLocal());
-        Mono<WeiXinResponse> mono = webClientUtils.sendPostJSON(url, json, WeiXinResponse.class);
-        mono.subscribe(callBack);
+        return webClientUtils.sendPostJSON(url, json, WeiXinResponse.class);
     }
 }

@@ -22,7 +22,6 @@ import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -57,9 +56,8 @@ public class AsyncTempMaterialManager {
      *
      * @param materialEnum   素材类型
      * @param file           文件内容
-     * @param callbackMethod 回调方法
      */
-    public void upload(MaterialEnum materialEnum, File file, Consumer<TempMaterialVO> callbackMethod) {
+    public Mono<TempMaterialVO> upload(MaterialEnum materialEnum, File file) {
 
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(file);
@@ -85,7 +83,7 @@ public class AsyncTempMaterialManager {
                 //响应数据类型转换
                 .bodyToMono(JSONObject.class);
 
-        mono.subscribe(obj -> {
+        return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
                 // 存在错误码，说明上传出错
                 WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
@@ -98,9 +96,7 @@ public class AsyncTempMaterialManager {
             materialVO.setMediaId(obj.getString("media_id"));
             materialVO.setCreatedAt(obj.getLong("created_at"));
             materialVO.setType(obj.getString("type"));
-
-            // 调用回调方法
-            callbackMethod.accept(materialVO);
+            return materialVO;
         });
     }
 
@@ -112,7 +108,7 @@ public class AsyncTempMaterialManager {
      * @param uri            uri链接
      * @param callbackMethod 回调方法
      */
-    public void upload(MaterialEnum materialEnum, URI uri, Consumer<TempMaterialVO> callbackMethod) {
+    public Mono<TempMaterialVO> upload(MaterialEnum materialEnum, URI uri, Consumer<TempMaterialVO> callbackMethod) {
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(Paths.get(uri));
 
@@ -137,7 +133,7 @@ public class AsyncTempMaterialManager {
                 //响应数据类型转换
                 .bodyToMono(JSONObject.class);
 
-        mono.subscribe(obj -> {
+        return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
                 // 存在错误码，说明上传出错上传出错
                 WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
@@ -150,9 +146,7 @@ public class AsyncTempMaterialManager {
             materialVO.setMediaId(obj.getString("media_id"));
             materialVO.setCreatedAt(obj.getLong("created_at"));
             materialVO.setType(obj.getString("type"));
-
-            // 调用回调方法
-            callbackMethod.accept(materialVO);
+            return materialVO;
         });
     }
 
@@ -161,12 +155,12 @@ public class AsyncTempMaterialManager {
      *
      * @param mediaId 媒体文件ID
      */
-    public void download(String mediaId, MediaType mediaType, Consumer<InputStream> callback) {
+    public Mono<Resource> download(String mediaId, MediaType mediaType) {
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时素材,不含视频url:{}", url);
 
-        Mono<Resource> mono = webClient
+        return webClient
                 // GET 请求
                 .get()
                 // 请求路径
@@ -177,14 +171,6 @@ public class AsyncTempMaterialManager {
                 //响应数据类型转换
                 .bodyToMono(Resource.class);
 
-        mono.subscribe(resource -> {
-            try (InputStream inputStream = resource.getInputStream();) {
-                callback.accept(inputStream);
-            } catch (Exception e) {
-                LoggerUtils.error(logger, "下载临时素材出现异常,mediaId:" + mediaId + ",mediaType:" + mediaType, e);
-                throw new WeiXinException(e.getMessage());
-            }
-        });
     }
 
 
@@ -193,7 +179,7 @@ public class AsyncTempMaterialManager {
      *
      * @param mediaId 媒体文件ID
      */
-    public void downloadVideo(String mediaId, Consumer<String> callback) {
+    public Mono<String> downloadVideo(String mediaId) {
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时视频素材url:{}", url);
@@ -209,10 +195,10 @@ public class AsyncTempMaterialManager {
                 //响应数据类型转换
                 .bodyToMono(JSONObject.class);
 
-        mono.subscribe(obj -> {
+        return mono.map(obj -> {
             String videoUrl = obj.getString("video_url");
             LoggerUtils.debug(logger, "下载视频临时素材微信出现异常，mediaId:{},返回:{}", mediaId, JSON.toJSONString(obj));
-            callback.accept(videoUrl);
+            return videoUrl;
         });
     }
 }

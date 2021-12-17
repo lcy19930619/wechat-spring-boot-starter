@@ -33,10 +33,9 @@ public class AsyncQrcodeManager {
      * 创建一个临时二维码,参数为自定义的字符串
      * @param eventKey 自定义的event key
      * @param expireSecond 过期时间（秒）
-     * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createTempStringQrcode(String eventKey, Long expireSecond, Consumer<TempQrCodeDTO> consumer){
+    public Mono<TempQrCodeDTO> createTempStringQrcode(String eventKey, Long expireSecond){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -48,20 +47,16 @@ public class AsyncQrcodeManager {
         JSONObject  actionInfo = new JSONObject();
         actionInfo.put("scene",scene);
         object.put("action_info",actionInfo);
-
-
-        Mono<TempQrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeDTO.class);
-        mono.subscribe(consumer);
+        return webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeDTO.class);
     }
 
     /**
      * 创建一个临时二维码,参数为自定义id
      * @param id 自定义的id
      * @param expireSecond 过期时间（秒）
-     * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createTempIdQrcode(Long id, Long expireSecond, Consumer<TempQrCodeDTO> consumer){
+    public Mono<TempQrCodeDTO> createTempIdQrcode(Long id, Long expireSecond){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -73,18 +68,16 @@ public class AsyncQrcodeManager {
         actionInfo.put("scene",scene);
         object.put("action_info",actionInfo);
 
-        Mono<TempQrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeDTO.class);
-        mono.subscribe(consumer);
+        return webClientUtils.sendPostJSON(url, JSON.toJSONString(object), TempQrCodeDTO.class);
     }
 
 
     /**
      * 创建一个永久二维码,参数为自定义字符串
      * @param eventKey 自定义的字符串
-     * @param consumer 二维码生成之后的处理者
      *
      */
-    public void createStringQrcode(String eventKey, Consumer<QrCodeDTO> consumer){
+    public Mono<QrCodeDTO> createStringQrcode(String eventKey){
         String token = weiXinTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL,token);
         JSONObject object = new JSONObject();
@@ -95,8 +88,7 @@ public class AsyncQrcodeManager {
         actionInfo.put("scene",scene);
         object.put("action_info",actionInfo);
 
-        Mono<QrCodeDTO> mono = webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeDTO.class);
-        mono.subscribe(consumer);
+        return webClientUtils.sendPostJSON(url, JSON.toJSONString(object), QrCodeDTO.class);
     }
 
 

@@ -45,7 +45,7 @@ public class AsyncOpenApiManager {
      * 3、每个帐号每月共10次清零操作机会，清零生效一次即用掉一次机会；第三方帮助公众号/小程序调用时，实际上是在消耗公众号/小程序自身的quota<br/>
      * 4、由于指标计算方法或统计时间差异，实时调用量数据可能会出现误差，一般在1%以内<br/>
      *
-     * @param callback <br/>
+     * @return <br/>
      *                 返回码	errmsg	说明
      *                 <br/>
      *                 0	    ok	    查询成功
@@ -55,20 +55,14 @@ public class AsyncOpenApiManager {
      *                 40013	invalid appid	appid写错了；或者填入的appid与access_token代表的账号的appid不一致
      *
      */
-    public void clean(Consumer<WeiXinResponse> callback)  {
-        if (Objects.isNull(callback)) {
-            throw new NullPointerException();
-        }
+    public Mono<WeiXinResponse> clean()  {
         String appId = weiXinProperties.getAppId();
         String token = weiXinTokenManager.getTokenFromLocal();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);
-
         String url = MessageFormat.format(UrlConstant.OPEN_API_CLEAN, token);
-
-        Mono<WeiXinResponse> weiXinResponseMono = webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), WeiXinResponse.class);
-        weiXinResponseMono.subscribe(callback);
+        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), WeiXinResponse.class);
     }
 
     /**
@@ -87,8 +81,8 @@ public class AsyncOpenApiManager {
      * </pre>
      * @param cgiPath api的请求地址，例如"/cgi-bin/message/custom/send";不要前缀“https://api.weixin.qq.com” ，也不要漏了"/",否则都会76003的报错
      */
-    public void selectQuota(String cgiPath, Consumer<ApiResult> callback) {
-        if (Objects.isNull(callback) || StringUtils.isBlank(cgiPath)) {
+    public Mono<ApiResult> selectQuota(String cgiPath) {
+        if (StringUtils.isBlank(cgiPath)) {
             throw new NullPointerException();
         }
         String appId = weiXinProperties.getAppId();
@@ -99,8 +93,7 @@ public class AsyncOpenApiManager {
 
         String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_QUOTA, token);
 
-        Mono<ApiResult> weiXinResponseMono = webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiResult.class);
-        weiXinResponseMono.subscribe(callback);
+        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiResult.class);
     }
 
     /**
@@ -116,10 +109,9 @@ public class AsyncOpenApiManager {
      * 3、rid的有效期只有7天，即只可查询最近7天的rid，查询超过7天的rid会出现报错，错误码为76001
      * </pre>
      * @param rid
-     * @param callback
      */
-    public void selectRid(String rid,Consumer<ApiRequestRecord> callback){
-        if (Objects.isNull(callback) || StringUtils.isBlank(rid)) {
+    public Mono<ApiRequestRecord> selectRid(String rid){
+        if (StringUtils.isBlank(rid)) {
             throw new NullPointerException();
         }
         String appId = weiXinProperties.getAppId();
@@ -130,7 +122,6 @@ public class AsyncOpenApiManager {
 
         String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_QUOTA, token);
 
-        Mono<ApiRequestRecord> weiXinResponseMono = webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiRequestRecord.class);
-        weiXinResponseMono.subscribe(callback);
+        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiRequestRecord.class);
     }
 }

@@ -60,9 +60,8 @@ public class AsyncPermanentMaterialManager {
      *
      * @param materialEnum   素材类型
      * @param file           文件内容
-     * @param callbackMethod 回调方法
      */
-    public void upload(MaterialEnum materialEnum, File file, Consumer<PermanentMaterialVO> callbackMethod) {
+    public Mono<PermanentMaterialVO> upload(MaterialEnum materialEnum, File file) {
 
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(file);
@@ -74,7 +73,7 @@ public class AsyncPermanentMaterialManager {
 
         String url = MessageFormat.format(UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增永久素材url:{}", url);
-        postRequest(callbackMethod, param, url);
+        return postRequest( param, url);
 
     }
 
@@ -84,9 +83,8 @@ public class AsyncPermanentMaterialManager {
      *
      * @param materialEnum   素材类型
      * @param uri            uri链接
-     * @param callbackMethod 回调方法
      */
-    public void upload(MaterialEnum materialEnum, URI uri, Consumer<PermanentMaterialVO> callbackMethod) {
+    public Mono<PermanentMaterialVO> upload(MaterialEnum materialEnum, URI uri) {
 
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(Paths.get(uri));
@@ -101,7 +99,7 @@ public class AsyncPermanentMaterialManager {
         LoggerUtils.debug(logger, "新增永久素材url:{}", url);
 
         // 发送请求
-        postRequest(callbackMethod, param, url);
+        return postRequest( param, url);
     }
 
     /**
@@ -181,11 +179,10 @@ public class AsyncPermanentMaterialManager {
 
     /**
      * 发送post请求
-     * @param callbackMethod 回调的处理方法
      * @param param 请求参数
      * @param url url地址
      */
-    private void postRequest(Consumer<PermanentMaterialVO> callbackMethod, MultiValueMap<String, Object> param, String url) {
+    private Mono<PermanentMaterialVO> postRequest(MultiValueMap<String, Object> param, String url) {
         // 发送请求
         Mono<JSONObject> mono = webClient
                 // POST 请求
@@ -199,7 +196,7 @@ public class AsyncPermanentMaterialManager {
                 //响应数据类型转换
                 .bodyToMono(JSONObject.class);
 
-        mono.subscribe(obj -> {
+       return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
                 // 存在错误码，说明上传出错
                 WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
@@ -212,8 +209,7 @@ public class AsyncPermanentMaterialManager {
             materialVO.setMediaId(obj.getString("media_id"));
             materialVO.setUrl(obj.getString("url"));
 
-            // 调用回调方法
-            callbackMethod.accept(materialVO);
+            return materialVO;
         });
     }
 

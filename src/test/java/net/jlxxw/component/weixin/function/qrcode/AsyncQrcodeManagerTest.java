@@ -1,8 +1,10 @@
 package net.jlxxw.component.weixin.function.qrcode;
 
 import net.jlxxw.component.weixin.base.BaseTest;
+import net.jlxxw.component.weixin.dto.qrcode.QrCodeDTO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Mono;
 
 /**
  * @author chunyang.leng
@@ -14,7 +16,8 @@ public class AsyncQrcodeManagerTest extends BaseTest {
 
     @Test
     public void createTempStringQrcodeTest(){
-        asyncQrcodeManager.createStringQrcode("a",(o)->{
+        Mono<QrCodeDTO> mono = asyncQrcodeManager.createStringQrcode("a");
+        mono.subscribe((o)->{
             String ticket = o.getTicket();
         });
     }
