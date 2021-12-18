@@ -38,9 +38,9 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/1/18 9:44 下午
  */
 @Configuration
-@ComponentScan("net.jlxxw.component.weixin")
+@ComponentScan("net.jlxxw.wechat")
 @EnableScheduling
-@MapperScan("net.jlxxw.component.weixin.mapper")
+@MapperScan("net.jlxxw.wechat.mapper")
 public class WeiXinComponentAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(WeiXinComponentAutoConfiguration.class);
 

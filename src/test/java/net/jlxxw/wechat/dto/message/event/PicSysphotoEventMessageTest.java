@@ -16,7 +16,7 @@ public class PicSysphotoEventMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/pic_sysphoto.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/event/pic_sysphoto.xml");
         File file = classPathResource.getFile();
         PicSysphotoEventMessage picSysphotoEventMessage = readXmlData(file, PicSysphotoEventMessage.class);
         Assert.assertNotNull(picSysphotoEventMessage);

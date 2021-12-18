@@ -19,7 +19,7 @@ weixin:
       max-thread-size: 200
       netty-port: 19191
       queue-size: 200
-  enable-message-enc: true
+  enable-message-enc: false
   enable-default-token-manager: true
   enable-wei-xin-call-back-server-security-check: false
   # 需要替换为真实数据
