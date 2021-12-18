@@ -199,7 +199,7 @@ weixin:
 ```
     
 7、简单的用户管理  
-     net.jlxxw.component.weixin.function.user.UserManager
+     UserManager
     
 8、微信信息加密传输
      通过配置文件开启,开启后，会对信息进行加密和解密，需要在微信后台---基本配置---服务器配置  
@@ -226,7 +226,7 @@ weixin:
  
   # 是否启用回调接口安全检查，如果启用，每3小时更新一次微信回调接口ip白名单
   enable-wei-xin-call-back-server-security-check: true
-  # 是否启用默认的token管理策略，如果使用自定义策略，需要实现 net.jlxxw.component.weixin.function.token.WeiXinTokenManager 接口
+  # 是否启用默认的token管理策略，如果使用自定义策略，需要实现 WeiXinTokenManager 接口
   enable-default-token-manager: true
   netty:
     server:
@@ -254,13 +254,13 @@ weixin:
 小视频信息 WeiXinMessageTypeEnum.SHORT_VIDEO  
 地理位置信息 WeiXinMessageTypeEnum.LOCATION  
 链接信息 WeiXinMessageTypeEnum.LINK  
-参考枚举：```net.jlxxw.component.weixin.enums.WeiXinMessageTypeEnum```
+参考枚举：```WeiXinMessageTypeEnum```
 
 数据传输入参，即  
-```net.jlxxw.component.weixin.component.listener.AbstractWeiXinMessageListener.handler```方法参数  
+```AbstractWeiXinMessageListener.handler```方法参数  
 可以参考```net.jlxxw.component.weixin.dto.message.*Message``` 进行数据类型强制转换
 
-返回信息类型可使用```net.jlxxw.component.weixin.response.WeiXinMessageResponse``` 进行创建
+返回信息类型可使用```WeiXinMessageResponse``` 进行创建
 例如:
 ```
     // 返回图文信息，具体内容补充方法参数即可
@@ -279,7 +279,7 @@ weixin:
 #### 使用方法
 1、新建class
 
-2、继承 net.jlxxw.component.weixin.component.listener.AbstractWeiXinMessageListener
+2、继承 AbstractWeiXinMessageListener
 
 3、添加 @Component注解  
 例如，接收用户传输对文字内容
@@ -327,7 +327,7 @@ public class TextListener extends AbrstractWeiXinMessageListener {
 ### 注册微信回调事件处理器（同消息处理器）
 1、新建class
 
-2、继承 net.jlxxw.component.weixin.component.listener.AbstractWeiXinEventListener
+2、继承 AbstractWeiXinEventListener
 
 3、添加 @Component注解
 

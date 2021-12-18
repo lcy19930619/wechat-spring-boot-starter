@@ -1,7 +1,7 @@
 spring:
   # 连接池相关配置
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/cy?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3306/temp?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
