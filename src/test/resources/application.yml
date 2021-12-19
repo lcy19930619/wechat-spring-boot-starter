@@ -16,7 +16,7 @@ spring:
     active: local
   # 连接池相关配置
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       #初始化大小
@@ -37,8 +37,8 @@ spring:
       testOnReturn: false
       poolPreparedStatements: true
       # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，
-      #'wall'用于防火墙，SpringBoot中没有log4j，我改成了logback
-      filters: stat,wall,logback
+      #'wall'用于防火墙
+      filters: stat,wall
       #最大PSCache连接
       maxPoolPreparedStatementPerConnectionSize: 20
       useGlobalDataSourceStat: true

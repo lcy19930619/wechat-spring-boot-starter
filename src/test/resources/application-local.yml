@@ -4,7 +4,7 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/temp?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
     username: root
     password: 123456
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
 weixin:
   # 需要替换为真实数据
