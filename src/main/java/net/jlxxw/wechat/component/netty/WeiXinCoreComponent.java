@@ -57,23 +57,23 @@ public class WeiXinCoreComponent {
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
                                 // 请求解码器
                                 socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
-                                LoggerUtils.info(logger,"初始化 netty 请求解码器 成功");
+                                LoggerUtils.debug(logger,"初始化 netty 请求解码器 成功");
 
                                 // 将HTTP消息的多个部分合成一条完整的HTTP消息
                                 socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(65535));
-                                LoggerUtils.info(logger,"初始化 netty http聚合器 成功");
+                                LoggerUtils.debug(logger,"初始化 netty http聚合器 成功");
 
                                 // 响应转码器
                                 socketChannel.pipeline().addLast("http-encoder", new HttpResponseEncoder());
-                                LoggerUtils.info(logger,"初始化 netty 响应编码器 成功");
+                                LoggerUtils.debug(logger,"初始化 netty 响应编码器 成功");
 
                                 // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
                                 socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
-                                LoggerUtils.info(logger,"初始化 netty 分块写入处理程序 成功");
+                                LoggerUtils.debug(logger,"初始化 netty 分块写入处理程序 成功");
 
                                 // 自定义处理handler
                                 socketChannel.pipeline().addLast("http-server", weiXinChannel);
-                                LoggerUtils.info(logger,"初始化 netty 微信协议处理器 成功");
+                                LoggerUtils.debug(logger,"初始化 netty 微信协议处理器 成功");
 
                             }
                         })
