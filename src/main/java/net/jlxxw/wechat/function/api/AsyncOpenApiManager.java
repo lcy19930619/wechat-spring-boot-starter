@@ -35,8 +35,8 @@ public class AsyncOpenApiManager {
     private WebClientUtils webClientUtils;
 
     /**
-     * @link https://developers.weixin.qq.com/doc/offiaccount/openApi/get_api_quota.html
-     *
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_api_quota.html">文档地址</a>
+     * <br/>
      * 本接口用于清空公众号/小程序/第三方平台等接口的每日调用接口次数。<br/>
      * 1、如果要清空公众号的接口的quota，则需要用公众号的access_token；如果要清空小程序的接口的quota，则需要用小程序的access_token；如果要清空第三方平台的接口的quota，则需要用第三方平台的component_access_token<br/>
      * 2、如果是第三方服务商代公众号或者小程序清除quota，则需要用authorizer_access_token<br/>
@@ -64,7 +64,7 @@ public class AsyncOpenApiManager {
     }
 
     /**
-     * @link https://developers.weixin.qq.com/doc/offiaccount/openApi/get_api_quota.html
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_api_quota.html">文档地址</a>
      *
      * 查询openAPI调用quota
      * <p>
@@ -95,7 +95,7 @@ public class AsyncOpenApiManager {
     }
 
     /**
-     * @link https://developers.weixin.qq.com/doc/offiaccount/openApi/get_rid_info.html
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_rid_info.html">文档地址</a>
      * 查询rid信息
      * 本接口用于查询调用公众号/小程序/第三方平台等接口报错返回的rid详情信息，辅助开发者高效定位问题
      * <pre>

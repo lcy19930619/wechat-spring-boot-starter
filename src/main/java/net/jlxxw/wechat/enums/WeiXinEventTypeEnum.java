@@ -43,21 +43,21 @@ public enum WeiXinEventTypeEnum {
     /**
      * 事件类型：CLICK(自定义菜单)
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#0
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#0
      */
     CLICK("CLICK", "自定义菜单"),
 
     /**
      * 点击菜单跳转链接时的事件推送
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#1
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#1
      */
     VIEW("VIEW", "点击菜单跳转链接时的事件推送"),
 
     /**
      * 扫码推事件的事件推送
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#2
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#2
      */
     SCANCODE_PUSH("scancode_push", "菜单扫码推事件的事件推送"),
 
@@ -69,35 +69,35 @@ public enum WeiXinEventTypeEnum {
     /**
      * 弹出系统拍照发图的事件推送
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#4
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#4
      */
     PIC_SYSPHOTO("pic_sysphoto", "弹出系统拍照发图的事件推送"),
 
     /**
      * 弹出拍照或者相册发图的事件推送
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#5
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#5
      */
     PIC_PHOTO_OR_ALBUM("pic_photo_or_album", "弹出拍照或者相册发图的事件推送"),
 
     /**
      * 弹出微信相册发图器的事件推送
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#6
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#6
      */
     PIC_WEIXIN("pic_weixin", "弹出微信相册发图器的事件推送"),
 
     /**
      * 弹出地理位置选择器的事件推送
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#7
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#7
      */
     LOCATION_SELECT("location_select", "弹出地理位置选择器的事件推送"),
 
     /**
      * 点击菜单跳转小程序的事件推送
      *
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#8
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#8
      */
     VIEW_MINIPROGRAM("view_miniprogram", "点击菜单跳转小程序的事件推送"),
 

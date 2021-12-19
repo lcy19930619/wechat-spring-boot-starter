@@ -2,7 +2,7 @@ package net.jlxxw.wechat.dto.message;
 
 /**
  * 小视频信息
- * @link https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%B0%8F%E8%A7%86%E9%A2%91%E6%B6%88%E6%81%AF
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%B0%8F%E8%A7%86%E9%A2%91%E6%B6%88%E6%81%AF">文档地址</a>
  * @author chunyang.leng
  * @date 2021/1/20 11:26 上午
  */

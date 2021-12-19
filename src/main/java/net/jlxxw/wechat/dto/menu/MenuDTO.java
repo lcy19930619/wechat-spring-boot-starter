@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  *  微信菜单传输对象
- * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html">文档地址</a>
  * @author chunyang.leng
  * @date 2021-12-13 2:09 下午
  */

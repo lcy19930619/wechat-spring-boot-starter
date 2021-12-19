@@ -36,7 +36,7 @@ public class AsyncMenuManager {
 
     /**
      * 创建菜单
-     * @link https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html">文档地址</a>
      * @param list 菜单列表
      */
     public Mono<WeiXinResponse> createMenu(List<MenuDTO> list) {

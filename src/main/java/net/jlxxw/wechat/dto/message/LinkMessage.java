@@ -3,7 +3,7 @@ package net.jlxxw.wechat.dto.message;
 /**
  *
  * 链接消息
- * @link https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E9%93%BE%E6%8E%A5%E6%B6%88%E6%81%AF
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E9%93%BE%E6%8E%A5%E6%B6%88%E6%81%AF">文档地址</a>
  * @author chunyang.leng
  * @date 2021/1/20 11:29 上午
  */

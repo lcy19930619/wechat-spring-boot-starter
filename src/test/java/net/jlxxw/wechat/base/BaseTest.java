@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import net.jlxxw.wechat.TestApplication;
 import net.jlxxw.wechat.function.token.WeiXinTokenManager;
@@ -81,11 +82,12 @@ public class BaseTest {
      * @throws IOException
      */
     protected static <T> T readXmlData(File xmlFile, Class<T> clazz) throws IOException {
-        String xml = FileUtils.readFileToString(xmlFile, "utf-8");
+        String xml = FileUtils.readFileToString(xmlFile, StandardCharsets.UTF_8);
         byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
         // jackson会自动关闭流，不需要手动关闭
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         Reader reader = new InputStreamReader(inputStream);
-        return xmlMapper.readValue(reader, clazz);
+        ObjectNode jsonNodes = xmlMapper.readValue(reader, ObjectNode.class);
+        return objectMapper.readValue(jsonNodes.toString(),clazz);
     }
 }

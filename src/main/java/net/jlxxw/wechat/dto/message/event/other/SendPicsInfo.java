@@ -1,6 +1,4 @@
-package net.jlxxw.wechat.dto.message.event;
-
-import java.util.List;
+package net.jlxxw.wechat.dto.message.event.other;
 
 /**
  * @author chunyang.leng
@@ -16,7 +14,7 @@ public class SendPicsInfo {
     /**
      * 图片列表
      */
-    private List<PicItem> picList;
+    private PicItem picList;
 
     public Long getCount() {
         return count;
@@ -26,11 +24,11 @@ public class SendPicsInfo {
         this.count = count;
     }
 
-    public List<PicItem> getPicList() {
+    public PicItem getPicList() {
         return picList;
     }
 
-    public void setPicList(List<PicItem> picList) {
+    public void setPicList(PicItem picList) {
         this.picList = picList;
     }
 }

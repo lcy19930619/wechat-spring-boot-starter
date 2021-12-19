@@ -212,7 +212,7 @@ public class EventBus {
             Reader reader = new InputStreamReader(inputStream);
             return handlerWeiXinMessage(reader);
         } catch (Exception e) {
-            logger.error("事件分发处理出现异常,微信参数:{},异常信息:{}", new String(bytes, StandardCharsets.UTF_8), e);
+            logger.error("事件分发处理出现异常,微信参数:{},异常信息:", new String(bytes, StandardCharsets.UTF_8), e);
             return "";
         }
     }
@@ -306,7 +306,7 @@ public class EventBus {
                         abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), TemplateEventMessage.class);
                         return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.TEMPLATESENDJOBFINISH);
 
-                    // ---------------------菜单类事件 开始--------------------- todo
+                    // ---------------------菜单类事件 开始---------------------
 
                     // 点击菜单拉取消息时的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#0
                     case "CLICK":
@@ -321,25 +321,39 @@ public class EventBus {
 
                     // 扫码推事件的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#2
                     case "scancode_push":
+                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ScancodePushEventMessage.class);
+                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     // 扫码推事件且弹出“消息接收中”提示框的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#3
                     case "scancode_waitmsg":
+                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ScancodeWaitmsgEventMessage.class);
+                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     // 弹出系统拍照发图的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#4
                     case"pic_sysphoto":
+                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicSysphotoEventMessage.class);
+                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     // 弹出拍照或者相册发图的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#5
                     case "pic_photo_or_album":
+                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicPhotoOrAlbumEventMessage.class);
+                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     // 弹出微信相册发图器的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#6
                     case "pic_weixin":
+                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicWeiXinEventMessage.class);
+                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     // 弹出地理位置选择器的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#7
                     case "location_select":
+                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LocationSelectEventMessage.class);
+                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     // 点击菜单跳转小程序的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#8
                     case "view_miniprogram":
-                    // ---------------------菜单类事件 结束--------------------- todo
+                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ViewMiniProgramEventMessage.class);
+                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                    // ---------------------菜单类事件 结束---------------------
 
 
                     // 未知的事件，用户可自行扩展

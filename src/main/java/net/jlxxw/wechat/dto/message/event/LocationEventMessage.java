@@ -4,6 +4,7 @@ import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
 
 /**
  * 上报地理位置事件
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E4%B8%8A%E6%8A%A5%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E4%BA%8B%E4%BB%B6">文档地址</a>
  * @author chunyang.leng
  * @date 2021/1/22 7:24 下午
  */

@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.dto.message.event;
+package net.jlxxw.wechat.dto.message.event.other;
 
 /**
  * @author chunyang.leng todo
