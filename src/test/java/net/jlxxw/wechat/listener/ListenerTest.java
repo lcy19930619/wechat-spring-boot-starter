@@ -55,7 +55,6 @@ public class ListenerTest extends BaseTest {
                 HttpEntity<String> formEntity = new HttpEntity<>(xmlData.toString(), headers);
                 ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://127.0.0.1:" + nettyPort, formEntity, String.class);
                 Assert.assertEquals(responseEntity.getStatusCode().value(), 200);
-                logger.info("发送测试请求，测试文件名称：{},测试文件内容:{},返回值:{}", resource.getFile().getName(), xmlData, responseEntity.getBody());
             }
         }
     }

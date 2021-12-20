@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.dto.message.event;
 
 import net.jlxxw.wechat.base.BaseTest;
+import net.jlxxw.wechat.response.WeChatMessageResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -20,5 +21,13 @@ public class TemplateEventMessageTest extends BaseTest {
         File file = classPathResource.getFile();
         TemplateEventMessage message = readXmlData(file, TemplateEventMessage.class);
         Assert.assertNotNull(message);
+    }
+
+
+    @Test
+    public void sendTest() throws IOException {
+        String xmlData = readXmlData("mock/data/xml/event/TemplateEventMessage.xml");
+        WeChatMessageResponse response = nettyMessageSend(xmlData, WeChatMessageResponse.class);
+        Assert.assertNotNull("返回值不应为null",response);
     }
 }
