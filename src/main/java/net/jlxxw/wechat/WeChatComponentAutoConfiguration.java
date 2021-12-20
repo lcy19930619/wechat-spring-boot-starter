@@ -29,7 +29,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.TcpClient;
 
-import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -52,26 +51,6 @@ public class WeChatComponentAutoConfiguration {
     }
 
 
-    @Bean("pushThreadPool")
-    public Executor pushThreadPool() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        //获取到服务器的cpu内核
-        int i = Runtime.getRuntime().availableProcessors();
-        //核心池大小
-        executor.setCorePoolSize(i + 1);
-        //最大线程数
-        executor.setMaxPoolSize(i * 2);
-        //队列长度
-        executor.setQueueCapacity(60000);
-        //线程空闲时间
-        executor.setKeepAliveSeconds(1000);
-        //线程前缀名称
-        executor.setThreadNamePrefix("push-pool-");
-        //配置拒绝策略
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        return executor;
-    }
-
 
     /**
      * 批量执行线程池
@@ -79,7 +58,7 @@ public class WeChatComponentAutoConfiguration {
      * @return
      */
     @Bean("batchExecuteThreadPool")
-    public Executor batchExecuteThreadPool() {
+    public ThreadPoolTaskExecutor batchExecuteThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //获取到服务器的cpu内核
         int i = Runtime.getRuntime().availableProcessors();

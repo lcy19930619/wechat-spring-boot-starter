@@ -11,12 +11,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.text.MessageFormat;
 import java.util.Objects;
+
+import static net.jlxxw.wechat.constant.UrlConstant.GET_JS_API_TICKET_URL;
 
 /**
  * @author chunyang.leng
@@ -33,6 +36,11 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
     private RestTemplate restTemplate;
     @Autowired
     private TokenMapper tokenMapper;
+    @PostConstruct
+    public void postConstruct() {
+        tokenMapper.createTokenTable();
+        tokenMapper.createJsApiTicketTable();
+    }
 
     /**
      * 保存token
@@ -41,13 +49,14 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
      */
     @Override
     public void saveToken(String token) {
-        tokenMapper.insert(token);
+        tokenMapper.insertToken(token);
     }
 
     /**
-     * 获取token
+     * 定时从微信获取token
      *
      * @return token
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Get_access_token.html">文档地址</a>
      */
     @Override
     public String getTokenFromWeiXin() throws WeChatException {
@@ -72,8 +81,44 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
         return tokenMapper.getToken();
     }
 
-    @PostConstruct
-    public void postConstruct() {
-        tokenMapper.createTable();
+
+    /**
+     * 保存JsApiTicket
+     *
+     * @param jsApiTicket
+     */
+    @Override
+    public void saveJsApiTicket(String jsApiTicket) {
+        tokenMapper.insertJsApiTicket(jsApiTicket);
+    }
+
+    /**
+     * 定时从微信获取JsApiTicket
+     *
+     * @return JsApiTicket
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/JS-SDK.html">文档地址</a>
+     */
+    @Override
+    public String getJsApiTicketFromWeiXin() throws WeChatException {
+        String url = MessageFormat.format(GET_JS_API_TICKET_URL,getTokenFromLocal());
+        ResponseEntity<WeChatTokenResponse> response = restTemplate.getForEntity(url, WeChatTokenResponse.class);
+        WeChatTokenResponse body = response.getBody();
+        if (Objects.nonNull(body.getErrcode()) && 0 != body.getErrcode()) {
+            logger.error("微信获取token返回值:{}", JSON.toJSONString(response));
+            WeChatException weChatException = new WeChatException(JSON.toJSONString(response));
+            weChatException.setErrorCode(body.getErrcode());
+            throw weChatException;
+        }
+        return body.getTicket();
+    }
+
+    /**
+     * 获取保存在本地的token
+     *
+     * @return 保存在本地的token
+     */
+    @Override
+    public String getJsApiTicketFromLocal() {
+        return tokenMapper.getJsApiTicket();
     }
 }

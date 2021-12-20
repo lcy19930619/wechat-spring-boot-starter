@@ -101,4 +101,9 @@ public interface UrlConstant {
      * 获取全部菜单
      */
     String GET_MENU_URL = "https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token={0}";
+
+    /**
+     * 获取 js_api_ticket
+     */
+    String GET_JS_API_TICKET_URL ="https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={0}&type=jsapi";
 }

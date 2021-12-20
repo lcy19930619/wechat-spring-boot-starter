@@ -2,11 +2,11 @@ package net.jlxxw.wechat.component;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 /**
@@ -20,7 +20,7 @@ public class BatchExecutor {
 
     @Autowired
     @Qualifier("batchExecuteThreadPool")
-    private Executor batchExecuteThreadPool;
+    private ThreadPoolTaskExecutor batchExecuteThreadPool;
 
     /**
      * 批量执行，每次执行512条数据，不使用线程池

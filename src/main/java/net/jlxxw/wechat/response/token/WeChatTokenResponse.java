@@ -25,6 +25,11 @@ public class WeChatTokenResponse extends WeiXinResponse {
     @JsonProperty(value = "expires_in")
     private String expiresIn;
 
+    /**
+     * js_api_tocket
+     */
+    private String ticket;
+
 
     public String getAccessToken() {
         return accessToken;
@@ -40,5 +45,13 @@ public class WeChatTokenResponse extends WeiXinResponse {
 
     public void setExpiresIn(String expiresIn) {
         this.expiresIn = expiresIn;
+    }
+
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
     }
 }
