@@ -32,29 +32,30 @@ public class ListenerTest extends BaseTest {
     private RestTemplate restTemplate;
     @Value("${weixin.netty.server.netty-port}")
     private int nettyPort;
+
     @Test
     public void allListenerTest() throws IOException {
         PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
 
         Resource[] messageResources = pathMatchingResourcePatternResolver.getResources("mock/data/*/*Message.xml");
-        Assert.assertNotNull("测试消息资源不应该为空",messageResources);
+        Assert.assertNotNull("测试消息资源不应该为空", messageResources);
         List<Resource> resourcesList = new ArrayList<>(Arrays.asList(messageResources));
 
         Resource[] eventMessageResources = pathMatchingResourcePatternResolver.getResources("mock/data/*/*Message.xml");
-        Assert.assertNotNull("测试事件资源不应该为空",eventMessageResources);
+        Assert.assertNotNull("测试事件资源不应该为空", eventMessageResources);
         resourcesList.addAll(Arrays.asList(eventMessageResources));
 
         for (Resource resource : resourcesList) {
             try (InputStream inputStream = resource.getInputStream();) {
                 List<String> list = IOUtils.readLines(inputStream, "utf-8");
-                String xmlData = String.join("\n",list);
+                String xmlData = String.join("\n", list);
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_XML);
 
                 HttpEntity<String> formEntity = new HttpEntity<>(xmlData.toString(), headers);
-                ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://127.0.0.1:"+nettyPort, formEntity, String.class);
-                Assert.assertEquals(responseEntity.getStatusCode().value(),200);
-                logger.info("发送测试请求，测试文件名称：{},测试文件内容:{},返回值:{}",resource.getFile().getName(),xmlData,responseEntity.getBody());
+                ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://127.0.0.1:" + nettyPort, formEntity, String.class);
+                Assert.assertEquals(responseEntity.getStatusCode().value(), 200);
+                logger.info("发送测试请求，测试文件名称：{},测试文件内容:{},返回值:{}", resource.getFile().getName(), xmlData, responseEntity.getBody());
             }
         }
     }

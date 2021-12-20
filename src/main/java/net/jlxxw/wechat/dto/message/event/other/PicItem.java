@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 /**
  * 图片信息
+ *
  * @author chunyang.leng
  * @date 2021-12-18 4:17 下午
  */

@@ -2,14 +2,14 @@ package net.jlxxw.wechat.function.material;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.WeiXinException;
 import net.jlxxw.wechat.function.token.WeiXinTokenManager;
 import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.material.PermanentMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import net.jlxxw.wechat.util.WebClientUtils;
-import net.jlxxw.wechat.vo.PermanentMaterialVO;
-import net.jlxxw.wechat.constant.UrlConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class AsyncPermanentMaterialManager {
      * @param materialEnum 素材类型
      * @param file         文件内容
      */
-    public Mono<PermanentMaterialVO> upload(MaterialEnum materialEnum, File file) {
+    public Mono<PermanentMaterialResponse> upload(MaterialEnum materialEnum, File file) {
 
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(file);
@@ -71,7 +71,7 @@ public class AsyncPermanentMaterialManager {
      * @param materialEnum 素材类型
      * @param uri          uri链接
      */
-    public Mono<PermanentMaterialVO> upload(MaterialEnum materialEnum, URI uri) {
+    public Mono<PermanentMaterialResponse> upload(MaterialEnum materialEnum, URI uri) {
 
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(Paths.get(uri));
@@ -138,7 +138,7 @@ public class AsyncPermanentMaterialManager {
      * @param param 请求参数
      * @param url   url地址
      */
-    private Mono<PermanentMaterialVO> postRequest(MultiValueMap<String, Object> param, String url) {
+    private Mono<PermanentMaterialResponse> postRequest(MultiValueMap<String, Object> param, String url) {
 
         Mono<JSONObject> mono = webClientUtils.sendPostFormUrlEncoded(url, param, JSONObject.class);
 
@@ -151,7 +151,7 @@ public class AsyncPermanentMaterialManager {
             }
             LoggerUtils.debug(logger, "新增永久素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象
-            PermanentMaterialVO materialVO = new PermanentMaterialVO();
+            PermanentMaterialResponse materialVO = new PermanentMaterialResponse();
             materialVO.setMediaId(obj.getString("media_id"));
             materialVO.setUrl(obj.getString("url"));
 

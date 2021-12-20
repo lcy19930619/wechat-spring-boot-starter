@@ -2,6 +2,7 @@ package net.jlxxw.wechat.dto.message;
 
 /**
  * 微信信息
+ *
  * @author chunyang.leng
  * @date 2021/1/20 11:15 上午
  */
@@ -30,7 +31,7 @@ public abstract class AbstractWeiXinMessage {
      * 小视频为shortvideo
      * 地理位置为location
      * 链接为link
-	 * 事件为event
+     * 事件为event
      */
     private String msgType;
 
@@ -39,56 +40,56 @@ public abstract class AbstractWeiXinMessage {
      */
     private Long msgId;
 
-	/**
-	 * 事件
-	 */
-	private String event;
+    /**
+     * 事件
+     */
+    private String event;
 
-	public String getToUserName() {
-		return toUserName;
-	}
+    public String getToUserName() {
+        return toUserName;
+    }
 
-	public void setToUserName(String toUserName) {
-		this.toUserName = toUserName;
-	}
+    public void setToUserName(String toUserName) {
+        this.toUserName = toUserName;
+    }
 
-	public String getFromUserName() {
-		return fromUserName;
-	}
+    public String getFromUserName() {
+        return fromUserName;
+    }
 
-	public void setFromUserName(String fromUserName) {
-		this.fromUserName = fromUserName;
-	}
+    public void setFromUserName(String fromUserName) {
+        this.fromUserName = fromUserName;
+    }
 
-	public Long getCreateTime() {
-		return createTime;
-	}
+    public Long getCreateTime() {
+        return createTime;
+    }
 
-	public void setCreateTime(Long createTime) {
-		this.createTime = createTime;
-	}
+    public void setCreateTime(Long createTime) {
+        this.createTime = createTime;
+    }
 
-	public String getMsgType() {
-		return msgType;
-	}
+    public String getMsgType() {
+        return msgType;
+    }
 
-	public void setMsgType(String msgType) {
-		this.msgType = msgType;
-	}
+    public void setMsgType(String msgType) {
+        this.msgType = msgType;
+    }
 
-	public Long getMsgId() {
-		return msgId;
-	}
+    public Long getMsgId() {
+        return msgId;
+    }
 
-	public void setMsgId(Long msgId) {
-		this.msgId = msgId;
-	}
+    public void setMsgId(Long msgId) {
+        this.msgId = msgId;
+    }
 
-	public String getEvent() {
-		return event;
-	}
+    public String getEvent() {
+        return event;
+    }
 
-	public void setEvent(String event) {
-		this.event = event;
-	}
+    public void setEvent(String event) {
+        this.event = event;
+    }
 }

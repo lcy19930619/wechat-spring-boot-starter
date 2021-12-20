@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.function.qrcode;
 
 import net.jlxxw.wechat.base.BaseTest;
-import net.jlxxw.wechat.dto.qrcode.QrCodeDTO;
+import net.jlxxw.wechat.response.qrcode.QrCodeResponse;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
@@ -15,9 +15,9 @@ public class AsyncQrcodeManagerTest extends BaseTest {
     public AsyncQrcodeManager asyncQrcodeManager;
 
     @Test
-    public void createTempStringQrcodeTest(){
-        Mono<QrCodeDTO> mono = asyncQrcodeManager.createStringQrcode("a");
-        mono.subscribe((o)->{
+    public void createTempStringQrcodeTest() {
+        Mono<QrCodeResponse> mono = asyncQrcodeManager.createStringQrcode("a");
+        mono.subscribe((o) -> {
             String ticket = o.getTicket();
         });
     }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @date 2021-12-19 7:09 下午
  */
 @Component
-public class TemplateEventMessageListener  extends AbstractWeiXinEventListener {
+public class TemplateEventMessageListener extends AbstractWeiXinEventListener {
     /**
      * 支持的事件类型
      *
@@ -31,7 +31,7 @@ public class TemplateEventMessageListener  extends AbstractWeiXinEventListener {
      */
     @Override
     public WeiXinMessageResponse handler(AbstractWeiXinMessage abstractWeiXinMessage) {
-        Assert.assertNotNull("接收到的数据不应为空",abstractWeiXinMessage);
+        Assert.assertNotNull("接收到的数据不应为空", abstractWeiXinMessage);
         return WeiXinMessageResponse.buildText(supportEventType().getDescription() + " done");
     }
 }

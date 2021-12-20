@@ -30,10 +30,10 @@ public class TemplateData {
         this.color = color;
     }
 
-    public static TemplateData build(String value, Color color){
+    public static TemplateData build(String value, Color color) {
         TemplateData templateData = new TemplateData();
         templateData.setValue(value);
-        templateData.setColor(Objects.isNull(color)?null:color.getColorValue());
+        templateData.setColor(Objects.isNull(color) ? null : color.getColorValue());
         return templateData;
     }
 }

@@ -1,17 +1,18 @@
 package net.jlxxw.wechat.response;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 微信消息应答对象
+ *
  * @author chunyang.leng
  * @date 2021/1/20 11:51 上午
  */
-@JacksonXmlRootElement(localName="xml")
+@JacksonXmlRootElement(localName = "xml")
 public class WeiXinMessageResponse {
     /**
      * 接收方帐号（收到的OpenID）
@@ -159,10 +160,11 @@ public class WeiXinMessageResponse {
 
     /**
      * 回复文本消息
+     *
      * @param content
      * @return
      */
-    public static WeiXinMessageResponse buildText(String content){
+    public static WeiXinMessageResponse buildText(String content) {
         WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
         weiXinMessageResponse.setMsgType("text");
         weiXinMessageResponse.setContent(content);
@@ -171,10 +173,11 @@ public class WeiXinMessageResponse {
 
     /**
      * 回复图片消息
+     *
      * @param mediaId 通过素材管理中的接口上传多媒体文件，得到的id。
      * @return
      */
-    public static WeiXinMessageResponse buildImage(String mediaId){
+    public static WeiXinMessageResponse buildImage(String mediaId) {
         WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
         weiXinMessageResponse.setMsgType("image");
         Image image = new Image();
@@ -185,10 +188,11 @@ public class WeiXinMessageResponse {
 
     /**
      * 回复语音消息
+     *
      * @param mediaId 通过素材管理中的接口上传多媒体文件，得到的id。
      * @return
      */
-    public static WeiXinMessageResponse buildVoice(String mediaId){
+    public static WeiXinMessageResponse buildVoice(String mediaId) {
         WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
         weiXinMessageResponse.setMsgType("voice");
         Voice voice = new Voice();
@@ -199,12 +203,13 @@ public class WeiXinMessageResponse {
 
     /**
      * 回复视频消息
-     * @param mediaId 通过素材管理中的接口上传多媒体文件，得到的id
-     * @param title 视频消息的标题
+     *
+     * @param mediaId     通过素材管理中的接口上传多媒体文件，得到的id
+     * @param title       视频消息的标题
      * @param description 视频消息的描述
      * @return
      */
-    public static WeiXinMessageResponse buildVideo(String mediaId,String title,String description){
+    public static WeiXinMessageResponse buildVideo(String mediaId, String title, String description) {
         WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
         weiXinMessageResponse.setMsgType("video");
         Video video = new Video();
@@ -217,14 +222,15 @@ public class WeiXinMessageResponse {
 
     /**
      * 回复音乐消息
-     * @param title 音乐标题
-     * @param description 音乐描述
-     * @param musicUrl 音乐链接
-     * @param hqMusicUrl 高质量音乐链接，WIFI环境优先使用该链接播放音乐
+     *
+     * @param title        音乐标题
+     * @param description  音乐描述
+     * @param musicUrl     音乐链接
+     * @param hqMusicUrl   高质量音乐链接，WIFI环境优先使用该链接播放音乐
      * @param thumbMediaId 缩略图的媒体id，通过素材管理中的接口上传多媒体文件，得到的id
      * @return
      */
-    public static WeiXinMessageResponse buildMusic(String title,String description,String musicUrl,String hqMusicUrl,String thumbMediaId){
+    public static WeiXinMessageResponse buildMusic(String title, String description, String musicUrl, String hqMusicUrl, String thumbMediaId) {
         WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
         weiXinMessageResponse.setMsgType("music");
         Music music = new Music();
@@ -239,10 +245,11 @@ public class WeiXinMessageResponse {
 
     /**
      * 回复图文消息
+     *
      * @param articles
      * @return
      */
-    public static WeiXinMessageResponse buildArticle(Article... articles){
+    public static WeiXinMessageResponse buildArticle(Article... articles) {
         WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
         weiXinMessageResponse.setMsgType("news");
         weiXinMessageResponse.setArticleCount(articles.length);
@@ -251,7 +258,7 @@ public class WeiXinMessageResponse {
     }
 }
 
-class Image{
+class Image {
     /**
      * 通过素材管理中的接口上传多媒体文件，得到的id。
      */
@@ -267,7 +274,7 @@ class Image{
     }
 }
 
-class Voice{
+class Voice {
     /**
      * 通过素材管理中的接口上传多媒体文件，得到的id。
      */
@@ -283,7 +290,7 @@ class Voice{
     }
 }
 
-class Video{
+class Video {
     /**
      * 通过素材管理中的接口上传多媒体文件，得到的id。
      */
@@ -325,7 +332,7 @@ class Video{
     }
 }
 
-class Music{
+class Music {
     /**
      * 音乐标题
      */
@@ -396,7 +403,7 @@ class Music{
     }
 }
 
-class Article{
+class Article {
     /**
      * 图文消息标题
      */
@@ -411,7 +418,6 @@ class Article{
 
     /**
      * 图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200
-     *
      */
     @JacksonXmlCData
     private String picUrl;
@@ -422,36 +428,36 @@ class Article{
     @JacksonXmlCData
     private String url;
 
-	public String getTitle() {
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getPicUrl() {
-		return picUrl;
-	}
+    public String getPicUrl() {
+        return picUrl;
+    }
 
-	public void setPicUrl(String picUrl) {
-		this.picUrl = picUrl;
-	}
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }
 

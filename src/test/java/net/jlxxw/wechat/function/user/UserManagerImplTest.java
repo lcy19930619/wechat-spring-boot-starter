@@ -24,14 +24,14 @@ public class UserManagerImplTest extends BaseTest {
 
 
     @Test
-    public void findAllTest(){
+    public void findAllTest() {
         Set<String> all = userManagerImpl.findAll();
-        Assert.assertFalse("查询到的用户不应为空",CollectionUtils.isEmpty(all));
+        Assert.assertFalse("查询到的用户不应为空", CollectionUtils.isEmpty(all));
     }
 
     @Test
-    public void findUserInfoTest(){
-        List<String> openIdList =new ArrayList<>();
+    public void findUserInfoTest() {
+        List<String> openIdList = new ArrayList<>();
         openIdList.add(openId);
         List<SubscriptionUser> userInfo = userManagerImpl.findUserInfo(openIdList, LanguageEnum.ZH_CN);
         Assert.assertFalse("查询到的用户信息不应为空", CollectionUtils.isEmpty(userInfo));
@@ -39,11 +39,10 @@ public class UserManagerImplTest extends BaseTest {
     }
 
     @Test
-    public void  getUserInfoTest(){
+    public void getUserInfoTest() {
         SubscriptionUser userInfo = userManagerImpl.getUserInfo(openId, LanguageEnum.ZH_CN);
         Assert.assertTrue("查询到的用户信息不应为空", Objects.nonNull(userInfo));
     }
-
 
 
 }

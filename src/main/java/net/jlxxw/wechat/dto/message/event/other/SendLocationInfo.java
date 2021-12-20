@@ -6,6 +6,7 @@ import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
 
 /**
  * 发送的位置信息
+ *
  * @author chunyang.leng
  * @date 2021-12-19 6:13 下午
  */

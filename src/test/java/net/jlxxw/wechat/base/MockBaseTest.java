@@ -20,6 +20,6 @@ public class MockBaseTest {
         ClassPathResource classPathResource = new ClassPathResource(classPathName);
         InputStream inputStream = classPathResource.getInputStream();
         List<String> list = IOUtils.readLines(inputStream, "utf-8");
-        return String.join("",list);
+        return String.join("", list);
     }
 }

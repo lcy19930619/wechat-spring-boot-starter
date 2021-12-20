@@ -27,7 +27,7 @@ import java.util.Objects;
  * @date 2021/1/18 10:14 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
+@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
 @Component
 public class SyncPushTemplate {
     @Autowired
@@ -41,6 +41,7 @@ public class SyncPushTemplate {
      * token 失效错误码
      */
     private static final int TOKEN_ERROR = 40001;
+
     /**
      * 推送一个模版信息
      *
@@ -60,6 +61,7 @@ public class SyncPushTemplate {
 
     /**
      * 批量推送
+     *
      * @param templateList 多个模版信息
      * @return
      */

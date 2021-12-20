@@ -9,6 +9,7 @@ public interface Color {
     /**
      * 获取颜色的具体值
      * 例如：#ffffff
+     *
      * @return 颜色的具体数值
      */
     String getColorValue();

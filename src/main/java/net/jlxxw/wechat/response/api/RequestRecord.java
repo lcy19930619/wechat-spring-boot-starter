@@ -6,27 +6,27 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author chunyang.leng
  * @date 2021-11-23 3:52 下午
  */
-public class RequestRecord  {
+public class RequestRecord {
     /**
      * 发起请求的时间戳
      */
     @JSONField(name = "nvoke_time")
-    private long nvokeTime	;
+    private long nvokeTime;
     /**
      * 请求毫秒级耗时
      */
     @JSONField(name = "cost_in_ms")
-    private long costInMs	;
+    private long costInMs;
     /**
      * 请求的URL参数
      */
     @JSONField(name = "request_url")
-    private String requestUrl	;
+    private String requestUrl;
     /**
      * post请求的请求参数
      */
     @JSONField(name = "request_body")
-    private String requestBody	;
+    private String requestBody;
     /**
      * 接口请求返回参数
      */

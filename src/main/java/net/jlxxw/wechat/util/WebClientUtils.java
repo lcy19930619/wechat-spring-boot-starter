@@ -45,9 +45,10 @@ public class WebClientUtils {
 
     /**
      * 发送一个get请求
-     * @param url 请求地址
+     *
+     * @param url    请求地址
      * @param result 应答数据类型
-     * @param <T> 转换应答类型
+     * @param <T>    转换应答类型
      * @return 异步包装对象
      */
     public <T> Mono<T> sendGet(String url, Class<T> result) {
@@ -69,7 +70,7 @@ public class WebClientUtils {
      * 发送http post json 请求
      *
      * @param url    请求url
-     * @param param   请求参数
+     * @param param  请求参数
      * @param result 返回值结果类型
      * @param <T>    返回值类型
      * @return 返回订阅对象
@@ -91,15 +92,15 @@ public class WebClientUtils {
     }
 
 
-
     /**
      * 发送一个get请求
-     * @param url 请求地址
+     *
+     * @param url    请求地址
      * @param result 应答数据类型
-     * @param <T> 转换应答类型
+     * @param <T>    转换应答类型
      * @return 异步包装对象
      */
-    public <T> Mono<T> sendGet(String url, Class<T> result,MediaType... mediaTypes) {
+    public <T> Mono<T> sendGet(String url, Class<T> result, MediaType... mediaTypes) {
         // 发送请求
         return webClient
                 // POST 请求
@@ -115,7 +116,6 @@ public class WebClientUtils {
                 .map(jsonString -> JSON.toJavaObject(JSON.parseObject(jsonString), result));
 
     }
-
 
 
 }

@@ -4,6 +4,7 @@ import net.jlxxw.wechat.response.WeiXinResponse;
 
 /**
  * open api请求接口返回值
+ *
  * @author chunyang.leng
  * @date 2021-11-23 3:54 下午
  */

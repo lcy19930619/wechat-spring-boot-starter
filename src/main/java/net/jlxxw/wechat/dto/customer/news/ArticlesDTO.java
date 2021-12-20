@@ -2,6 +2,7 @@ package net.jlxxw.wechat.dto.customer.news;
 
 /**
  * 图文信息具体内容
+ *
  * @author chunyang.leng
  * @date 2020/11/11 12:55
  */

@@ -2,6 +2,7 @@ package net.jlxxw.wechat.vo.jsapi.v3;
 
 /**
  * 微信支付返回对象
+ *
  * @author chunyang.leng
  * @date 2021-04-10 8:29 下午
  */

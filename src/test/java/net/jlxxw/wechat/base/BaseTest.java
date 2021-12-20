@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
  * @author chunyang.leng
  * @date 2021-06-09 1:21 下午
  */
-@SpringBootTest(classes = TestApplication.class )
+@SpringBootTest(classes = TestApplication.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BaseTest {
     /**
@@ -44,8 +44,8 @@ public class BaseTest {
     @Autowired
     private WeiXinTokenManager weiXinTokenManager;
 
-    protected static  XmlMapper xmlMapper = new XmlMapper();
-    protected static  ObjectMapper objectMapper = new ObjectMapper();
+    protected static XmlMapper xmlMapper = new XmlMapper();
+    protected static ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         // 初始化xmlMapper相关配置
@@ -68,13 +68,14 @@ public class BaseTest {
         Assert.assertTrue("测试token不能为空", StringUtils.isBlank(token));
     }
 
-    protected String getToken(){
+    protected String getToken() {
         return weiXinTokenManager.getTokenFromLocal();
     }
 
 
     /**
      * 读取Xml 转换为指定对象
+     *
      * @param xmlFile
      * @param clazz
      * @param <T>
@@ -88,6 +89,6 @@ public class BaseTest {
         ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
         Reader reader = new InputStreamReader(inputStream);
         ObjectNode jsonNodes = xmlMapper.readValue(reader, ObjectNode.class);
-        return objectMapper.readValue(jsonNodes.toString(),clazz);
+        return objectMapper.readValue(jsonNodes.toString(), clazz);
     }
 }

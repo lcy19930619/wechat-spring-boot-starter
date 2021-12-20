@@ -31,7 +31,7 @@ public class VideoMessageListener extends AbstractWeiXinMessageListener {
      */
     @Override
     public WeiXinMessageResponse handler(AbstractWeiXinMessage abstractWeiXinMessage) {
-        Assert.assertNotNull("接收到的信息不应为空",abstractWeiXinMessage);
-        return WeiXinMessageResponse.buildText(supportMessageType().getDescription()+"done");
+        Assert.assertNotNull("接收到的信息不应为空", abstractWeiXinMessage);
+        return WeiXinMessageResponse.buildText(supportMessageType().getDescription() + "done");
     }
 }

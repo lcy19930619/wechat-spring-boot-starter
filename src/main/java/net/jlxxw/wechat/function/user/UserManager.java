@@ -22,7 +22,8 @@ public interface UserManager {
 
     /**
      * 批量根据用户的openId获取用户的基本信息
-     * @param openIdList openId列表
+     *
+     * @param openIdList   openId列表
      * @param languageEnum 返回字体语言
      * @return 用户基本信息
      */
@@ -30,7 +31,8 @@ public interface UserManager {
 
     /**
      * 获取一个用户的基本信息
-     * @param openId 用户的openId
+     *
+     * @param openId       用户的openId
      * @param languageEnum 返回字体语言
      * @return 用户的基本信息
      */

@@ -33,7 +33,7 @@ import java.util.Set;
  * @date 2021/1/25 6:44 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
+@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
 @Component
 public class UserManagerImpl implements UserManager {
 
@@ -56,20 +56,20 @@ public class UserManagerImpl implements UserManager {
         int current = 0;
         int totle = 1;
         String nextOpenId = "";
-        while (current<totle){
-            String url = MessageFormat.format(UrlConstant.FIND_ALL_USER_OPENID,token,nextOpenId);
+        while (current < totle) {
+            String url = MessageFormat.format(UrlConstant.FIND_ALL_USER_OPENID, token, nextOpenId);
 
             ResponseEntity<String> forEntity = restTemplate.getForEntity(url, String.class);
             String body = forEntity.getBody();
             final JSONObject resultData = JSONObject.parseObject(body);
             if (resultData.getInteger("errcode") == null || resultData.getInteger("errcode") == 0) {
                 totle = resultData.getInteger("total");
-                current += resultData.getInteger("count") ;
+                current += resultData.getInteger("count");
                 nextOpenId = resultData.getString("next_openid");
 
                 final JSONArray array = resultData.getJSONArray("openid");
-                if(!CollectionUtils.isEmpty(array)){
-                    array.forEach(o->{
+                if (!CollectionUtils.isEmpty(array)) {
+                    array.forEach(o -> {
                         openIdSet.add(o.toString());
                     });
                 }
@@ -128,7 +128,7 @@ public class UserManagerImpl implements UserManager {
                 JSONArray infoList = resultData.getJSONArray("user_info_list");
                 List<SubscriptionUser> subscriptionUsers = JSONArray.parseArray(JSON.toJSONString(infoList), SubscriptionUser.class);
                 result.addAll(subscriptionUsers);
-                logger.info("用户数量总计:{},当前执行数量:{}",openIdList.size(),end);
+                logger.info("用户数量总计:{},当前执行数量:{}", openIdList.size(), end);
             } else {
                 WeiXinException weiXinException = new WeiXinException("批量获取用户信息失败，微信返回值:" + resultData.toJSONString() + ",用户openId列表:" + JSON.toJSONString(tempList));
                 weiXinException.setErrorCode(resultData.getInteger("errcode"));

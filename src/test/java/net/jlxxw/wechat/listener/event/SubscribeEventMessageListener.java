@@ -31,7 +31,7 @@ public class SubscribeEventMessageListener extends AbstractWeiXinEventListener {
      */
     @Override
     public WeiXinMessageResponse handler(AbstractWeiXinMessage abstractWeiXinMessage) {
-        Assert.assertNotNull("接收到的数据不应为空",abstractWeiXinMessage);
+        Assert.assertNotNull("接收到的数据不应为空", abstractWeiXinMessage);
         return WeiXinMessageResponse.buildText(supportEventType().getDescription() + " done");
     }
 }

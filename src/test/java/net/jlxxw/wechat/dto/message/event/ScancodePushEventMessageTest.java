@@ -18,7 +18,7 @@ public class ScancodePushEventMessageTest extends BaseTest {
     public void convertTest() throws IOException {
         ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/ScancodePushEventMessage.xml");
         File file = classPathResource.getFile();
-        ScancodePushEventMessage message = readXmlData(file,ScancodePushEventMessage.class);
+        ScancodePushEventMessage message = readXmlData(file, ScancodePushEventMessage.class);
         Assert.assertNotNull(message);
     }
 

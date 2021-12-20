@@ -20,7 +20,7 @@ public class AsyncMenuManagerTest extends BaseTest {
     @Autowired
     private AsyncMenuManager asyncMenuManager;
 
-    public void createMenuTest(){
+    public void createMenuTest() {
         JSONObject jsonObject = JSON.parseObject(getMockMenuData());
         JSONArray jsonArray = jsonObject.getJSONArray("button");
         List<MenuDTO> menuList = jsonArray.toJavaList(MenuDTO.class);
@@ -32,7 +32,7 @@ public class AsyncMenuManagerTest extends BaseTest {
     }
 
 
-    private static String getMockMenuData(){
+    private static String getMockMenuData() {
         return "{\n" +
                 "     \"button\":[\n" +
                 "     {\t\n" +

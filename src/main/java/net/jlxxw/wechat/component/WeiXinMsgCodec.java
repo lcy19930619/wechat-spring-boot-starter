@@ -6,6 +6,10 @@
  * 针对org.apache.commons.codec.binary.Base64，
  * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
  * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
+ * <p>
+ * 针对org.apache.commons.codec.binary.Base64，
+ * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
+ * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
  */
 
 // ------------------------------------------------------------------------
@@ -63,7 +67,7 @@ import java.util.Random;
  * @author lcy
  */
 @Component
-@ConditionalOnProperty(value = "weixin.enable-message-enc",havingValue = "true")
+@ConditionalOnProperty(value = "weixin.enable-message-enc", havingValue = "true")
 public class WeiXinMsgCodec {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final Base64 BASE64 = new Base64();
@@ -72,6 +76,7 @@ public class WeiXinMsgCodec {
     private String appId;
     @Autowired
     private WeiXinProperties weiXinProperties;
+
     /**
      * 后置处理器
      *  token 公众平台上，开发者设置的token
@@ -135,10 +140,10 @@ public class WeiXinMsgCodec {
      * @return 加密后的信息
      * @throws AesException
      */
-    public String encrypt(String text) throws AesException{
+    public String encrypt(String text) throws AesException {
         String timeStamp = String.valueOf(System.currentTimeMillis());
         String nonce = getRandomStr();
-        return encryptMsg(text,timeStamp,nonce);
+        return encryptMsg(text, timeStamp, nonce);
     }
 
     /**
@@ -213,6 +218,7 @@ public class WeiXinMsgCodec {
         }
         return sb.toString();
     }
+
     /**
      * 对明文进行加密.
      *
@@ -254,7 +260,7 @@ public class WeiXinMsgCodec {
 
             return BASE64.encodeToString(encrypted);
         } catch (Exception e) {
-            throw new AesException(AesExceptionEnum.ENCRYPT_AES_ERROR,e);
+            throw new AesException(AesExceptionEnum.ENCRYPT_AES_ERROR, e);
         }
     }
 
@@ -280,7 +286,7 @@ public class WeiXinMsgCodec {
             // 解密
             original = cipher.doFinal(encrypted);
         } catch (Exception e) {
-            throw new AesException(AesExceptionEnum.DECRYPT_AES_ERROR,e);
+            throw new AesException(AesExceptionEnum.DECRYPT_AES_ERROR, e);
         }
 
         String xmlContent;
@@ -298,7 +304,7 @@ public class WeiXinMsgCodec {
             fromAppid = new String(Arrays.copyOfRange(bytes, 20 + xmlLength, bytes.length),
                     CHARSET);
         } catch (Exception e) {
-            throw new AesException(AesExceptionEnum.ILLEGAL_BUFFER,e);
+            throw new AesException(AesExceptionEnum.ILLEGAL_BUFFER, e);
         }
 
         // appid不相同的情况

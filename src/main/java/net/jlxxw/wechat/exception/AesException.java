@@ -16,6 +16,7 @@ public class AesException extends Exception {
      * 错误码
      */
     private final int code;
+
     public int getCode() {
         return code;
     }
@@ -23,7 +24,7 @@ public class AesException extends Exception {
     public AesException(AesExceptionEnum exceptionEnum, Exception e) {
         super(exceptionEnum.getMessage());
         this.code = exceptionEnum.getCode();
-        if(Objects.nonNull(e)){
+        if (Objects.nonNull(e)) {
             e.printStackTrace();
         }
     }

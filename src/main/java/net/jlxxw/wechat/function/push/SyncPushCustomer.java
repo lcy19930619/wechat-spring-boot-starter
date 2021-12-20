@@ -27,7 +27,7 @@ import java.util.Objects;
  * @date 2021/1/18 10:14 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
+@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
 @Component
 public class SyncPushCustomer {
     @Autowired
@@ -49,13 +49,14 @@ public class SyncPushCustomer {
         headers.setContentType(MediaType.APPLICATION_JSON);
         String json = JSON.toJSONString(messageDTO);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        String url = MessageFormat.format(UrlConstant.PUSH_CUSTOMER_PREFIX,weiXinTokenManager.getTokenFromLocal());
-        ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity( url, request, WeiXinResponse.class);
+        String url = MessageFormat.format(UrlConstant.PUSH_CUSTOMER_PREFIX, weiXinTokenManager.getTokenFromLocal());
+        ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity(url, request, WeiXinResponse.class);
         return responseEntity.getBody();
     }
 
     /**
      * 批量推送
+     *
      * @param messageList 多个客服信息
      * @return
      */

@@ -19,8 +19,10 @@ import org.springframework.stereotype.Component;
 import java.net.InetSocketAddress;
 
 import static io.netty.buffer.Unpooled.copiedBuffer;
+
 /**
- *  netty微信回调处理接口
+ * netty微信回调处理接口
+ *
  * @author chunyang.leng
  * @date 2021/1/25 9:46 上午
  */
@@ -37,19 +39,19 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
-        LoggerUtils.debug(logger,"netty 开始处理");
-        if(weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null){
+        LoggerUtils.debug(logger, "netty 开始处理");
+        if (weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null) {
             // 开启微信回调ip安全检查时执行
 
             // 获取远程socket信息
             InetSocketAddress socketAddress = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
             // 获取远程ip地址信息
             String ipAddress = socketAddress.getAddress().getHostAddress();
-            LoggerUtils.debug(logger,"微信回调ip安全检查执行,远程ip:{}",ipAddress);
-            if(!weiXinServerSecurityCheck.isSecurity(ipAddress)){
-                LoggerUtils.warn(logger,"非法ip，不予处理:{}",ipAddress);
+            LoggerUtils.debug(logger, "微信回调ip安全检查执行,远程ip:{}", ipAddress);
+            if (!weiXinServerSecurityCheck.isSecurity(ipAddress)) {
+                LoggerUtils.warn(logger, "非法ip，不予处理:{}", ipAddress);
                 // 非法ip，不予处理
-                channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN,copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);
+                channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN, copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);
                 return;
             }
         }
@@ -62,7 +64,7 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
         // 获取请求的uri
         String uri = fullHttpRequest.uri();
         // 事件总线开始执行处理逻辑
-        final String resultData = eventBus.dispatcher(reqContent,uri);
+        final String resultData = eventBus.dispatcher(reqContent, uri);
         // 响应数据刷新到缓冲区
         ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
         // 包装响应结果
@@ -75,7 +77,8 @@ public class WeiXinChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
 
     /**
      * 包装响应结果，使用http1.1协议格式
-     * @param status 响应状态码
+     *
+     * @param status  响应状态码
      * @param content 响应内容
      * @return 包装后到对象
      */

@@ -18,7 +18,7 @@ public class SubscribeScanEventMessageTest extends BaseTest {
     public void convertTest() throws IOException {
         ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/SubscribeScanEventMessage.xml");
         File file = classPathResource.getFile();
-        SubscribeScanEventMessage message = readXmlData(file,SubscribeScanEventMessage.class);
+        SubscribeScanEventMessage message = readXmlData(file, SubscribeScanEventMessage.class);
         Assert.assertNotNull(message);
     }
 }

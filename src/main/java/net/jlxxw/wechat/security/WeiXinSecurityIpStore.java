@@ -10,12 +10,14 @@ public interface WeiXinSecurityIpStore {
 
     /**
      * 新增一个微信的服务器ip
+     *
      * @param ip 微信服务器ip
      */
     void addSecurityIp(String ip);
 
     /**
      * 判断当前访问ip是否是安全的
+     *
      * @param ip
      * @return
      */
@@ -23,6 +25,7 @@ public interface WeiXinSecurityIpStore {
 
     /**
      * 新增一组微信的服务器ip
+     *
      * @param ipList 微信服务器ip
      */
     void addSecurityIp(List<String> ipList);

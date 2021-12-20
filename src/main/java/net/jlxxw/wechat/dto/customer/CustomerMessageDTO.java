@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * 客服信息基础类
+ *
  * @author chunyang.leng
  * @date 2020/11/11 12:51
  */
@@ -59,15 +60,16 @@ public class CustomerMessageDTO {
 
     /**
      * 构建图文类信息模板
-     * @param openId 接收用户
+     *
+     * @param openId      接收用户
      * @param articlesDTO 图文信息，只能有一个
      * @return
      */
-    public static CustomerMessageDTO buildNews(String openId , ArticlesDTO articlesDTO){
+    public static CustomerMessageDTO buildNews(String openId, ArticlesDTO articlesDTO) {
         NewsDTO newsDTO = new NewsDTO();
         List<ArticlesDTO> articlesDTOList = new ArrayList<>();
         articlesDTOList.add(articlesDTO);
         newsDTO.setArticles(articlesDTOList);
-        return new CustomerMessageDTO(openId,"news", newsDTO);
+        return new CustomerMessageDTO(openId, "news", newsDTO);
     }
 }

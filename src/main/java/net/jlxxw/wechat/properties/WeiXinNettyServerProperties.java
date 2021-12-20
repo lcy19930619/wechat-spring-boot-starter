@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 微信配置类
+ *
  * @author chunyang.leng
  * @date 2021/1/19 5:31 下午
  */

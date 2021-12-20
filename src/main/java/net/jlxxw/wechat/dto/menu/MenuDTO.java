@@ -6,10 +6,11 @@ import net.jlxxw.wechat.enums.MenuTypeEnum;
 import java.util.List;
 
 /**
- *  微信菜单传输对象
- * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html">文档地址</a>
+ * 微信菜单传输对象
+ *
  * @author chunyang.leng
  * @date 2021-12-13 2:09 下午
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html">文档地址</a>
  */
 public class MenuDTO {
 

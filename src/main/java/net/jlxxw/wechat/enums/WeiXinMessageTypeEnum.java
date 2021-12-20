@@ -2,6 +2,7 @@ package net.jlxxw.wechat.enums;
 
 /**
  * 微信信息枚举
+ *
  * @author chunyang.leng
  * @date 2021/1/20 11:45 上午
  */

@@ -5,9 +5,10 @@ import net.jlxxw.wechat.dto.message.event.other.SendLocationInfo;
 
 /**
  * 弹出地理位置选择器的事件推送
- * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#7">文档地址</a>
+ *
  * @author chunyang.leng
  * @date 2021-12-19 6:12 下午
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#7">文档地址</a>
  */
 public class LocationSelectEventMessage extends AbstractWeiXinMessage {
 

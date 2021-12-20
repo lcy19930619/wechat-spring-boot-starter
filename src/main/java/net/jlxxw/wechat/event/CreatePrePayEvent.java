@@ -5,6 +5,7 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * 预支付订单事件
+ *
  * @author chunyang.leng
  * @date 2021-04-23 9:53 上午
  */
@@ -19,7 +20,7 @@ public class CreatePrePayEvent extends ApplicationEvent {
         super(source);
     }
 
-    public PayResultVO getPayResultVO(){
-        return (PayResultVO)super.getSource();
+    public PayResultVO getPayResultVO() {
+        return (PayResultVO) super.getSource();
     }
 }

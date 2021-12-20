@@ -13,14 +13,14 @@ import net.jlxxw.wechat.component.listener.AbstractWeiXinEventListener;
 import net.jlxxw.wechat.component.listener.AbstractWeiXinMessageListener;
 import net.jlxxw.wechat.component.listener.UnKnowWeiXinEventListener;
 import net.jlxxw.wechat.component.listener.UnKnowWeiXinMessageListener;
+import net.jlxxw.wechat.dto.message.*;
+import net.jlxxw.wechat.dto.message.event.*;
 import net.jlxxw.wechat.enums.WeiXinEventTypeEnum;
 import net.jlxxw.wechat.enums.WeiXinMessageTypeEnum;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeiXinProperties;
 import net.jlxxw.wechat.response.WeiXinMessageResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
-import net.jlxxw.wechat.dto.message.*;
-import net.jlxxw.wechat.dto.message.event.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
@@ -134,6 +134,7 @@ public class EventBus {
 
     /**
      * 微信请求事件分发处理，用于controller接口处理
+     *
      * @param request request全部信息
      * @return 返回给微信的数据
      */
@@ -160,8 +161,9 @@ public class EventBus {
 
     /**
      * 微信消息加解密处理，netty使用
+     *
      * @param bytes 微信请求的全部数据
-     * @param uri 微信携带的uri，用于获取加解密参数内容
+     * @param uri   微信携带的uri，用于获取加解密参数内容
      * @throws AesException 微信信息加解密异常
      */
     public String dispatcher(byte[] bytes, String uri) throws AesException {
@@ -219,6 +221,7 @@ public class EventBus {
 
     /**
      * 具体对微信信息处理
+     *
      * @param reader 微信输入的数据
      * @return 微信处理的结果
      * @throws IOException io异常
@@ -330,7 +333,7 @@ public class EventBus {
                         return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
                     // 弹出系统拍照发图的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#4
-                    case"pic_sysphoto":
+                    case "pic_sysphoto":
                         abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicSysphotoEventMessage.class);
                         return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
 
@@ -364,7 +367,7 @@ public class EventBus {
                         return unKnowWeiXinEventListener.handlerOtherType(objectNode);
                 }
 
-            // 未知的消息，用户可自行扩展
+                // 未知的消息，用户可自行扩展
             default:
                 if (Objects.isNull(unKnowWeiXinMessageListener)) {
                     throw new IllegalArgumentException("未知的消息请求信息类型,messageType:" + msgType + ",请求数据信息:" + objectNode.toString());
@@ -377,7 +380,7 @@ public class EventBus {
     /**
      * 处理微信信息，若出现异常，则向返回空白字符串
      *
-     * @param abstractWeiXinMessage         微信消息
+     * @param abstractWeiXinMessage 微信消息
      * @param weiXinMessageTypeEnum 消息类型枚举
      * @return 处理完毕的xml字符串
      */
@@ -406,7 +409,7 @@ public class EventBus {
             LoggerUtils.debug(logger, "返回微信应答信息，参数:{}", res);
             return res;
         } catch (JsonProcessingException e) {
-            LoggerUtils.error(logger,"jackson 转xml失败，输入参数:"+JSON.toJSONString(response),e);
+            LoggerUtils.error(logger, "jackson 转xml失败，输入参数:" + JSON.toJSONString(response), e);
             return "";
         }
     }
@@ -415,7 +418,7 @@ public class EventBus {
      * 处理微信事件，若出现异常，则向返回空白字符串
      *
      * @param abstractWeiXinMessage 微信事件信息
-     * @param weiXinEventTypeEnum 微信事件枚举
+     * @param weiXinEventTypeEnum   微信事件枚举
      * @return 处理结果
      */
     private String handlerEvent(AbstractWeiXinMessage abstractWeiXinMessage, WeiXinEventTypeEnum weiXinEventTypeEnum) {
@@ -439,7 +442,7 @@ public class EventBus {
         try {
             return XML_MAPPER.writeValueAsString(response);
         } catch (JsonProcessingException e) {
-            LoggerUtils.error(logger,"jackson 转xml失败，输入参数:"+JSON.toJSONString(response),e);
+            LoggerUtils.error(logger, "jackson 转xml失败，输入参数:" + JSON.toJSONString(response), e);
             return "";
         }
     }

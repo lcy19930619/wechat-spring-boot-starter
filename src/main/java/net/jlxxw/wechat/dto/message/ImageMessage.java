@@ -2,9 +2,10 @@ package net.jlxxw.wechat.dto.message;
 
 /**
  * 接收图片消息
- * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%9B%BE%E7%89%87%E6%B6%88%E6%81%AF">文档地址</a>
+ *
  * @author chunyang.leng
  * @date 2021/1/20 11:22 上午
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%9B%BE%E7%89%87%E6%B6%88%E6%81%AF">文档地址</a>
  */
 public class ImageMessage extends AbstractWeiXinMessage {
 
@@ -18,19 +19,19 @@ public class ImageMessage extends AbstractWeiXinMessage {
      */
     private String mediaId;
 
-	public String getPicUrl() {
-		return picUrl;
-	}
+    public String getPicUrl() {
+        return picUrl;
+    }
 
-	public void setPicUrl(String picUrl) {
-		this.picUrl = picUrl;
-	}
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
 
-	public String getMediaId() {
-		return mediaId;
-	}
+    public String getMediaId() {
+        return mediaId;
+    }
 
-	public void setMediaId(String mediaId) {
-		this.mediaId = mediaId;
-	}
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
 }

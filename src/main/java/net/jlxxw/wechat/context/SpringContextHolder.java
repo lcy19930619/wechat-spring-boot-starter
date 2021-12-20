@@ -13,24 +13,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpringContextHolder implements ApplicationContextAware {
     ApplicationContext applicationContext;
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 
-    public <T> T getBean(Class<T> clazz){
+    public <T> T getBean(Class<T> clazz) {
         return applicationContext.getBean(clazz);
     }
 
-    public <T> T getBean(Class<T> clazz,String beanName){
-        return applicationContext.getBean(clazz,beanName);
+    public <T> T getBean(Class<T> clazz, String beanName) {
+        return applicationContext.getBean(clazz, beanName);
     }
 
     /**
      * 发布一个事件
+     *
      * @param applicationEvent
      */
-    public void publishEvent(ApplicationEvent applicationEvent){
+    public void publishEvent(ApplicationEvent applicationEvent) {
         applicationContext.publishEvent(applicationEvent);
     }
 }

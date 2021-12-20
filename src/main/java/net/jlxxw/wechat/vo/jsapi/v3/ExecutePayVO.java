@@ -2,6 +2,7 @@ package net.jlxxw.wechat.vo.jsapi.v3;
 
 /**
  * 调起支付时，需要返回给前端的对象
+ *
  * @author chunyang.leng
  * @date 2021-04-10 9:53 下午
  */

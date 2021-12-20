@@ -5,7 +5,7 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.WeiXinException;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.properties.WeiXinProperties;
-import net.jlxxw.wechat.response.WeChatTokenResponse;
+import net.jlxxw.wechat.response.token.WeChatTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ import java.util.Objects;
  * @author chunyang.leng
  * @date 2021/1/19 5:30 下午
  */
-@DependsOn({"tokenMapper","weiXinProperties"})
+@DependsOn({"tokenMapper", "weiXinProperties"})
 @ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
 @Component
-public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager{
+public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager {
     private static final Logger logger = LoggerFactory.getLogger(DefaultWeiXinTokenManagerImpl.class);
     @Autowired
     private WeiXinProperties weiXinProperties;
@@ -50,11 +50,11 @@ public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager{
      * @return token
      */
     @Override
-    public String getTokenFromWeiXin() throws WeiXinException{
-        String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getAppId(),weiXinProperties.getSecret());
+    public String getTokenFromWeiXin() throws WeiXinException {
+        String url = MessageFormat.format(UrlConstant.TOKEN_URL, weiXinProperties.getAppId(), weiXinProperties.getSecret());
         WeChatTokenResponse response = restTemplate.getForObject(url, WeChatTokenResponse.class);
-        if(Objects.nonNull(response.getErrcode()) && 0!=response.getErrcode()){
-        	logger.error("微信获取token返回值:{}",JSON.toJSONString(response));
+        if (Objects.nonNull(response.getErrcode()) && 0 != response.getErrcode()) {
+            logger.error("微信获取token返回值:{}", JSON.toJSONString(response));
             WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(response));
             weiXinException.setErrorCode(response.getErrcode());
             throw weiXinException;
@@ -73,7 +73,7 @@ public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager{
     }
 
     @PostConstruct
-    public void postConstruct(){
+    public void postConstruct() {
         tokenMapper.createTable();
     }
 }

@@ -16,6 +16,7 @@ import java.util.Set;
 
 /**
  * 微信服务器安全检查，（ip白名单的过滤）
+ *
  * @author chunyang.leng
  * @date 2021/1/25 4:20 下午
  */
@@ -31,17 +32,17 @@ public class WeiXinServerSecurityCheck {
     private SpringContextHolder springContextHolder;
 
     @PostConstruct
-    private void init(){
-        try{
+    private void init() {
+        try {
             weiXinSecurityIpStore = springContextHolder.getBean(WeiXinSecurityIpStore.class);
             Class clazz = weiXinSecurityIpStore.getClass();
-            if(AopUtils.isAopProxy(weiXinSecurityIpStore)){
+            if (AopUtils.isAopProxy(weiXinSecurityIpStore)) {
                 clazz = AopUtils.getTargetClass(weiXinSecurityIpStore);
             }
-            LoggerUtils.info(logger,"初始化微信安全ip存储器，使用外置存储,{}",clazz.getName());
-        }catch (NoSuchBeanDefinitionException e){
-            LoggerUtils.info(logger,"初始化微信安全ip存储器，使用内置存储");
-                // 没有这个bean，使用内部类
+            LoggerUtils.info(logger, "初始化微信安全ip存储器，使用外置存储,{}", clazz.getName());
+        } catch (NoSuchBeanDefinitionException e) {
+            LoggerUtils.info(logger, "初始化微信安全ip存储器，使用内置存储");
+            // 没有这个bean，使用内部类
             weiXinSecurityIpStore = new WeiXinSecurityIpStore() {
                 /**
                  * 微信服务器ip白名单地址
@@ -84,19 +85,21 @@ public class WeiXinServerSecurityCheck {
 
     /**
      * 检查ip地址是否在微信白名单中
+     *
      * @param requestIp 要检查的ip地址
      * @return 是否安全
      */
-    public boolean isSecurity(String requestIp){
+    public boolean isSecurity(String requestIp) {
         return weiXinSecurityIpStore.isSecurityIp(requestIp);
     }
 
     /**
      * 获取微信服务器IP地址,并添加到白名单列表中，由定时任务控制
+     *
      * @see ScheduledUpdateWeiXinServerIp#update()
      */
-    public void updateWeiXinServerIp(List<String> ipList){
-        logger.info("更新ip白名单：{}",ipList);
+    public void updateWeiXinServerIp(List<String> ipList) {
+        logger.info("更新ip白名单：{}", ipList);
         weiXinSecurityIpStore.addSecurityIp(ipList);
     }
 }

@@ -1,6 +1,5 @@
 package net.jlxxw.wechat.response.api;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 
 /**

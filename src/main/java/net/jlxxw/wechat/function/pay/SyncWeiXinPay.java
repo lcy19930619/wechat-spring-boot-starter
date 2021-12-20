@@ -2,6 +2,7 @@ package net.jlxxw.wechat.function.pay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.context.SpringContextHolder;
 import net.jlxxw.wechat.dto.pay.jsapi.v3.OrderInfoDTO;
 import net.jlxxw.wechat.event.CreatePrePayEvent;
@@ -11,7 +12,6 @@ import net.jlxxw.wechat.properties.WeiXinProperties;
 import net.jlxxw.wechat.util.RSAUtils;
 import net.jlxxw.wechat.vo.jsapi.v3.ExecutePayVO;
 import net.jlxxw.wechat.vo.jsapi.v3.PayResultVO;
-import net.jlxxw.wechat.constant.UrlConstant;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -28,7 +28,7 @@ import java.util.Objects;
  * @date 2021-04-10 8:01 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
+@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
 @Component
 public class SyncWeiXinPay {
     private static final int SUCCESS_CODE = 200;
@@ -42,6 +42,7 @@ public class SyncWeiXinPay {
     private WeiXinPayProperties weiXinPayProperties;
     @Autowired
     private SpringContextHolder springContextHolder;
+
     /**
      * 创建预支付订单
      *
@@ -56,7 +57,7 @@ public class SyncWeiXinPay {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-        headers.add("User-Agent",userAgent);
+        headers.add("User-Agent", userAgent);
         String json = JSON.toJSONString(orderInfoDTO);
         HttpEntity<String> formEntity = new HttpEntity<>(json.toString(), headers);
         ResponseEntity<JSONObject> responseEntity = restTemplate.postForEntity(UrlConstant.JSAPI_V3_PRE_PAY_URL, formEntity, JSONObject.class);
@@ -86,9 +87,9 @@ public class SyncWeiXinPay {
      * 调起支付
      *
      * @param prePayId 预支付交易会话标识
-     * @see SyncWeiXinPay#createPrePay(OrderInfoDTO, java.lang.String)
-     * @exception Exception 签名异常
      * @return 返回给前端，用于调起支付的对象
+     * @throws Exception 签名异常
+     * @see SyncWeiXinPay#createPrePay(OrderInfoDTO, java.lang.String)
      */
     public ExecutePayVO getExecutePayVO(String prePayId) throws Exception {
         String appId = weiXinProperties.getAppId();

@@ -2,6 +2,7 @@ package net.jlxxw.wechat.dto.message;
 
 /**
  * 视频信息
+ *
  * @author chunyang.leng
  * @date 2021/1/20 11:25 上午
  */
@@ -17,19 +18,19 @@ public class VideoMessage extends AbstractWeiXinMessage {
      */
     private String thumbMediaId;
 
-	public String getMediaId() {
-		return mediaId;
-	}
+    public String getMediaId() {
+        return mediaId;
+    }
 
-	public void setMediaId(String mediaId) {
-		this.mediaId = mediaId;
-	}
+    public void setMediaId(String mediaId) {
+        this.mediaId = mediaId;
+    }
 
-	public String getThumbMediaId() {
-		return thumbMediaId;
-	}
+    public String getThumbMediaId() {
+        return thumbMediaId;
+    }
 
-	public void setThumbMediaId(String thumbMediaId) {
-		this.thumbMediaId = thumbMediaId;
-	}
+    public void setThumbMediaId(String thumbMediaId) {
+        this.thumbMediaId = thumbMediaId;
+    }
 }

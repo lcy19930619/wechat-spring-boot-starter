@@ -32,9 +32,9 @@ public class ScheduledUpdateToken {
      * 每两个小时执行一次，更新数据库token
      */
     @Scheduled(cron = "0 0 */2 * * ?")
-    public void updateToken()throws WeiXinException {
+    public void updateToken() throws WeiXinException {
         Date date = tokenMapper.lockSelectMaxDate();
-        if(date == null){
+        if (date == null) {
             // 第一次操作的时候，数据库没数据
             String token = weiXinTokenManager.getTokenFromWeiXin();
             weiXinTokenManager.saveToken(token);
@@ -43,7 +43,7 @@ public class ScheduledUpdateToken {
         }
         long dbTime = date.getTime();
         long current = System.currentTimeMillis();
-        if((current - dbTime) <3*60*60){
+        if ((current - dbTime) < 3 * 60 * 60) {
             // 误差时间小于3分钟时，不做任何处理
             return;
         }

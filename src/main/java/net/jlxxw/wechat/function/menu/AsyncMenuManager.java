@@ -22,10 +22,11 @@ import java.util.List;
 
 /**
  * 公众号菜单管理 todo 未完成
+ *
  * @author chunyang.leng
  * @date 2021-12-13 2:04 下午
  */
-@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
+@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
 @Component
 public class AsyncMenuManager {
 
@@ -37,39 +38,42 @@ public class AsyncMenuManager {
 
     /**
      * 创建菜单
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html">文档地址</a>
+     *
      * @param list 菜单列表
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html">文档地址</a>
      */
     public Mono<WeiXinResponse> createMenu(List<MenuDTO> list) {
-        if(CollectionUtils.isEmpty(list)){
-            LoggerUtils.debug(logger,"创建公众号菜单，输入列表信息为空");
+        if (CollectionUtils.isEmpty(list)) {
+            LoggerUtils.debug(logger, "创建公众号菜单，输入列表信息为空");
             return Mono.error(new NullPointerException("创建公众号菜单，输入列表信息为空"));
         }
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("button",list);
+        jsonObject.put("button", list);
         String json = JSON.toJSONString(jsonObject);
-        LoggerUtils.debug(logger,"创建公众号菜单，请求参数:{}",json);
-        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL,weiXinTokenManager.getTokenFromLocal());
+        LoggerUtils.debug(logger, "创建公众号菜单，请求参数:{}", json);
+        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weiXinTokenManager.getTokenFromLocal());
         return webClientUtils.sendPostJSON(url, json, WeiXinResponse.class);
     }
 
     /**
      * 删除菜单
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Deleting_Custom-Defined_Menu.html">文档地址</a>
+     *
      * @return 正确应为 {"errcode":0,"errmsg":"ok"}
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Deleting_Custom-Defined_Menu.html">文档地址</a>
      */
-    public Mono<WeiXinResponse> deleteMenu(){
-        String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL,weiXinTokenManager.getTokenFromLocal());
+    public Mono<WeiXinResponse> deleteMenu() {
+        String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL, weiXinTokenManager.getTokenFromLocal());
         return webClientUtils.sendGet(url, WeiXinResponse.class);
     }
 
     /**
      * 获取全部菜单
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Querying_Custom_Menus.html">文档地址</a>
+     *
      * @return
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Querying_Custom_Menus.html">文档地址</a>
      */
-    public Mono<MenuResponse> getMenu(){
-        String url = MessageFormat.format(UrlConstant.GET_MENU_URL,weiXinTokenManager.getTokenFromLocal());
-        return webClientUtils.sendGet(url,MenuResponse.class);
+    public Mono<MenuResponse> getMenu() {
+        String url = MessageFormat.format(UrlConstant.GET_MENU_URL, weiXinTokenManager.getTokenFromLocal());
+        return webClientUtils.sendGet(url, MenuResponse.class);
     }
 }

@@ -2,10 +2,11 @@ package net.jlxxw.wechat.enums;
 
 /**
  * 微信模板消息颜色枚举
+ *
  * @author chunyang.leng
  * @date 2020/11/17 16:58
  */
-public enum ColorEnums implements Color{
+public enum ColorEnums implements Color {
     /**
      * 红色
      */

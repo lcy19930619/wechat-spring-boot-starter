@@ -30,14 +30,14 @@ public class Button {
     /**
      * 对于不同的菜单类型，value的值意义不同。
      * 官网上设置的自定义菜单：
-     *   Text:保存文字到value；
-     *   Img、voice：保存mediaID到value；
-     *   Video：保存视频下载链接到value；
-     *   News：保存图文消息到news_info，同时保存mediaID到value；
-     *   View：保存链接到url。
-     *   <br/>
-     *   使用API设置的自定义菜单：
-     *   click、scancode_push、scancode_waitmsg、pic_sysphoto、pic_photo_or_album、 pic_weixin、location_select：保存值到key；view：保存链接到url
+     * Text:保存文字到value；
+     * Img、voice：保存mediaID到value；
+     * Video：保存视频下载链接到value；
+     * News：保存图文消息到news_info，同时保存mediaID到value；
+     * View：保存链接到url。
+     * <br/>
+     * 使用API设置的自定义菜单：
+     * click、scancode_push、scancode_waitmsg、pic_sysphoto、pic_photo_or_album、 pic_weixin、location_select：保存值到key；view：保存链接到url
      */
     @JSONField(name = "value")
     private String value;
@@ -45,14 +45,14 @@ public class Button {
     /**
      * 对于不同的菜单类型，value的值意义不同。
      * 官网上设置的自定义菜单：
-     *   Text:保存文字到value；
-     *   Img、voice：保存mediaID到value；
-     *   Video：保存视频下载链接到value；
-     *   News：保存图文消息到news_info，同时保存mediaID到value；
-     *   View：保存链接到url。
-     *   <br/>
-     *   使用API设置的自定义菜单：
-     *   click、scancode_push、scancode_waitmsg、pic_sysphoto、pic_photo_or_album、 pic_weixin、location_select：保存值到key；view：保存链接到url
+     * Text:保存文字到value；
+     * Img、voice：保存mediaID到value；
+     * Video：保存视频下载链接到value；
+     * News：保存图文消息到news_info，同时保存mediaID到value；
+     * View：保存链接到url。
+     * <br/>
+     * 使用API设置的自定义菜单：
+     * click、scancode_push、scancode_waitmsg、pic_sysphoto、pic_photo_or_album、 pic_weixin、location_select：保存值到key；view：保存链接到url
      */
     @JSONField(name = "key")
     private String key;
@@ -60,14 +60,14 @@ public class Button {
     /**
      * 对于不同的菜单类型，value的值意义不同。
      * 官网上设置的自定义菜单：
-     *   Text:保存文字到value；
-     *   Img、voice：保存mediaID到value；
-     *   Video：保存视频下载链接到value；
-     *   News：保存图文消息到news_info，同时保存mediaID到value；
-     *   View：保存链接到url。
-     *   <br/>
-     *   使用API设置的自定义菜单：
-     *   click、scancode_push、scancode_waitmsg、pic_sysphoto、pic_photo_or_album、 pic_weixin、location_select：保存值到key；view：保存链接到url
+     * Text:保存文字到value；
+     * Img、voice：保存mediaID到value；
+     * Video：保存视频下载链接到value；
+     * News：保存图文消息到news_info，同时保存mediaID到value；
+     * View：保存链接到url。
+     * <br/>
+     * 使用API设置的自定义菜单：
+     * click、scancode_push、scancode_waitmsg、pic_sysphoto、pic_photo_or_album、 pic_weixin、location_select：保存值到key；view：保存链接到url
      */
     @JSONField(name = "url")
     private String url;

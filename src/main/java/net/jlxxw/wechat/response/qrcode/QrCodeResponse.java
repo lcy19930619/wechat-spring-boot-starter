@@ -1,11 +1,14 @@
-package net.jlxxw.wechat.dto.qrcode;
+package net.jlxxw.wechat.response.qrcode;
+
+import net.jlxxw.wechat.response.WeiXinResponse;
 
 /**
  * 永久二维码创建结果
+ *
  * @author chunyang.leng
  * @date 2021-11-23 11:32 上午
  */
-public class QrCodeDTO {
+public class QrCodeResponse extends WeiXinResponse {
     /**
      * 微信票据
      */

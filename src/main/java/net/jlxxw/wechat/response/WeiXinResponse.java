@@ -2,9 +2,10 @@ package net.jlxxw.wechat.response;
 
 /**
  * 微信应答对象
- * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Global_Return_Code.html">错误码文档</a>
+ *
  * @author chunyang.leng
  * @date 2020/11/11 13:08
+ * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Getting_Started/Global_Return_Code.html">错误码文档</a>
  */
 public class WeiXinResponse {
     /**

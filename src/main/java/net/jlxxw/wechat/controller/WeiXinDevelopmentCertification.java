@@ -34,7 +34,7 @@ public class WeiXinDevelopmentCertification {
         String msgTimestamp = request.getParameter("timestamp");
         String msgNonce = request.getParameter("nonce");
         String echostr = request.getParameter("echostr");
-        logger.info("接收到微信请求：signature={},timestamp={},nonce={},echostr={}",msgSignature,msgTimestamp,msgNonce,echostr);
+        logger.info("接收到微信请求：signature={},timestamp={},nonce={},echostr={}", msgSignature, msgTimestamp, msgNonce, echostr);
         if (verify(msgSignature, msgTimestamp, msgNonce)) {
             logger.info("验证通过");
             return echostr;
@@ -60,7 +60,7 @@ public class WeiXinDevelopmentCertification {
     }
 
     private static String sha1Sign(String token, String timestamp, String nonce) throws NoSuchAlgorithmException {
-        if(StringUtils.isBlank(token)){
+        if (StringUtils.isBlank(token)) {
             throw new IllegalArgumentException("verify-token不能为空");
         }
         String[] array = new String[]{token, timestamp, nonce};

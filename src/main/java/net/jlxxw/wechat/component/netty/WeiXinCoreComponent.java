@@ -41,10 +41,10 @@ public class WeiXinCoreComponent {
         if (!weiXinNettyServerProperties.getEnableNetty()) {
             return;
         }
-        Thread t =  new Thread() {
+        Thread t = new Thread() {
             @Override
             public void run() {
-                LoggerUtils.info(logger,"初始化 netty 组件");
+                LoggerUtils.info(logger, "初始化 netty 组件");
                 //new 一个主线程组
                 EventLoopGroup bossGroup = new NioEventLoopGroup(1);
                 //new 一个工作线程组
@@ -57,23 +57,23 @@ public class WeiXinCoreComponent {
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
                                 // 请求解码器
                                 socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
-                                LoggerUtils.debug(logger,"初始化 netty 请求解码器 成功");
+                                LoggerUtils.debug(logger, "初始化 netty 请求解码器 成功");
 
                                 // 将HTTP消息的多个部分合成一条完整的HTTP消息
                                 socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(65535));
-                                LoggerUtils.debug(logger,"初始化 netty http聚合器 成功");
+                                LoggerUtils.debug(logger, "初始化 netty http聚合器 成功");
 
                                 // 响应转码器
                                 socketChannel.pipeline().addLast("http-encoder", new HttpResponseEncoder());
-                                LoggerUtils.debug(logger,"初始化 netty 响应编码器 成功");
+                                LoggerUtils.debug(logger, "初始化 netty 响应编码器 成功");
 
                                 // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
                                 socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
-                                LoggerUtils.debug(logger,"初始化 netty 分块写入处理程序 成功");
+                                LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
 
                                 // 自定义处理handler
                                 socketChannel.pipeline().addLast("http-server", weiXinChannel);
-                                LoggerUtils.debug(logger,"初始化 netty 微信协议处理器 成功");
+                                LoggerUtils.debug(logger, "初始化 netty 微信协议处理器 成功");
 
                             }
                         })
@@ -85,10 +85,10 @@ public class WeiXinCoreComponent {
                 //绑定端口,开始接收进来的连接
                 try {
                     ChannelFuture future = BOOTSTRAP.bind(weiXinNettyServerProperties.getNettyPort()).sync();
-                    LoggerUtils.info(logger,"微信netty服务启动，开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
+                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
                     future.channel().closeFuture().sync();
                 } catch (InterruptedException e) {
-                    LoggerUtils.error(logger,"微信netty服务启动失败！！！", e);
+                    LoggerUtils.error(logger, "微信netty服务启动失败！！！", e);
                     System.exit(0);
                 } finally {
                     //关闭主线程组

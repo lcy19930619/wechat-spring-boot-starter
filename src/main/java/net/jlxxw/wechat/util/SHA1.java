@@ -18,19 +18,21 @@ import java.util.Arrays;
 
 /**
  * SHA1 class
- *
+ * <p>
  * 计算公众平台的消息签名接口.
+ *
  * @author lcy
  */
 public class SHA1 {
-    private static final  Logger logger = LoggerFactory.getLogger(SHA1.class);
+    private static final Logger logger = LoggerFactory.getLogger(SHA1.class);
 
     /**
      * 用SHA1算法生成安全签名
-     * @param token 票据
+     *
+     * @param token     票据
      * @param timestamp 时间戳
-     * @param nonce 随机字符串
-     * @param encrypt 密文
+     * @param nonce     随机字符串
+     * @param encrypt   密文
      * @return 安全签名
      * @throws AesException
      */
@@ -60,7 +62,7 @@ public class SHA1 {
             }
             return hexstr.toString();
         } catch (Exception e) {
-            LoggerUtils.error(logger,"sha1 error",e);
+            LoggerUtils.error(logger, "sha1 error", e);
             throw new AesException(AesExceptionEnum.COMPUTE_SIGNATURE_ERROR);
         }
     }

@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * 子按钮数据
+ *
  * @author chunyang.leng
  * @date 2021-12-20 11:01 上午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Querying_Custom_Menus.html">文档地址</a>

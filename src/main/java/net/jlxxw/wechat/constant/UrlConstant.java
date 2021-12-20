@@ -40,7 +40,7 @@ public interface UrlConstant {
     /**
      * 获取帐号的关注者列表
      */
-    String FIND_ALL_USER_OPENID="https://api.weixin.qq.com/cgi-bin/user/get?access_token={0}&next_openid={1}";
+    String FIND_ALL_USER_OPENID = "https://api.weixin.qq.com/cgi-bin/user/get?access_token={0}&next_openid={1}";
 
     /**
      * 上传临时素材
@@ -70,7 +70,7 @@ public interface UrlConstant {
     /**
      * JSAPI_V3 统一下单API url
      */
-    String JSAPI_V3_PRE_PAY_URL= "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
+    String JSAPI_V3_PRE_PAY_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
 
     /**
      * 创建临时二维码url
@@ -85,7 +85,7 @@ public interface UrlConstant {
     /**
      * 查询api quota 调用情况
      */
-    String OPEN_API_SELECT_QUOTA="https://api.weixin.qq.com/cgi-bin/openapi/quota/get?access_token={0}";
+    String OPEN_API_SELECT_QUOTA = "https://api.weixin.qq.com/cgi-bin/openapi/quota/get?access_token={0}";
 
     /**
      * 创建菜单
@@ -100,5 +100,5 @@ public interface UrlConstant {
     /**
      * 获取全部菜单
      */
-    String GET_MENU_URL ="https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token={0}";
+    String GET_MENU_URL = "https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token={0}";
 }

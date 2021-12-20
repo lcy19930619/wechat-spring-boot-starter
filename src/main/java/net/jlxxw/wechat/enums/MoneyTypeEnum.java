@@ -2,6 +2,7 @@ package net.jlxxw.wechat.enums;
 
 /**
  * 金钱类型
+ *
  * @author chunyang.leng
  * @date 2021-04-08 4:03 下午
  */

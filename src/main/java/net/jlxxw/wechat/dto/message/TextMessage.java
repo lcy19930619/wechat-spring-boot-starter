@@ -2,6 +2,7 @@ package net.jlxxw.wechat.dto.message;
 
 /**
  * 文本类型信息
+ *
  * @author chunyang.leng
  * @date 2021/1/20 11:18 上午
  */
@@ -12,11 +13,11 @@ public class TextMessage extends AbstractWeiXinMessage {
      */
     private String content;
 
-	public String getContent() {
-		return content;
-	}
+    public String getContent() {
+        return content;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    public void setContent(String content) {
+        this.content = content;
+    }
 }

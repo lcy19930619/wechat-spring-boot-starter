@@ -25,12 +25,14 @@ public enum WeiXinEventTypeEnum {
 
     /**
      * 事件类型：scan(用户已关注时的扫描带参数二维码)
+     *
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E6%89%AB%E6%8F%8F%E5%B8%A6%E5%8F%82%E6%95%B0%E4%BA%8C%E7%BB%B4%E7%A0%81%E4%BA%8B%E4%BB%B6">文档地址</a>
      */
     SCAN("SCAN", "用户已关注时的扫描带参数二维码"),
 
     /**
      * 事件类型：LOCATION(上报地理位置)
+     *
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E4%B8%8A%E6%8A%A5%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E4%BA%8B%E4%BB%B6">文档地址</a>
      */
     LOCATION("LOCATION", "上报地理位置"),
@@ -65,6 +67,7 @@ public enum WeiXinEventTypeEnum {
 
     /**
      * 扫码推事件且弹出“消息接收中”提示框的事件推送
+     *
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#3">文档地址</a>
      */
     SCANCODE_WAITMSG("scancode_waitmsg", "扫码推事件且弹出“消息接收中”提示框的事件推送"),

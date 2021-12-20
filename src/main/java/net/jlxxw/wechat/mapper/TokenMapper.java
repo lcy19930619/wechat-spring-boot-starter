@@ -16,6 +16,7 @@ public interface TokenMapper {
 
     /**
      * 创建一个token管理表
+     *
      * @return
      */
     @Insert("create table if not exists wei_xin_token\n" +
@@ -25,11 +26,12 @@ public interface TokenMapper {
             "    create_time      datetime default now() comment '数据插入时间'\n" +
             ")\n" +
             "charset = utf8\n"
-            )
+    )
     int createTable();
 
     /**
      * 从数据库中获取token
+     *
      * @return
      */
     @Select("select token from wei_xin_token order by id desc limit 1")
@@ -37,6 +39,7 @@ public interface TokenMapper {
 
     /**
      * 向数据库中存储token
+     *
      * @param token
      * @return
      */
@@ -45,6 +48,7 @@ public interface TokenMapper {
 
     /**
      * 锁表
+     *
      * @return
      */
     @Select("select max(create_time) from wei_xin_token for update")

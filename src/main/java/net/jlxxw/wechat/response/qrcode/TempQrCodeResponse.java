@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.dto.qrcode;
+package net.jlxxw.wechat.response.qrcode;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
@@ -8,7 +8,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @author chunyang.leng
  * @date 2021-11-23 11:32 上午
  */
-public class TempQrCodeDTO extends QrCodeDTO {
+public class TempQrCodeResponse extends QrCodeResponse {
     /**
      * 过期时间
      */

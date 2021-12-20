@@ -128,7 +128,7 @@ public class WeiXinComponentAutoConfiguration {
     @ConditionalOnProperty(prefix = "weixin", name = "enable-default-token-manager", havingValue = "true")
     public ScheduledUpdateToken weiXinTokenManager(TokenMapper tokenMapper,
                                                    WeiXinTokenManager weiXinTokenManager) {
-        LoggerUtils.info(logger,"初始化默认token管理器");
+        LoggerUtils.info(logger, "初始化默认token管理器");
         return new ScheduledUpdateToken(tokenMapper, weiXinTokenManager);
     }
 
@@ -139,23 +139,22 @@ public class WeiXinComponentAutoConfiguration {
             RestTemplate restTemplate,
             WeiXinServerSecurityCheck weiXinServerSecurityCheck,
             WeiXinProperties weiXinProperties) {
-        LoggerUtils.info(logger,"初始化微信安全检查组件");
+        LoggerUtils.info(logger, "初始化微信安全检查组件");
         return new ScheduledUpdateWeiXinServerIp(weiXinTokenManager, restTemplate, weiXinServerSecurityCheck, weiXinProperties);
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "weixin", name = {"enable-wei-xin-call-back-server-security-check"}, havingValue = "true")
     public WeiXinServerSecurityCheck weiXinServerSecurityCheck() {
-        LoggerUtils.info(logger,"启用微信回调ip白名单管理器");
+        LoggerUtils.info(logger, "启用微信回调ip白名单管理器");
         return new WeiXinServerSecurityCheck();
     }
 
 
-
     @Bean
     @ConditionalOnMissingBean(WebClient.class)
-    public WebClient webClient(){
-        LoggerUtils.info(logger,"初始化WebClient");
+    public WebClient webClient() {
+        LoggerUtils.info(logger, "初始化WebClient");
         TcpClient tcpClient = TcpClient
                 .create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)

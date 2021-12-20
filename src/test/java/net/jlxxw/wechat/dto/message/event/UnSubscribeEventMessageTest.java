@@ -18,7 +18,7 @@ public class UnSubscribeEventMessageTest extends BaseTest {
     public void convertTest() throws IOException {
         ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/UnSubscribeEventMessage.xml");
         File file = classPathResource.getFile();
-        UnSubscribeEventMessage message = readXmlData(file,UnSubscribeEventMessage.class);
+        UnSubscribeEventMessage message = readXmlData(file, UnSubscribeEventMessage.class);
         Assert.assertNotNull(message);
     }
 

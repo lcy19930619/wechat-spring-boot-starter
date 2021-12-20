@@ -29,7 +29,7 @@ public class SubscriptionUser {
      */
     private Integer sex;
     /**
-     * 	用户的语言，简体中文为zh_CN
+     * 用户的语言，简体中文为zh_CN
      */
     private String language;
     /**
@@ -37,7 +37,7 @@ public class SubscriptionUser {
      */
     private String city;
     /**
-     * 	用户所在省份
+     * 用户所在省份
      */
     private String province;
 

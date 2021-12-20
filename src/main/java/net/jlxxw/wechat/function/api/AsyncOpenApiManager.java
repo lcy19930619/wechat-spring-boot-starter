@@ -6,7 +6,7 @@ import net.jlxxw.wechat.function.token.WeiXinTokenManager;
 import net.jlxxw.wechat.properties.WeiXinProperties;
 import net.jlxxw.wechat.response.WeiXinResponse;
 import net.jlxxw.wechat.response.api.ApiRequestRecord;
-import net.jlxxw.wechat.response.api.ApiResult;
+import net.jlxxw.wechat.response.api.ApiResponse;
 import net.jlxxw.wechat.util.WebClientUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.text.MessageFormat;
  * @date 2021-11-23 2:22 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties","weiXinTokenManager","webClientUtils"})
+@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
 @Component
 public class AsyncOpenApiManager {
     @Autowired
@@ -35,6 +35,14 @@ public class AsyncOpenApiManager {
     private WebClientUtils webClientUtils;
 
     /**
+     * @return <br/>
+     * 返回码	errmsg	说明
+     * <br/>
+     * 0	    ok	    查询成功
+     * <br/>
+     * 48006	forbid to clear quota because of reaching the limit	一个月10次的机会用完了
+     * <br/>
+     * 40013	invalid appid	appid写错了；或者填入的appid与access_token代表的账号的appid不一致
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_api_quota.html">文档地址</a>
      * <br/>
      * 本接口用于清空公众号/小程序/第三方平台等接口的每日调用接口次数。<br/>
@@ -42,18 +50,8 @@ public class AsyncOpenApiManager {
      * 2、如果是第三方服务商代公众号或者小程序清除quota，则需要用authorizer_access_token<br/>
      * 3、每个帐号每月共10次清零操作机会，清零生效一次即用掉一次机会；第三方帮助公众号/小程序调用时，实际上是在消耗公众号/小程序自身的quota<br/>
      * 4、由于指标计算方法或统计时间差异，实时调用量数据可能会出现误差，一般在1%以内<br/>
-     *
-     * @return <br/>
-     *                 返回码	errmsg	说明
-     *                 <br/>
-     *                 0	    ok	    查询成功
-     *                 <br/>
-     *                 48006	forbid to clear quota because of reaching the limit	一个月10次的机会用完了
-     *                 <br/>
-     *                 40013	invalid appid	appid写错了；或者填入的appid与access_token代表的账号的appid不一致
-     *
      */
-    public Mono<WeiXinResponse> clean()  {
+    public Mono<WeiXinResponse> clean() {
         String appId = weiXinProperties.getAppId();
         String token = weiXinTokenManager.getTokenFromLocal();
 
@@ -64,8 +62,9 @@ public class AsyncOpenApiManager {
     }
 
     /**
+     * @param cgiPath api的请求地址，例如"/cgi-bin/message/custom/send";不要前缀“https://api.weixin.qq.com” ，也不要漏了"/",否则都会76003的报错
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_api_quota.html">文档地址</a>
-     *
+     * <p>
      * 查询openAPI调用quota
      * <p>
      * 本接口用于查询公众号/小程序/第三方平台等接口的每日调用接口的额度以及调用次数。
@@ -77,9 +76,8 @@ public class AsyncOpenApiManager {
      * 3、每个接口都有调用次数限制，请开发者合理调用接口
      * 4、”/xxx/sns/xxx“这类接口不支持使用该接口，会出现76022报错。
      * </pre>
-     * @param cgiPath api的请求地址，例如"/cgi-bin/message/custom/send";不要前缀“https://api.weixin.qq.com” ，也不要漏了"/",否则都会76003的报错
      */
-    public Mono<ApiResult> selectQuota(String cgiPath) {
+    public Mono<ApiResponse> selectQuota(String cgiPath) {
         if (StringUtils.isBlank(cgiPath)) {
             throw new NullPointerException();
         }
@@ -91,10 +89,11 @@ public class AsyncOpenApiManager {
 
         String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_QUOTA, token);
 
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiResult.class);
+        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiResponse.class);
     }
 
     /**
+     * @param rid
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_rid_info.html">文档地址</a>
      * 查询rid信息
      * 本接口用于查询调用公众号/小程序/第三方平台等接口报错返回的rid详情信息，辅助开发者高效定位问题
@@ -106,9 +105,8 @@ public class AsyncOpenApiManager {
      *
      * 3、rid的有效期只有7天，即只可查询最近7天的rid，查询超过7天的rid会出现报错，错误码为76001
      * </pre>
-     * @param rid
      */
-    public Mono<ApiRequestRecord> selectRid(String rid){
+    public Mono<ApiRequestRecord> selectRid(String rid) {
         if (StringUtils.isBlank(rid)) {
             throw new NullPointerException();
         }

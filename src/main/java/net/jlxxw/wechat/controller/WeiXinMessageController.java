@@ -20,7 +20,7 @@ import java.io.PrintWriter;
  * @date 2021/1/20 12:48 下午
  */
 @Controller
-@ConditionalOnProperty(value = "weixin.netty.server.enable-netty",havingValue = "false")
+@ConditionalOnProperty(value = "weixin.netty.server.enable-netty", havingValue = "false")
 public class WeiXinMessageController {
     @Autowired
     private EventBus eventBus;
@@ -31,10 +31,10 @@ public class WeiXinMessageController {
 
     @RequestMapping("weixin")
     public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if(weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null){
+        if (weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null) {
             // 开启微信回调ip安全检查时执行
             final String ipAddress = NetworkUtil.getIpAddress(request);
-            if(!weiXinServerSecurityCheck.isSecurity(ipAddress)){
+            if (!weiXinServerSecurityCheck.isSecurity(ipAddress)) {
                 // 非法ip，不予处理
                 return;
             }

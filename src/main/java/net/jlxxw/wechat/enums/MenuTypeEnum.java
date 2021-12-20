@@ -61,7 +61,5 @@ public enum MenuTypeEnum {
     /**
      * 小程序类型
      */
-    miniprogram
-
-    ;
+    miniprogram;
 }

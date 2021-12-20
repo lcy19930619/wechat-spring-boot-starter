@@ -41,10 +41,10 @@ public class ScheduledUpdateWeiXinServerIp {
     @PostConstruct
     @Scheduled(cron = "00 00 3,6,9,12,15,18,21 * * ?")
     public void update() {
-        if(!weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck()){
+        if (!weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck()) {
             return;
         }
-        if(weiXinTokenManager == null){
+        if (weiXinTokenManager == null) {
             throw new BeanCreationException("检查微信白名单时，必须配置WeiXinTokenManager的实现类，或配置weixin.enable-default-token-manager: true");
         }
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();

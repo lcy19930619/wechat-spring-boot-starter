@@ -30,7 +30,7 @@ public class BatchExecutor {
      * @param <T>      具体的数据类型
      */
     private <T> void batchExecute(List<T> data, Consumer<List<T>> consumer) {
-        if(CollectionUtils.isEmpty(data)){
+        if (CollectionUtils.isEmpty(data)) {
             return;
         }
         // 统计需要分成几次
@@ -56,13 +56,14 @@ public class BatchExecutor {
 
     /**
      * 灵活执行方法，批量执行，每次处理512条
-     * @param data 需要处理的数据
-     * @param consumer 处理逻辑
+     *
+     * @param data          需要处理的数据
+     * @param consumer      处理逻辑
      * @param useThreadPool 是否使用线程池进行处理push
      * @param <T>
      */
-    public <T> void batchExecute( boolean useThreadPool,List<T> data, Consumer<List<T>> consumer) {
-        if(CollectionUtils.isEmpty(data)){
+    public <T> void batchExecute(boolean useThreadPool, List<T> data, Consumer<List<T>> consumer) {
+        if (CollectionUtils.isEmpty(data)) {
             return;
         }
         if (useThreadPool) {
@@ -87,8 +88,8 @@ public class BatchExecutor {
                     consumer.accept(tempList);
                 });
             }
-        }else{
-            batchExecute(data,consumer);
+        } else {
+            batchExecute(data, consumer);
         }
     }
 

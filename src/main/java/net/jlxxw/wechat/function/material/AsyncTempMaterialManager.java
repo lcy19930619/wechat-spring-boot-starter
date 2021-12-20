@@ -2,13 +2,13 @@ package net.jlxxw.wechat.function.material;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.WeiXinException;
 import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.response.material.TempMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import net.jlxxw.wechat.util.WebClientUtils;
-import net.jlxxw.wechat.vo.TempMaterialVO;
-import net.jlxxw.wechat.constant.UrlConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class AsyncTempMaterialManager {
      * @param materialEnum 素材类型
      * @param file         文件内容
      */
-    public Mono<TempMaterialVO> upload(MaterialEnum materialEnum, File file) {
+    public Mono<TempMaterialResponse> upload(MaterialEnum materialEnum, File file) {
 
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(file);
@@ -74,7 +74,7 @@ public class AsyncTempMaterialManager {
             }
             LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象
-            TempMaterialVO materialVO = new TempMaterialVO();
+            TempMaterialResponse materialVO = new TempMaterialResponse();
             materialVO.setMediaId(obj.getString("media_id"));
             materialVO.setCreatedAt(obj.getLong("created_at"));
             materialVO.setType(obj.getString("type"));
@@ -90,7 +90,7 @@ public class AsyncTempMaterialManager {
      * @param uri            uri链接
      * @param callbackMethod 回调方法
      */
-    public Mono<TempMaterialVO> upload(MaterialEnum materialEnum, URI uri, Consumer<TempMaterialVO> callbackMethod) {
+    public Mono<TempMaterialResponse> upload(MaterialEnum materialEnum, URI uri, Consumer<TempMaterialResponse> callbackMethod) {
         String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(Paths.get(uri));
 
@@ -114,7 +114,7 @@ public class AsyncTempMaterialManager {
             }
             LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象
-            TempMaterialVO materialVO = new TempMaterialVO();
+            TempMaterialResponse materialVO = new TempMaterialResponse();
             materialVO.setMediaId(obj.getString("media_id"));
             materialVO.setCreatedAt(obj.getLong("created_at"));
             materialVO.setType(obj.getString("type"));
@@ -145,7 +145,7 @@ public class AsyncTempMaterialManager {
         String url = MessageFormat.format(UrlConstant.DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时视频素材url:{}", url);
 
-        Mono<JSONObject> mono =  webClientUtils.sendGet(url,JSONObject.class,MediaType.APPLICATION_JSON);
+        Mono<JSONObject> mono = webClientUtils.sendGet(url, JSONObject.class, MediaType.APPLICATION_JSON);
 
         return mono.map(obj -> {
             String videoUrl = obj.getString("video_url");

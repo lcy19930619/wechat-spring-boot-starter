@@ -22,31 +22,32 @@ public class SyncPushCustomerTest extends BaseTest {
 
     @Autowired
     public SyncPushCustomer syncPushCustomer;
+
     @Test
-    public void pushCustomerTest(){
+    public void pushCustomerTest() {
         ArticlesDTO articlesDTO = new ArticlesDTO();
         articlesDTO.setPicurl("测试图片url");
         articlesDTO.setTitle("这里一个测试的标题");
         articlesDTO.setUrl("测试跳转链接");
         articlesDTO.setDescription("测试描述信息");
-        CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
+        CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId, articlesDTO);
         WeiXinResponse weiXinResponse = syncPushCustomer.pushCustomer(dto);
 
-        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse),0L, (int) weiXinResponse.getErrcode());
+        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse), 0L, (int) weiXinResponse.getErrcode());
 
     }
 
     /**
      * 批量推送
      */
-    public void pushCustomerListTest(){
+    public void pushCustomerListTest() {
         ArticlesDTO articlesDTO = new ArticlesDTO();
         articlesDTO.setPicurl("测试图片url");
         articlesDTO.setTitle("这里一个测试的标题");
         articlesDTO.setUrl("测试跳转链接");
         articlesDTO.setDescription("测试描述信息");
-        List<CustomerMessageDTO> dtoList =new ArrayList<>();
-        CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
+        List<CustomerMessageDTO> dtoList = new ArrayList<>();
+        CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId, articlesDTO);
         dtoList.add(dto);
         List<WeiXinResponse> weiXinResponse = syncPushCustomer.pushCustomer(dtoList);
         Assert.assertFalse("测试结果不应为空", CollectionUtils.isEmpty(weiXinResponse));

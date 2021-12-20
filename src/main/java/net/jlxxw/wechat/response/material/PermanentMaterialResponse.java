@@ -1,4 +1,6 @@
-package net.jlxxw.wechat.vo;
+package net.jlxxw.wechat.response.material;
+
+import net.jlxxw.wechat.response.WeiXinResponse;
 
 /**
  * 临时素材信息返回对象
@@ -6,7 +8,7 @@ package net.jlxxw.wechat.vo;
  * @author chunyang.leng
  * @date 2021-03-05 6:02 下午
  */
-public class PermanentMaterialVO {
+public class PermanentMaterialResponse extends WeiXinResponse {
     /**
      * 新增的图片素材的图片URL（仅新增图片素材时会返回该字段）
      */

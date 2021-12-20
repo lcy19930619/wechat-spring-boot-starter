@@ -56,7 +56,7 @@ public class SyncWeiXinPayTest extends BaseTest {
 
     @Test
     public void getExecutePayVOTest() throws Exception {
-        String prePayId="";
+        String prePayId = "";
         syncWeiXinPay.getExecutePayVO(prePayId);
         Assert.assertFalse(StringUtils.isEmpty(prePayId));
     }
