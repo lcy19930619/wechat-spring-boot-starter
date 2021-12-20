@@ -9,10 +9,10 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import net.jlxxw.wechat.component.listener.AbstractWeiXinEventListener;
-import net.jlxxw.wechat.component.listener.AbstractWeiXinMessageListener;
-import net.jlxxw.wechat.component.listener.UnKnowWeiXinEventListener;
-import net.jlxxw.wechat.component.listener.UnKnowWeiXinMessageListener;
+import net.jlxxw.wechat.component.listener.AbstractWeChatEventListener;
+import net.jlxxw.wechat.component.listener.AbstractWeChatMessageListener;
+import net.jlxxw.wechat.component.listener.UnKnowWeChatEventListener;
+import net.jlxxw.wechat.component.listener.UnKnowWeChatMessageListener;
 import net.jlxxw.wechat.dto.message.*;
 import net.jlxxw.wechat.dto.message.event.*;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
@@ -50,17 +50,17 @@ public class EventBus {
     private static final XmlMapper XML_MAPPER = new XmlMapper();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     @Autowired(required = false)
-    private List<AbstractWeiXinMessageListener> abstractWeiXinMessageListeners;
+    private List<AbstractWeChatMessageListener> abstractWeChatMessageListeners;
     @Autowired(required = false)
-    private List<AbstractWeiXinEventListener> abstractWeiXinEventListeners;
+    private List<AbstractWeChatEventListener> abstractWeChatEventListeners;
     @Autowired(required = false)
     private WeChatMsgCodec weChatMsgCodec;
     @Autowired
     private WeChatProperties weChatProperties;
     @Autowired(required = false)
-    private UnKnowWeiXinEventListener unKnowWeiXinEventListener;
+    private UnKnowWeChatEventListener unKnowWeChatEventListener;
     @Autowired(required = false)
-    private UnKnowWeiXinMessageListener unKnowWeiXinMessageListener;
+    private UnKnowWeChatMessageListener unKnowWeChatMessageListener;
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
 
@@ -69,13 +69,13 @@ public class EventBus {
      * key 支持的消息类型
      * value 消息监听器
      */
-    private final Map<WeChatMessageTypeEnum, AbstractWeiXinMessageListener> messageListenerMap = new HashMap<>();
+    private final Map<WeChatMessageTypeEnum, AbstractWeChatMessageListener> messageListenerMap = new HashMap<>();
     /**
      * 消息处理监听器
      * key 支持的消息类型
      * value 消息监听器
      */
-    private final Map<WeChatEventTypeEnum, AbstractWeiXinEventListener> eventListenerMap = new HashMap<>();
+    private final Map<WeChatEventTypeEnum, AbstractWeChatEventListener> eventListenerMap = new HashMap<>();
 
 
     @PostConstruct
@@ -90,9 +90,9 @@ public class EventBus {
         OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         OBJECT_MAPPER.setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE);
 
-        if (!CollectionUtils.isEmpty(abstractWeiXinMessageListeners)) {
+        if (!CollectionUtils.isEmpty(abstractWeChatMessageListeners)) {
             // 如果已经配置了微信监听器，则按照支持到类型枚举，进行分类
-            Map<WeChatMessageTypeEnum, List<AbstractWeiXinMessageListener>> map = abstractWeiXinMessageListeners.stream().collect(Collectors.groupingBy(AbstractWeiXinMessageListener::supportMessageType));
+            Map<WeChatMessageTypeEnum, List<AbstractWeChatMessageListener>> map = abstractWeChatMessageListeners.stream().collect(Collectors.groupingBy(AbstractWeChatMessageListener::supportMessageType));
 
             map.forEach((k, v) -> {
                 if (v.size() > 1) {
@@ -111,9 +111,9 @@ public class EventBus {
             }
         }
 
-        if (!CollectionUtils.isEmpty(abstractWeiXinEventListeners)) {
+        if (!CollectionUtils.isEmpty(abstractWeChatEventListeners)) {
             // 如果已经配置了微信监听器，则按照支持到类型枚举，进行分类
-            Map<WeChatEventTypeEnum, List<AbstractWeiXinEventListener>> eventMap = abstractWeiXinEventListeners.stream().collect(Collectors.groupingBy(AbstractWeiXinEventListener::supportEventType));
+            Map<WeChatEventTypeEnum, List<AbstractWeChatEventListener>> eventMap = abstractWeChatEventListeners.stream().collect(Collectors.groupingBy(AbstractWeChatEventListener::supportEventType));
             eventMap.forEach((k, v) -> {
                 if (v.size() > 1) {
                     // 因为每个事件都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
@@ -361,18 +361,18 @@ public class EventBus {
 
                     // 未知的事件，用户可自行扩展
                     default:
-                        if (Objects.isNull(unKnowWeiXinEventListener)) {
+                        if (Objects.isNull(unKnowWeChatEventListener)) {
                             throw new IllegalArgumentException("未知的事件请求信息类型，event:" + event + ",请求数据信息:" + objectNode.toString());
                         }
-                        return unKnowWeiXinEventListener.handlerOtherType(objectNode);
+                        return unKnowWeChatEventListener.handlerOtherType(objectNode);
                 }
 
                 // 未知的消息，用户可自行扩展
             default:
-                if (Objects.isNull(unKnowWeiXinMessageListener)) {
+                if (Objects.isNull(unKnowWeChatMessageListener)) {
                     throw new IllegalArgumentException("未知的消息请求信息类型,messageType:" + msgType + ",请求数据信息:" + objectNode.toString());
                 }
-                return unKnowWeiXinMessageListener.handlerOtherType(objectNode);
+                return unKnowWeChatMessageListener.handlerOtherType(objectNode);
         }
     }
 
@@ -385,17 +385,17 @@ public class EventBus {
      * @return 处理完毕的xml字符串
      */
     private String handlerMessage(AbstractWeChatMessage abstractWeChatMessage, WeChatMessageTypeEnum weChatMessageTypeEnum) {
-        if (CollectionUtils.isEmpty(abstractWeiXinMessageListeners)) {
+        if (CollectionUtils.isEmpty(abstractWeChatMessageListeners)) {
             throw new IllegalArgumentException("未注册任何相关消息监听器，或监听器未加入到ioc容器中");
         }
-        final AbstractWeiXinMessageListener abstractWeiXinMessageListener = messageListenerMap.get(weChatMessageTypeEnum);
+        final AbstractWeChatMessageListener abstractWeChatMessageListener = messageListenerMap.get(weChatMessageTypeEnum);
 
-        if (Objects.isNull(abstractWeiXinMessageListener)) {
+        if (Objects.isNull(abstractWeChatMessageListener)) {
             throw new IllegalArgumentException(weChatMessageTypeEnum.name() + "消息监听器未注册");
         }
 
         LoggerUtils.debug(logger, "接收到微信请求，请求类型:{},请求参数:{}", weChatMessageTypeEnum.getDescription(), JSON.toJSONString(abstractWeChatMessage));
-        WeChatMessageResponse response = abstractWeiXinMessageListener.handler(abstractWeChatMessage);
+        WeChatMessageResponse response = abstractWeChatMessageListener.handler(abstractWeChatMessage);
         if (Objects.isNull(response)) {
             return "";
         }
@@ -422,15 +422,15 @@ public class EventBus {
      * @return 处理结果
      */
     private String handlerEvent(AbstractWeChatMessage abstractWeChatMessage, WeChatEventTypeEnum weChatEventTypeEnum) {
-        if (CollectionUtils.isEmpty(abstractWeiXinEventListeners)) {
+        if (CollectionUtils.isEmpty(abstractWeChatEventListeners)) {
             throw new IllegalArgumentException("未注册相关事件监听器，或监听器未加入到ioc容器中");
         }
-        final AbstractWeiXinEventListener abstractWeiXinEventListener = eventListenerMap.get(weChatEventTypeEnum);
+        final AbstractWeChatEventListener abstractWeChatEventListener = eventListenerMap.get(weChatEventTypeEnum);
 
-        if (Objects.isNull(abstractWeiXinEventListener)) {
+        if (Objects.isNull(abstractWeChatEventListener)) {
             throw new IllegalArgumentException(weChatEventTypeEnum.name() + "事件监听器未注册");
         }
-        WeChatMessageResponse response = abstractWeiXinEventListener.handler(abstractWeChatMessage);
+        WeChatMessageResponse response = abstractWeChatEventListener.handler(abstractWeChatMessage);
         if (Objects.isNull(response)) {
             return "";
         }

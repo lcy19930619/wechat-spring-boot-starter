@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.dto.message;
 
 import net.jlxxw.wechat.base.BaseTest;
+import net.jlxxw.wechat.response.WeChatMessageResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
@@ -19,6 +20,20 @@ public class ImageMessageTest extends BaseTest {
         File file = classPathResource.getFile();
         ImageMessage message = readXmlData(file, ImageMessage.class);
         Assert.assertNotNull(message);
+    }
+
+    @Test
+    public void responseTest() throws IOException {
+        String xmlData = readXmlData("mock/data/xml/ImageMessage.xml");
+        WeChatMessageResponse response = nettyMessageSend(xmlData, WeChatMessageResponse.class);
+        Assert.assertNotNull(response);
+
+        WeChatMessageResponse.Image image = response.getImage();
+        Assert.assertNotNull(image);
+
+        String mediaId = image.getMediaId();
+        Assert.assertEquals("预期的值为media_id，但发现的值为:"+mediaId,"media_id",mediaId);
+
     }
 
 }

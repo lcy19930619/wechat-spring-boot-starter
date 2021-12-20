@@ -14,8 +14,15 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +34,10 @@ import java.nio.charset.StandardCharsets;
 @SpringBootTest(classes = TestApplication.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class BaseTest {
+
+    protected static XmlMapper xmlMapper = new XmlMapper();
+    protected static ObjectMapper objectMapper = new ObjectMapper();
+
     /**
      * 测试用的openId
      */
@@ -43,9 +54,10 @@ public class BaseTest {
 
     @Autowired
     private WeChatTokenManager weChatTokenManager;
-
-    protected static XmlMapper xmlMapper = new XmlMapper();
-    protected static ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private RestTemplate restTemplate;
+    @Value("${we-chat.netty.server.netty-port}")
+    private int nettyPort;
 
     static {
         // 初始化xmlMapper相关配置
@@ -91,4 +103,29 @@ public class BaseTest {
         ObjectNode jsonNodes = xmlMapper.readValue(reader, ObjectNode.class);
         return objectMapper.readValue(jsonNodes.toString(), clazz);
     }
+
+
+    protected <T> T nettyMessageSend(String xmlData,Class<T> clazz) throws IOException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_XML);
+        HttpEntity<String> formEntity = new HttpEntity<>(xmlData, headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://127.0.0.1:" + nettyPort, formEntity, String.class);
+        Assert.assertEquals(responseEntity.getStatusCode().value(), 200);
+        String xml = responseEntity.getBody();
+        Assert.assertNotNull("返回值不应为null",xml);
+
+        byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
+        // jackson会自动关闭流，不需要手动关闭
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        Reader reader = new InputStreamReader(inputStream);
+        return xmlMapper.readValue(reader, clazz);
+    }
+
+
+    protected static String readXmlData(String classPathName) throws IOException {
+        ClassPathResource classPathResource = new ClassPathResource(classPathName);
+        File file = classPathResource.getFile();
+        return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+    }
+
 }

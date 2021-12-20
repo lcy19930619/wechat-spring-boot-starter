@@ -30,7 +30,7 @@ public class ListenerTest extends BaseTest {
     private static final Logger logger = LoggerFactory.getLogger(ListenerTest.class);
     @Autowired
     private RestTemplate restTemplate;
-    @Value("${weixin.netty.server.netty-port}")
+    @Value("${we-chat.netty.server.netty-port}")
     private int nettyPort;
 
     @Test

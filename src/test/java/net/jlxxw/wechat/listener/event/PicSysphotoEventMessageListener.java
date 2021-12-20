@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.listener.event;
 
-import net.jlxxw.wechat.component.listener.AbstractWeiXinEventListener;
+import net.jlxxw.wechat.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * @date 2021-12-19 7:08 下午
  */
 @Component
-public class PicSysphotoEventMessageListener extends AbstractWeiXinEventListener {
+public class PicSysphotoEventMessageListener extends AbstractWeChatEventListener {
     /**
      * 支持的事件类型
      *

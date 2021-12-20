@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.response;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlCData;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.util.Arrays;
@@ -17,13 +17,13 @@ public class WeChatMessageResponse {
     /**
      * 接收方帐号（收到的OpenID）
      */
-    @JacksonXmlCData
+    @JacksonXmlProperty
     private String toUserName;
 
     /**
      * 开发者微信号
      */
-    @JacksonXmlCData
+    @JacksonXmlProperty
     private String fromUserName;
 
     /**
@@ -35,13 +35,13 @@ public class WeChatMessageResponse {
      * 消息类型，
      * 文本为text
      */
-    @JacksonXmlCData
+    @JacksonXmlProperty
     private String msgType;
 
     /**
      * 回复的消息内容（换行：在content中能够换行，微信客户端就支持换行显示）
      */
-    @JacksonXmlCData
+    @JacksonXmlProperty
     private String content;
 
     /**
@@ -52,7 +52,8 @@ public class WeChatMessageResponse {
     /**
      * 图文
      */
-    private List<Article> Articles;
+    @JacksonXmlProperty(localName = "Articles")
+    private List<Article> articles;
     /**
      * 图片
      */
@@ -119,11 +120,11 @@ public class WeChatMessageResponse {
     }
 
     public List<Article> getArticles() {
-        return Articles;
+        return articles;
     }
 
     public void setArticles(List<Article> articles) {
-        Articles = articles;
+        this.articles = articles;
     }
 
     public Image getImage() {
@@ -161,7 +162,7 @@ public class WeChatMessageResponse {
     /**
      * 回复文本消息
      *
-     * @param content
+     * @param content 回复的文件内容
      * @return
      */
     public static WeChatMessageResponse buildText(String content) {
@@ -236,8 +237,8 @@ public class WeChatMessageResponse {
         Music music = new Music();
         music.setTitle(title);
         music.setDescription(description);
-        music.setMusicURL(musicUrl);
-        music.sethQMusicUrl(hqMusicUrl);
+        music.setMusicUrl(musicUrl);
+        music.setHqMusicUrl(hqMusicUrl);
         music.setThumbMediaId(thumbMediaId);
         weChatMessageResponse.setMusic(music);
         return weChatMessageResponse;
@@ -246,7 +247,7 @@ public class WeChatMessageResponse {
     /**
      * 回复图文消息
      *
-     * @param articles
+     * @param articles 回复的图文消息
      * @return
      */
     public static WeChatMessageResponse buildArticle(Article... articles) {
@@ -256,208 +257,210 @@ public class WeChatMessageResponse {
         weChatMessageResponse.setArticles(Arrays.asList(articles));
         return weChatMessageResponse;
     }
+
+
+    public static class Image {
+        /**
+         * 通过素材管理中的接口上传多媒体文件，得到的id。
+         */
+        @JacksonXmlProperty
+        private String mediaId;
+
+        public String getMediaId() {
+            return mediaId;
+        }
+
+        public void setMediaId(String mediaId) {
+            this.mediaId = mediaId;
+        }
+    }
+
+    public static class Voice {
+        /**
+         * 通过素材管理中的接口上传多媒体文件，得到的id。
+         */
+        @JacksonXmlProperty
+        private String mediaId;
+
+        public String getMediaId() {
+            return mediaId;
+        }
+
+        public void setMediaId(String mediaId) {
+            this.mediaId = mediaId;
+        }
+    }
+
+    public static class Video {
+        /**
+         * 通过素材管理中的接口上传多媒体文件，得到的id。
+         */
+        @JacksonXmlProperty
+        private String mediaId;
+        /**
+         * 视频消息的标题
+         */
+        @JacksonXmlProperty
+        private String title;
+        /**
+         * 视频消息的描述
+         */
+        @JacksonXmlProperty
+        private String description;
+
+        public String getMediaId() {
+            return mediaId;
+        }
+
+        public void setMediaId(String mediaId) {
+            this.mediaId = mediaId;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+    }
+
+    public static class Music {
+        /**
+         * 音乐标题
+         */
+        @JacksonXmlProperty
+        private String title;
+        /**
+         * 音乐描述
+         */
+        @JacksonXmlProperty
+        private String description;
+
+        /**
+         * 音乐链接
+         */
+        @JacksonXmlProperty(localName = "MusicUrl")
+        private String musicUrl;
+
+        /**
+         * 高质量音乐链接，WIFI环境优先使用该链接播放音乐
+         */
+        @JacksonXmlProperty(localName = "HQMusicUrl")
+        private String hqMusicUrl;
+
+        /**
+         * 缩略图的媒体id，通过素材管理中的接口上传多媒体文件，得到的id
+         */
+        @JacksonXmlProperty
+        private String thumbMediaId;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getMusicUrl() {
+            return musicUrl;
+        }
+
+        public void setMusicUrl(String musicUrl) {
+            this.musicUrl = musicUrl;
+        }
+
+        public String getHqMusicUrl() {
+            return hqMusicUrl;
+        }
+
+        public void setHqMusicUrl(String hqMusicUrl) {
+            this.hqMusicUrl = hqMusicUrl;
+        }
+
+        public String getThumbMediaId() {
+            return thumbMediaId;
+        }
+
+        public void setThumbMediaId(String thumbMediaId) {
+            this.thumbMediaId = thumbMediaId;
+        }
+    }
+
+    public static class Article {
+        /**
+         * 图文消息标题
+         */
+        @JacksonXmlProperty
+        private String title;
+
+        /**
+         * 图文消息描述
+         */
+        @JacksonXmlProperty
+        private String description;
+
+        /**
+         * 图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200
+         */
+        @JacksonXmlProperty
+        private String picUrl;
+
+        /**
+         * 点击图文消息跳转链接
+         */
+        @JacksonXmlProperty
+        private String url;
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public String getPicUrl() {
+            return picUrl;
+        }
+
+        public void setPicUrl(String picUrl) {
+            this.picUrl = picUrl;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+    }
 }
 
-class Image {
-    /**
-     * 通过素材管理中的接口上传多媒体文件，得到的id。
-     */
-    @JacksonXmlCData
-    private String mediaId;
-
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(String mediaId) {
-        this.mediaId = mediaId;
-    }
-}
-
-class Voice {
-    /**
-     * 通过素材管理中的接口上传多媒体文件，得到的id。
-     */
-    @JacksonXmlCData
-    private String mediaId;
-
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(String mediaId) {
-        this.mediaId = mediaId;
-    }
-}
-
-class Video {
-    /**
-     * 通过素材管理中的接口上传多媒体文件，得到的id。
-     */
-    @JacksonXmlCData
-    private String mediaId;
-    /**
-     * 视频消息的标题
-     */
-    @JacksonXmlCData
-    private String title;
-    /**
-     * 视频消息的描述
-     */
-    @JacksonXmlCData
-    private String description;
-
-    public String getMediaId() {
-        return mediaId;
-    }
-
-    public void setMediaId(String mediaId) {
-        this.mediaId = mediaId;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-}
-
-class Music {
-    /**
-     * 音乐标题
-     */
-    @JacksonXmlCData
-    private String title;
-    /**
-     * 音乐描述
-     */
-    @JacksonXmlCData
-    private String description;
-
-    /**
-     * 音乐链接
-     */
-    @JacksonXmlCData
-    private String musicURL;
-
-    /**
-     * 高质量音乐链接，WIFI环境优先使用该链接播放音乐
-     */
-    @JacksonXmlCData
-    private String hQMusicUrl;
-
-    /**
-     * 缩略图的媒体id，通过素材管理中的接口上传多媒体文件，得到的id
-     */
-    @JacksonXmlCData
-    private String thumbMediaId;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getMusicURL() {
-        return musicURL;
-    }
-
-    public void setMusicURL(String musicURL) {
-        this.musicURL = musicURL;
-    }
-
-    public String gethQMusicUrl() {
-        return hQMusicUrl;
-    }
-
-    public void sethQMusicUrl(String hQMusicUrl) {
-        this.hQMusicUrl = hQMusicUrl;
-    }
-
-    public String getThumbMediaId() {
-        return thumbMediaId;
-    }
-
-    public void setThumbMediaId(String thumbMediaId) {
-        this.thumbMediaId = thumbMediaId;
-    }
-}
-
-class Article {
-    /**
-     * 图文消息标题
-     */
-    @JacksonXmlCData
-    private String title;
-
-    /**
-     * 图文消息描述
-     */
-    @JacksonXmlCData
-    private String description;
-
-    /**
-     * 图片链接，支持JPG、PNG格式，较好的效果为大图360*200，小图200*200
-     */
-    @JacksonXmlCData
-    private String picUrl;
-
-    /**
-     * 点击图文消息跳转链接
-     */
-    @JacksonXmlCData
-    private String url;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-}
 
