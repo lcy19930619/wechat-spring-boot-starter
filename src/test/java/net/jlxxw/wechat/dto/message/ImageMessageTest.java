@@ -15,7 +15,7 @@ import java.io.IOException;
 public class ImageMessageTest extends BaseTest {
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/ImageMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/ImageMessage.xml");
         File file = classPathResource.getFile();
         ImageMessage message = readXmlData(file, ImageMessage.class);
         Assert.assertNotNull(message);

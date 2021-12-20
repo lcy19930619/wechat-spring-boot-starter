@@ -16,7 +16,7 @@ public class LocationMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/LocationMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/LocationMessage.xml");
         File file = classPathResource.getFile();
         LocationMessage message = readXmlData(file, LocationMessage.class);
         Assert.assertNotNull(message);

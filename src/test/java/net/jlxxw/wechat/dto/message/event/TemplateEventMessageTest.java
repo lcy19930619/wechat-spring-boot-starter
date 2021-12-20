@@ -16,7 +16,7 @@ public class TemplateEventMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/event/TemplateEventMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/TemplateEventMessage.xml");
         File file = classPathResource.getFile();
         TemplateEventMessage message = readXmlData(file,TemplateEventMessage.class);
         Assert.assertNotNull(message);

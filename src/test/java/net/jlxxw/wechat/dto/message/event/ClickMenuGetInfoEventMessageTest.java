@@ -16,7 +16,7 @@ public class ClickMenuGetInfoEventMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/event/ClickMenuGetInfoEventMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/ClickMenuGetInfoEventMessage.xml");
         File file = classPathResource.getFile();
         ClickMenuGetInfoEventMessage message = readXmlData(file, ClickMenuGetInfoEventMessage.class);
         Assert.assertNotNull(message);

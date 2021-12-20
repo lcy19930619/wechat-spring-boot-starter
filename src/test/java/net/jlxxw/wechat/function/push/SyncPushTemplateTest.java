@@ -45,7 +45,7 @@ public class SyncPushTemplateTest extends BaseTest {
                 .buildFirstData("first DATA的具体值", ColorEnums.BLUE)
                 .buildKeyWord1Data("keyword1 DATA的具体值",null)
                 .buildOtherData("abc","abc DATA的具体值",ColorEnums.ORANGE);
-        WeiXinResponse weiXinResponse = syncPushTemplate.pushTemplate(wxTemplate, token);
+        WeiXinResponse weiXinResponse = syncPushTemplate.pushTemplate(wxTemplate);
 
         Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse),0L, (int) weiXinResponse.getErrcode());
     }
@@ -68,7 +68,7 @@ public class SyncPushTemplateTest extends BaseTest {
                 .buildOtherData("abc","abc DATA的具体值",ColorEnums.ORANGE);
         List<WxTemplate> templateList =new ArrayList<>();
         templateList.add(wxTemplate);
-        List<WeiXinResponse>  weiXinResponse = syncPushTemplate.pushTemplate(templateList, token,volatileToken);
+        List<WeiXinResponse>  weiXinResponse = syncPushTemplate.pushTemplate(templateList);
         Assert.assertFalse("模版推送结果不应为空",CollectionUtils.isEmpty(weiXinResponse));
     }
 

@@ -15,7 +15,7 @@ import java.io.IOException;
 public class VideoMessageTest extends BaseTest {
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/VideoMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/VideoMessage.xml");
         File file = classPathResource.getFile();
         VideoMessage subscribeEventMessage = readXmlData(file, VideoMessage.class);
         Assert.assertNotNull(subscribeEventMessage);

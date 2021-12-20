@@ -30,7 +30,7 @@ public class SyncPushCustomerTest extends BaseTest {
         articlesDTO.setUrl("测试跳转链接");
         articlesDTO.setDescription("测试描述信息");
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
-        WeiXinResponse weiXinResponse = syncPushCustomer.pushCustomer(dto, token);
+        WeiXinResponse weiXinResponse = syncPushCustomer.pushCustomer(dto);
 
         Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse),0L, (int) weiXinResponse.getErrcode());
 
@@ -48,7 +48,7 @@ public class SyncPushCustomerTest extends BaseTest {
         List<CustomerMessageDTO> dtoList =new ArrayList<>();
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId,articlesDTO);
         dtoList.add(dto);
-        List<WeiXinResponse> weiXinResponse = syncPushCustomer.pushCustomer(dtoList, token);
+        List<WeiXinResponse> weiXinResponse = syncPushCustomer.pushCustomer(dtoList);
         Assert.assertFalse("测试结果不应为空", CollectionUtils.isEmpty(weiXinResponse));
     }
 }

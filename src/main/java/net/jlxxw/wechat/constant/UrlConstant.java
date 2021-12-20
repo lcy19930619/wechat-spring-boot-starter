@@ -10,12 +10,12 @@ public interface UrlConstant {
     /**
      * 模板推送地址前缀
      */
-    String PUSH_TEMPLATE_PREFIX = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=";
+    String PUSH_TEMPLATE_PREFIX = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={0}";
 
     /**
      * 客服信息推送地址前缀
      */
-    String PUSH_CUSTOMER_PREFIX = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token=";
+    String PUSH_CUSTOMER_PREFIX = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token={0}";
 
     /**
      * 获取token的URL
@@ -91,4 +91,14 @@ public interface UrlConstant {
      * 创建菜单
      */
     String CREATE_MENU_URL = " https://api.weixin.qq.com/cgi-bin/menu/create?access_token={0}";
+
+    /**
+     * 删除菜单
+     */
+    String DELETE_MENU_URL = " https://api.weixin.qq.com/cgi-bin/menu/delete?access_token={0}";
+
+    /**
+     * 获取全部菜单
+     */
+    String GET_MENU_URL ="https://api.weixin.qq.com/cgi-bin/get_current_selfmenu_info?access_token={0}";
 }

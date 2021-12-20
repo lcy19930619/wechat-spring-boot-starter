@@ -16,7 +16,7 @@ public class VoiceMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/VoiceMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/VoiceMessage.xml");
         File file = classPathResource.getFile();
         VoiceMessage subscribeEventMessage = readXmlData(file, VoiceMessage.class);
         Assert.assertNotNull(subscribeEventMessage);

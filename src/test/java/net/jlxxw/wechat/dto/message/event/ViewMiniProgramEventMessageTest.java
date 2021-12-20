@@ -16,7 +16,7 @@ public class ViewMiniProgramEventMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/event/ViewMiniProgramEventMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/ViewMiniProgramEventMessage.xml");
         File file = classPathResource.getFile();
         ViewMiniProgramEventMessage message = readXmlData(file,ViewMiniProgramEventMessage.class);
         Assert.assertNotNull(message);

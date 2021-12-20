@@ -5,7 +5,7 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.WeiXinException;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.properties.WeiXinProperties;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,14 +52,14 @@ public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager{
     @Override
     public String getTokenFromWeiXin() throws WeiXinException{
         String url = MessageFormat.format(UrlConstant.TOKEN_URL,weiXinProperties.getAppId(),weiXinProperties.getSecret());
-        WeiXinResponse response = restTemplate.getForObject(url, WeiXinResponse.class);
+        WeChatTokenResponse response = restTemplate.getForObject(url, WeChatTokenResponse.class);
         if(Objects.nonNull(response.getErrcode()) && 0!=response.getErrcode()){
         	logger.error("微信获取token返回值:{}",JSON.toJSONString(response));
             WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(response));
             weiXinException.setErrorCode(response.getErrcode());
             throw weiXinException;
         }
-        return response.getAccess_token();
+        return response.getAccessToken();
     }
 
     /**

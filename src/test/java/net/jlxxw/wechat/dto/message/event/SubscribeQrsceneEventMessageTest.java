@@ -16,7 +16,7 @@ public class SubscribeQrsceneEventMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/event/SubscribeQrsceneEventMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/SubscribeQrsceneEventMessage.xml");
         File file = classPathResource.getFile();
         SubscribeQrsceneEventMessage message = readXmlData(file,SubscribeQrsceneEventMessage.class);
         Assert.assertNotNull(message);

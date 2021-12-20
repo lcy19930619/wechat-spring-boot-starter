@@ -16,7 +16,7 @@ public class LinkMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/LinkMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/LinkMessage.xml");
         File file = classPathResource.getFile();
         LinkMessage message = readXmlData(file, LinkMessage.class);
         Assert.assertNotNull(message);

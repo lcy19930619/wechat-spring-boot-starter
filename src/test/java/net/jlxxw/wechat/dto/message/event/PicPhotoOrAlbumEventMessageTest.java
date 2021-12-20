@@ -16,7 +16,7 @@ public class PicPhotoOrAlbumEventMessageTest extends BaseTest {
 
     @Test
     public void convertTest() throws IOException {
-        ClassPathResource classPathResource = new ClassPathResource("mock/data/event/PicPhotoOrAlbumEventMessage.xml");
+        ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/PicPhotoOrAlbumEventMessage.xml");
         File file = classPathResource.getFile();
         PicPhotoOrAlbumEventMessage message = readXmlData(file,  PicPhotoOrAlbumEventMessage.class);
         Assert.assertNotNull(message);
