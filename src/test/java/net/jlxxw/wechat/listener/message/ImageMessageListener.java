@@ -3,7 +3,7 @@ package net.jlxxw.wechat.listener.message;
 import net.jlxxw.wechat.component.listener.AbstractWeiXinMessageListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
-import net.jlxxw.wechat.response.WeiXinMessageResponse;
+import net.jlxxw.wechat.response.WeChatMessageResponse;
 import org.junit.Assert;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +30,8 @@ public class ImageMessageListener extends AbstractWeiXinMessageListener {
      * @return
      */
     @Override
-    public WeiXinMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage) {
+    public WeChatMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage) {
         Assert.assertNotNull("接收到的信息不应为空", abstractWeChatMessage);
-        return WeiXinMessageResponse.buildText(supportMessageType().getDescription() + " done");
+        return WeChatMessageResponse.buildText(supportMessageType().getDescription() + " done");
     }
 }

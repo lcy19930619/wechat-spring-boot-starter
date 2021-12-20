@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.MenuDTO;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.MenuResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import net.jlxxw.wechat.util.WebClientUtils;
@@ -42,7 +42,7 @@ public class AsyncMenuManager {
      * @param list 菜单列表
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Creating_Custom-Defined_Menu.html">文档地址</a>
      */
-    public Mono<WeiXinResponse> createMenu(List<MenuDTO> list) {
+    public Mono<WeChatResponse> createMenu(List<MenuDTO> list) {
         if (CollectionUtils.isEmpty(list)) {
             LoggerUtils.debug(logger, "创建公众号菜单，输入列表信息为空");
             return Mono.error(new NullPointerException("创建公众号菜单，输入列表信息为空"));
@@ -52,7 +52,7 @@ public class AsyncMenuManager {
         String json = JSON.toJSONString(jsonObject);
         LoggerUtils.debug(logger, "创建公众号菜单，请求参数:{}", json);
         String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenManager.getTokenFromLocal());
-        return webClientUtils.sendPostJSON(url, json, WeiXinResponse.class);
+        return webClientUtils.sendPostJSON(url, json, WeChatResponse.class);
     }
 
     /**
@@ -61,9 +61,9 @@ public class AsyncMenuManager {
      * @return 正确应为 {"errcode":0,"errmsg":"ok"}
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Deleting_Custom-Defined_Menu.html">文档地址</a>
      */
-    public Mono<WeiXinResponse> deleteMenu() {
+    public Mono<WeChatResponse> deleteMenu() {
         String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL, weChatTokenManager.getTokenFromLocal());
-        return webClientUtils.sendGet(url, WeiXinResponse.class);
+        return webClientUtils.sendGet(url, WeChatResponse.class);
     }
 
     /**

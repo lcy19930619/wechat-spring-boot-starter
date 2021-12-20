@@ -2,13 +2,13 @@ package net.jlxxw.wechat.response.token;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 
 /**
  * @author chunyang.leng
  * @date 2021-12-20 11:46 上午
  */
-public class WeChatTokenResponse extends WeiXinResponse {
+public class WeChatTokenResponse extends WeChatResponse {
 
 
     /**

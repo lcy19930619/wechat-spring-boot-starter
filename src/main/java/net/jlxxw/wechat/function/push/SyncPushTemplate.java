@@ -5,7 +5,7 @@ import net.jlxxw.wechat.component.BatchExecutor;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.template.WeChatTemplateDTO;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
@@ -43,14 +43,14 @@ public class SyncPushTemplate {
      * @param template 模版信息
      * @return 微信返回结果, 如果微信返回为null, 则该方法返回null
      */
-    public WeiXinResponse pushTemplate(WeChatTemplateDTO template) {
+    public WeChatResponse pushTemplate(WeChatTemplateDTO template) {
         Objects.requireNonNull(template);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String json = JSON.toJSONString(template);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         String url = MessageFormat.format(UrlConstant.PUSH_TEMPLATE_PREFIX, weChatTokenManager.getTokenFromLocal());
-        ResponseEntity<WeiXinResponse> responseEntity = restTemplate.postForEntity(url, request, WeiXinResponse.class);
+        ResponseEntity<WeChatResponse> responseEntity = restTemplate.postForEntity(url, request, WeChatResponse.class);
         return responseEntity.getBody();
     }
 
@@ -60,16 +60,16 @@ public class SyncPushTemplate {
      * @param templateList 多个模版信息
      * @return
      */
-    public List<WeiXinResponse> pushTemplate(List<WeChatTemplateDTO> templateList) {
+    public List<WeChatResponse> pushTemplate(List<WeChatTemplateDTO> templateList) {
         if (CollectionUtils.isEmpty(templateList)) {
             return new ArrayList<>();
         }
-        List<WeiXinResponse> responseList = new ArrayList<>();
+        List<WeChatResponse> responseList = new ArrayList<>();
 
         batchExecutor.batchExecute(true, templateList, (list) -> {
             for (WeChatTemplateDTO weChatTemplate : list) {
-                WeiXinResponse weiXinResponse = pushTemplate(weChatTemplate);
-                responseList.add(weiXinResponse);
+                WeChatResponse weChatResponse = pushTemplate(weChatTemplate);
+                responseList.add(weChatResponse);
             }
         });
         return responseList;

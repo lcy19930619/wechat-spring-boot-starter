@@ -3,7 +3,7 @@ package net.jlxxw.wechat.listener.event;
 import net.jlxxw.wechat.component.listener.AbstractWeiXinEventListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
-import net.jlxxw.wechat.response.WeiXinMessageResponse;
+import net.jlxxw.wechat.response.WeChatMessageResponse;
 import org.junit.Assert;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +30,8 @@ public class ScanCodeWaitMsgEventListener extends AbstractWeiXinEventListener {
      * @return
      */
     @Override
-    public WeiXinMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage) {
+    public WeChatMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage) {
         Assert.assertNotNull("接收到的数据不应为空", abstractWeChatMessage);
-        return WeiXinMessageResponse.buildText(supportEventType().getDescription() + " done");
+        return WeChatMessageResponse.buildText(supportEventType().getDescription() + " done");
     }
 }

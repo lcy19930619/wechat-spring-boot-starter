@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.response.menu;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 
 /**
  * 菜单返回数据
@@ -11,7 +11,7 @@ import net.jlxxw.wechat.response.WeiXinResponse;
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Querying_Custom_Menus.html">文档地址</a>
  */
 
-public class MenuResponse extends WeiXinResponse {
+public class MenuResponse extends WeChatResponse {
 
     /**
      * 菜单是否开启，0代表未开启，1代表开启

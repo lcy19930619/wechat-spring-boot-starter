@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.response.user;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @author chunyang.leng
  * @date 2021/1/25 6:31 下午
  */
-public class SubscriptionResponse extends WeiXinResponse {
+public class SubscriptionResponse extends WeChatResponse {
 
     /**
      * 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。

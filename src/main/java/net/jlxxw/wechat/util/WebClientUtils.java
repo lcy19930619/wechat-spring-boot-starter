@@ -44,6 +44,28 @@ public class WebClientUtils {
     }
 
     /**
+     * 发送http post 请求
+     *
+     * @param url    请求url
+     * @param result 返回值结果类型
+     * @param <T>    返回值类型
+     * @return 返回订阅对象
+     */
+    public <T> Mono<T> sendPost(String url,  Class<T> result) {
+        // 发送请求
+        return webClient
+                // POST 请求
+                .post()
+                // 请求路径
+                .uri(url)
+                // 获取响应体
+                .retrieve()
+                //响应数据类型转换
+                .bodyToMono(String.class)
+                .map(jsonString -> JSON.toJavaObject(JSON.parseObject(jsonString), result));
+    }
+
+    /**
      * 发送一个get请求
      *
      * @param url    请求地址

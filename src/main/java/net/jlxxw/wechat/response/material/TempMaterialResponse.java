@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.response.material;
 
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 
 /**
  * 临时素材信息返回对象
@@ -8,7 +8,7 @@ import net.jlxxw.wechat.response.WeiXinResponse;
  * @author chunyang.leng
  * @date 2021-03-05 6:02 下午
  */
-public class TempMaterialResponse extends WeiXinResponse {
+public class TempMaterialResponse extends WeChatResponse {
     /**
      * 媒体文件类型，分别有图片（image）、语音（voice）、视频（video）和缩略图（thumb，主要用于视频与音乐格式的缩略图）
      */

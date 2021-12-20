@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2021/1/20 11:51 上午
  */
 @JacksonXmlRootElement(localName = "xml")
-public class WeiXinMessageResponse {
+public class WeChatMessageResponse {
     /**
      * 接收方帐号（收到的OpenID）
      */
@@ -164,11 +164,11 @@ public class WeiXinMessageResponse {
      * @param content
      * @return
      */
-    public static WeiXinMessageResponse buildText(String content) {
-        WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
-        weiXinMessageResponse.setMsgType("text");
-        weiXinMessageResponse.setContent(content);
-        return weiXinMessageResponse;
+    public static WeChatMessageResponse buildText(String content) {
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("text");
+        weChatMessageResponse.setContent(content);
+        return weChatMessageResponse;
     }
 
     /**
@@ -177,13 +177,13 @@ public class WeiXinMessageResponse {
      * @param mediaId 通过素材管理中的接口上传多媒体文件，得到的id。
      * @return
      */
-    public static WeiXinMessageResponse buildImage(String mediaId) {
-        WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
-        weiXinMessageResponse.setMsgType("image");
+    public static WeChatMessageResponse buildImage(String mediaId) {
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("image");
         Image image = new Image();
         image.setMediaId(mediaId);
-        weiXinMessageResponse.setImage(image);
-        return weiXinMessageResponse;
+        weChatMessageResponse.setImage(image);
+        return weChatMessageResponse;
     }
 
     /**
@@ -192,13 +192,13 @@ public class WeiXinMessageResponse {
      * @param mediaId 通过素材管理中的接口上传多媒体文件，得到的id。
      * @return
      */
-    public static WeiXinMessageResponse buildVoice(String mediaId) {
-        WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
-        weiXinMessageResponse.setMsgType("voice");
+    public static WeChatMessageResponse buildVoice(String mediaId) {
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("voice");
         Voice voice = new Voice();
         voice.setMediaId(mediaId);
-        weiXinMessageResponse.setVoice(voice);
-        return weiXinMessageResponse;
+        weChatMessageResponse.setVoice(voice);
+        return weChatMessageResponse;
     }
 
     /**
@@ -209,15 +209,15 @@ public class WeiXinMessageResponse {
      * @param description 视频消息的描述
      * @return
      */
-    public static WeiXinMessageResponse buildVideo(String mediaId, String title, String description) {
-        WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
-        weiXinMessageResponse.setMsgType("video");
+    public static WeChatMessageResponse buildVideo(String mediaId, String title, String description) {
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("video");
         Video video = new Video();
         video.setMediaId(mediaId);
         video.setTitle(title);
         video.setDescription(description);
-        weiXinMessageResponse.setVideo(video);
-        return weiXinMessageResponse;
+        weChatMessageResponse.setVideo(video);
+        return weChatMessageResponse;
     }
 
     /**
@@ -230,17 +230,17 @@ public class WeiXinMessageResponse {
      * @param thumbMediaId 缩略图的媒体id，通过素材管理中的接口上传多媒体文件，得到的id
      * @return
      */
-    public static WeiXinMessageResponse buildMusic(String title, String description, String musicUrl, String hqMusicUrl, String thumbMediaId) {
-        WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
-        weiXinMessageResponse.setMsgType("music");
+    public static WeChatMessageResponse buildMusic(String title, String description, String musicUrl, String hqMusicUrl, String thumbMediaId) {
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("music");
         Music music = new Music();
         music.setTitle(title);
         music.setDescription(description);
         music.setMusicURL(musicUrl);
         music.sethQMusicUrl(hqMusicUrl);
         music.setThumbMediaId(thumbMediaId);
-        weiXinMessageResponse.setMusic(music);
-        return weiXinMessageResponse;
+        weChatMessageResponse.setMusic(music);
+        return weChatMessageResponse;
     }
 
     /**
@@ -249,12 +249,12 @@ public class WeiXinMessageResponse {
      * @param articles
      * @return
      */
-    public static WeiXinMessageResponse buildArticle(Article... articles) {
-        WeiXinMessageResponse weiXinMessageResponse = new WeiXinMessageResponse();
-        weiXinMessageResponse.setMsgType("news");
-        weiXinMessageResponse.setArticleCount(articles.length);
-        weiXinMessageResponse.setArticles(Arrays.asList(articles));
-        return weiXinMessageResponse;
+    public static WeChatMessageResponse buildArticle(Article... articles) {
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("news");
+        weChatMessageResponse.setArticleCount(articles.length);
+        weChatMessageResponse.setArticles(Arrays.asList(articles));
+        return weChatMessageResponse;
     }
 }
 

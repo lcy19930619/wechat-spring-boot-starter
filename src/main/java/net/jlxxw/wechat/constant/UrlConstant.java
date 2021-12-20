@@ -106,4 +106,19 @@ public interface UrlConstant {
      * 获取 js_api_ticket
      */
     String GET_JS_API_TICKET_URL ="https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token={0}&type=jsapi";
+
+    /**
+     * 创建个性化菜单
+     */
+    String CREATE_PERSONALIZED_MENU = "https://api.weixin.qq.com/cgi-bin/menu/addconditional?access_token={0}";
+
+    /**
+     * 删除个性化菜单
+     */
+    String DELETE_PERSONALIZED_MENU = "https://api.weixin.qq.com/cgi-bin/menu/delconditional?access_token={0}";
+
+    /**
+     * 测试个性化菜单匹配结果
+     */
+    String TRY_MATCH_PERSONALIZED_MENU = "https://api.weixin.qq.com/cgi-bin/menu/trymatch?access_token={0}";
 }

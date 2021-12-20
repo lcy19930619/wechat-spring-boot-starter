@@ -6,7 +6,7 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.material.PermanentMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import net.jlxxw.wechat.util.WebClientUtils;
@@ -110,7 +110,7 @@ public class AsyncPermanentMaterialManager {
      *
      * @param mediaId 素材id
      */
-    public Mono<WeiXinResponse> delete(String mediaId) {
+    public Mono<WeChatResponse> delete(String mediaId) {
         // 封装请求参数
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
         param.add("mediaId", mediaId);
@@ -126,7 +126,7 @@ public class AsyncPermanentMaterialManager {
                 weChatException.setErrorCode(obj.getInteger("errcode"));
                 throw weChatException;
             }
-            return obj.toJavaObject(WeiXinResponse.class);
+            return obj.toJavaObject(WeChatResponse.class);
         });
 
     }

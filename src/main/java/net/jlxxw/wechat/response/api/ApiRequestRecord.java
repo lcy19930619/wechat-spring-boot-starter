@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.response.api;
 
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 
 /**
  * open api请求接口返回值
@@ -8,7 +8,7 @@ import net.jlxxw.wechat.response.WeiXinResponse;
  * @author chunyang.leng
  * @date 2021-11-23 3:54 下午
  */
-public class ApiRequestRecord extends WeiXinResponse {
+public class ApiRequestRecord extends WeChatResponse {
 
     private RequestRecord request;
 

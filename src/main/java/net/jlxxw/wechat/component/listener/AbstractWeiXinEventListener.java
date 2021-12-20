@@ -2,7 +2,7 @@ package net.jlxxw.wechat.component.listener;
 
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
-import net.jlxxw.wechat.response.WeiXinMessageResponse;
+import net.jlxxw.wechat.response.WeChatMessageResponse;
 
 /**
  * 微信事件处理模版
@@ -26,5 +26,5 @@ public abstract class AbstractWeiXinEventListener {
      * @param abstractWeChatMessage
      * @return
      */
-    public abstract WeiXinMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage);
+    public abstract WeChatMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage);
 }

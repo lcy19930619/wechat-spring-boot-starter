@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.api.ApiRequestRecord;
 import net.jlxxw.wechat.response.api.ApiResponse;
 import net.jlxxw.wechat.util.WebClientUtils;
@@ -51,14 +51,14 @@ public class AsyncOpenApiManager {
      * 3、每个帐号每月共10次清零操作机会，清零生效一次即用掉一次机会；第三方帮助公众号/小程序调用时，实际上是在消耗公众号/小程序自身的quota<br/>
      * 4、由于指标计算方法或统计时间差异，实时调用量数据可能会出现误差，一般在1%以内<br/>
      */
-    public Mono<WeiXinResponse> clean() {
+    public Mono<WeChatResponse> clean() {
         String appId = weChatProperties.getAppId();
         String token = weChatTokenManager.getTokenFromLocal();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);
         String url = MessageFormat.format(UrlConstant.OPEN_API_CLEAN, token);
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), WeiXinResponse.class);
+        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), WeChatResponse.class);
     }
 
     /**

@@ -9,7 +9,7 @@ import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;
 import net.jlxxw.wechat.dto.customer.news.ArticlesDTO;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +31,9 @@ public class SyncPushCustomerTest extends BaseTest {
         articlesDTO.setUrl("测试跳转链接");
         articlesDTO.setDescription("测试描述信息");
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId, articlesDTO);
-        WeiXinResponse weiXinResponse = syncPushCustomer.pushCustomer(dto);
+        WeChatResponse weChatResponse = syncPushCustomer.pushCustomer(dto);
 
-        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse), 0L, (int) weiXinResponse.getErrcode());
+        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weChatResponse), 0L, (int) weChatResponse.getErrcode());
 
     }
 
@@ -49,7 +49,7 @@ public class SyncPushCustomerTest extends BaseTest {
         List<CustomerMessageDTO> dtoList = new ArrayList<>();
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId, articlesDTO);
         dtoList.add(dto);
-        List<WeiXinResponse> weiXinResponse = syncPushCustomer.pushCustomer(dtoList);
-        Assert.assertFalse("测试结果不应为空", CollectionUtils.isEmpty(weiXinResponse));
+        List<WeChatResponse> weChatResponse = syncPushCustomer.pushCustomer(dtoList);
+        Assert.assertFalse("测试结果不应为空", CollectionUtils.isEmpty(weChatResponse));
     }
 }

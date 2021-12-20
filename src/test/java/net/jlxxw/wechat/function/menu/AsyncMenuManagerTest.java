@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.dto.menu.MenuDTO;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
@@ -24,7 +24,7 @@ public class AsyncMenuManagerTest extends BaseTest {
         JSONObject jsonObject = JSON.parseObject(getMockMenuData());
         JSONArray jsonArray = jsonObject.getJSONArray("button");
         List<MenuDTO> menuList = jsonArray.toJavaList(MenuDTO.class);
-        Mono<WeiXinResponse> menu = asyncMenuManager.createMenu(menuList);
+        Mono<WeChatResponse> menu = asyncMenuManager.createMenu(menuList);
         menu.subscribe((response) -> {
             Integer errcode = response.getErrcode();
             Assert.assertEquals(0, (int) errcode);

@@ -5,7 +5,7 @@ import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.dto.template.WeChatTemplateDTO;
 import net.jlxxw.wechat.enums.ColorEnums;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
-import net.jlxxw.wechat.response.WeiXinResponse;
+import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +45,9 @@ public class SyncPushTemplateTest extends BaseTest {
                 .buildFirstData("first DATA的具体值", ColorEnums.BLUE)
                 .buildKeyWord1Data("keyword1 DATA的具体值", null)
                 .buildOtherData("abc", "abc DATA的具体值", ColorEnums.ORANGE);
-        WeiXinResponse weiXinResponse = syncPushTemplate.pushTemplate(weChatTemplateDTO);
+        WeChatResponse weChatResponse = syncPushTemplate.pushTemplate(weChatTemplateDTO);
 
-        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weiXinResponse), 0L, (int) weiXinResponse.getErrcode());
+        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weChatResponse), 0L, (int) weChatResponse.getErrcode());
     }
 
     /**
@@ -68,8 +68,8 @@ public class SyncPushTemplateTest extends BaseTest {
                 .buildOtherData("abc", "abc DATA的具体值", ColorEnums.ORANGE);
         List<WeChatTemplateDTO> templateList = new ArrayList<>();
         templateList.add(weChatTemplateDTO);
-        List<WeiXinResponse> weiXinResponse = syncPushTemplate.pushTemplate(templateList);
-        Assert.assertFalse("模版推送结果不应为空", CollectionUtils.isEmpty(weiXinResponse));
+        List<WeChatResponse> weChatResponse = syncPushTemplate.pushTemplate(templateList);
+        Assert.assertFalse("模版推送结果不应为空", CollectionUtils.isEmpty(weChatResponse));
     }
 
 

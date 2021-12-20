@@ -19,7 +19,7 @@ import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
 import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.response.WeiXinMessageResponse;
+import net.jlxxw.wechat.response.WeChatMessageResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -395,7 +395,7 @@ public class EventBus {
         }
 
         LoggerUtils.debug(logger, "接收到微信请求，请求类型:{},请求参数:{}", weChatMessageTypeEnum.getDescription(), JSON.toJSONString(abstractWeChatMessage));
-        WeiXinMessageResponse response = abstractWeiXinMessageListener.handler(abstractWeChatMessage);
+        WeChatMessageResponse response = abstractWeiXinMessageListener.handler(abstractWeChatMessage);
         if (Objects.isNull(response)) {
             return "";
         }
@@ -430,7 +430,7 @@ public class EventBus {
         if (Objects.isNull(abstractWeiXinEventListener)) {
             throw new IllegalArgumentException(weChatEventTypeEnum.name() + "事件监听器未注册");
         }
-        WeiXinMessageResponse response = abstractWeiXinEventListener.handler(abstractWeChatMessage);
+        WeChatMessageResponse response = abstractWeiXinEventListener.handler(abstractWeChatMessage);
         if (Objects.isNull(response)) {
             return "";
         }
