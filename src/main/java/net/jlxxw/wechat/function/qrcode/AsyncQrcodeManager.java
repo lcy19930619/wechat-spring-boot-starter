@@ -3,7 +3,7 @@ package net.jlxxw.wechat.function.qrcode;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.qrcode.QrCodeResponse;
 import net.jlxxw.wechat.response.qrcode.TempQrCodeResponse;
 import net.jlxxw.wechat.util.WebClientUtils;
@@ -22,11 +22,11 @@ import java.text.MessageFormat;
  * @date 2021-03-05 5:52 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
+@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component
 public class AsyncQrcodeManager {
     @Autowired
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
     @Autowired
     private WebClientUtils webClientUtils;
 
@@ -37,7 +37,7 @@ public class AsyncQrcodeManager {
      * @param expireSecond 过期时间（秒）
      */
     public Mono<TempQrCodeResponse> createTempStringQrcode(String eventKey, Long expireSecond) {
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_SCENE");
@@ -58,7 +58,7 @@ public class AsyncQrcodeManager {
      * @param expireSecond 过期时间（秒）
      */
     public Mono<TempQrCodeResponse> createTempIdQrcode(Long id, Long expireSecond) {
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_SCENE");
@@ -79,7 +79,7 @@ public class AsyncQrcodeManager {
      * @param eventKey 自定义的字符串
      */
     public Mono<QrCodeResponse> createStringQrcode(String eventKey) {
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_SCENE");
@@ -99,7 +99,7 @@ public class AsyncQrcodeManager {
      * @param id 自定义的id
      */
     public Mono<QrCodeResponse> createIdQrcode(Long id) {
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_SCENE");

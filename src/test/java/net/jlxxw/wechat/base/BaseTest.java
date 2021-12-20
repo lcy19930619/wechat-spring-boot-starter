@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import net.jlxxw.wechat.TestApplication;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
@@ -42,7 +42,7 @@ public class BaseTest {
     protected String token = "";
 
     @Autowired
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
 
     protected static XmlMapper xmlMapper = new XmlMapper();
     protected static ObjectMapper objectMapper = new ObjectMapper();
@@ -69,7 +69,7 @@ public class BaseTest {
     }
 
     protected String getToken() {
-        return weiXinTokenManager.getTokenFromLocal();
+        return weChatTokenManager.getTokenFromLocal();
     }
 
 

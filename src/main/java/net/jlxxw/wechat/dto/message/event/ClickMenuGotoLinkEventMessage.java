@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.dto.message.event;
 
-import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
+import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 
 /**
  * 点击菜单跳转链接时的事件推送
@@ -9,7 +9,7 @@ import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
  * @date 2021/1/22 7:25 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#1">文档地址</a>
  */
-public class ClickMenuGotoLinkEventMessage extends AbstractWeiXinMessage {
+public class ClickMenuGotoLinkEventMessage extends AbstractWeChatMessage {
 
     /**
      * 事件KEY值，设置的跳转URL

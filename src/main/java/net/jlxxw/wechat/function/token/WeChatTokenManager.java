@@ -1,12 +1,12 @@
 package net.jlxxw.wechat.function.token;
 
-import net.jlxxw.wechat.exception.WeiXinException;
+import net.jlxxw.wechat.exception.WeChatException;
 
 /**
  * @author chunyang.leng
  * @date 2021/1/19 5:28 下午
  */
-public interface WeiXinTokenManager {
+public interface WeChatTokenManager {
 
     /**
      * 保存token
@@ -20,7 +20,7 @@ public interface WeiXinTokenManager {
      *
      * @return token
      */
-    String getTokenFromWeiXin() throws WeiXinException;
+    String getTokenFromWeiXin() throws WeChatException;
 
     /**
      * 获取保存在本地的token

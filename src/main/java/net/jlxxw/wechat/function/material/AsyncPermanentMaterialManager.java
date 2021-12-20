@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
-import net.jlxxw.wechat.exception.WeiXinException;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.exception.WeChatException;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.WeiXinResponse;
 import net.jlxxw.wechat.response.material.PermanentMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
@@ -32,12 +32,12 @@ import java.text.MessageFormat;
  * @author chunyang.leng
  * @date 2021-03-05 5:53 下午
  */
-@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
+@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component
 public class AsyncPermanentMaterialManager {
     private static final Logger logger = LoggerFactory.getLogger(AsyncPermanentMaterialManager.class);
     @Autowired
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
     @Autowired
     private WebClientUtils webClientUtils;
 
@@ -50,7 +50,7 @@ public class AsyncPermanentMaterialManager {
      */
     public Mono<PermanentMaterialResponse> upload(MaterialEnum materialEnum, File file) {
 
-        String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(file);
 
         // 封装请求参数
@@ -73,7 +73,7 @@ public class AsyncPermanentMaterialManager {
      */
     public Mono<PermanentMaterialResponse> upload(MaterialEnum materialEnum, URI uri) {
 
-        String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(Paths.get(uri));
 
         // 封装请求参数
@@ -99,7 +99,7 @@ public class AsyncPermanentMaterialManager {
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
         param.add("mediaId", mediaId);
 
-        String url = MessageFormat.format(UrlConstant.DOWNLOAD_PERMANENT_MATERIAL, weiXinTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.DOWNLOAD_PERMANENT_MATERIAL, weChatTokenManager.getTokenFromLocal());
         LoggerUtils.debug(logger, "下载永久素材url:{}", url);
 
         return webClientUtils.sendPostFormUrlEncoded(url, param, Resource.class);
@@ -115,16 +115,16 @@ public class AsyncPermanentMaterialManager {
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
         param.add("mediaId", mediaId);
 
-        String url = MessageFormat.format(UrlConstant.DELETE_PERMANENT_MATERIAL, weiXinTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.DELETE_PERMANENT_MATERIAL, weChatTokenManager.getTokenFromLocal());
         LoggerUtils.debug(logger, "删除永久素材url:{}", url);
 
         Mono<JSONObject> mono = webClientUtils.sendPostFormUrlEncoded(url, param, JSONObject.class);
 
         return mono.map((obj) -> {
             if (obj.getInteger("errcode") != 0) {
-                WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
-                weiXinException.setErrorCode(obj.getInteger("errcode"));
-                throw weiXinException;
+                WeChatException weChatException = new WeChatException(JSON.toJSONString(obj));
+                weChatException.setErrorCode(obj.getInteger("errcode"));
+                throw weChatException;
             }
             return obj.toJavaObject(WeiXinResponse.class);
         });
@@ -145,9 +145,9 @@ public class AsyncPermanentMaterialManager {
         return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
                 // 存在错误码，说明上传出错
-                WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
-                weiXinException.setErrorCode(obj.getInteger("errcode"));
-                throw weiXinException;
+                WeChatException weChatException = new WeChatException(JSON.toJSONString(obj));
+                weChatException.setErrorCode(obj.getInteger("errcode"));
+                throw weChatException;
             }
             LoggerUtils.debug(logger, "新增永久素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象

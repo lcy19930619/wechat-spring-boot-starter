@@ -6,7 +6,7 @@ spring:
     password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-weixin:
+we-chat:
   # 需要替换为真实数据
   app-id: wx97562dcec7e78aca
   # 需要替换为真实数据
@@ -21,6 +21,6 @@ weixin:
       queue-size: 200
   enable-message-enc: false
   enable-default-token-manager: true
-  enable-wei-xin-call-back-server-security-check: false
+  enable-we-chat-call-back-server-security-check: false
   # 需要替换为真实数据
   encoding-aes-key: 9hFP1tCoPIRB8rFk4ukaYn6bw1Gbxs53yIGVplNsxxx

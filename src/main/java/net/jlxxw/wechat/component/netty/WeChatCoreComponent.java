@@ -12,7 +12,7 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import net.jlxxw.wechat.properties.WeiXinNettyServerProperties;
+import net.jlxxw.wechat.properties.WeChatNettyServerProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,17 +28,17 @@ import javax.annotation.PostConstruct;
  * @date 2021/1/25 9:31 上午
  */
 @Component
-public class WeiXinCoreComponent {
+public class WeChatCoreComponent {
     private static final ServerBootstrap BOOTSTRAP = new ServerBootstrap();
-    private static final Logger logger = LoggerFactory.getLogger(WeiXinCoreComponent.class);
+    private static final Logger logger = LoggerFactory.getLogger(WeChatCoreComponent.class);
     @Autowired
-    private WeiXinNettyServerProperties weiXinNettyServerProperties;
+    private WeChatNettyServerProperties weChatNettyServerProperties;
     @Autowired
-    private WeiXinChannel weiXinChannel;
+    private WeChatChannel weChatChannel;
 
     @PostConstruct
     public void postConstruct() {
-        if (!weiXinNettyServerProperties.getEnableNetty()) {
+        if (!weChatNettyServerProperties.getEnableNetty()) {
             return;
         }
         Thread t = new Thread() {
@@ -48,7 +48,7 @@ public class WeiXinCoreComponent {
                 //new 一个主线程组
                 EventLoopGroup bossGroup = new NioEventLoopGroup(1);
                 //new 一个工作线程组
-                EventLoopGroup workGroup = new NioEventLoopGroup(weiXinNettyServerProperties.getMaxThreadSize());
+                EventLoopGroup workGroup = new NioEventLoopGroup(weChatNettyServerProperties.getMaxThreadSize());
                 BOOTSTRAP
                         .group(bossGroup, workGroup)
                         .channel(NioServerSocketChannel.class)
@@ -72,20 +72,20 @@ public class WeiXinCoreComponent {
                                 LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
 
                                 // 自定义处理handler
-                                socketChannel.pipeline().addLast("http-server", weiXinChannel);
+                                socketChannel.pipeline().addLast("http-server", weChatChannel);
                                 LoggerUtils.debug(logger, "初始化 netty 微信协议处理器 成功");
 
                             }
                         })
-                        .localAddress(weiXinNettyServerProperties.getNettyPort())
+                        .localAddress(weChatNettyServerProperties.getNettyPort())
                         //设置队列大小
-                        .option(ChannelOption.SO_BACKLOG, weiXinNettyServerProperties.getQueueSize())
+                        .option(ChannelOption.SO_BACKLOG, weChatNettyServerProperties.getQueueSize())
                         // 两小时内没有数据的通信时,TCP会自动发送一个活动探测数据报文
                         .childOption(ChannelOption.SO_KEEPALIVE, true);
                 //绑定端口,开始接收进来的连接
                 try {
-                    ChannelFuture future = BOOTSTRAP.bind(weiXinNettyServerProperties.getNettyPort()).sync();
-                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weiXinNettyServerProperties.getNettyPort());
+                    ChannelFuture future = BOOTSTRAP.bind(weChatNettyServerProperties.getNettyPort()).sync();
+                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatNettyServerProperties.getNettyPort());
                     future.channel().closeFuture().sync();
                 } catch (InterruptedException e) {
                     LoggerUtils.error(logger, "微信netty服务启动失败！！！", e);
@@ -98,7 +98,7 @@ public class WeiXinCoreComponent {
                 }
             }
         };
-        t.setName("weixin-netty-thread-listener");
+        t.setName("WeChat-netty-thread-listener");
         t.setDaemon(false);
         t.start();
     }

@@ -6,7 +6,7 @@ package net.jlxxw.wechat.dto.message;
  * @author chunyang.leng
  * @date 2021/1/20 11:18 上午
  */
-public class TextMessage extends AbstractWeiXinMessage {
+public class TextMessage extends AbstractWeChatMessage {
 
     /**
      * 文本消息内容

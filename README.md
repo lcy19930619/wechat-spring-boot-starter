@@ -26,19 +26,19 @@
 一个message只能使用一个listener  
 一个event只能使用一个listener  
 如果内置的处理器不能满足业务需求，或者微信扩展了新的消息和事件，可以注册以下两个bean进行处理
-UnKnowWeiXinEventListener
-UnKnowWeiXinMessageListener
+UnKnowWeChatEventListener
+UnKnowWeChatMessageListener
 ## 执行流程
 ### netty模式  
-1、WeiXinCoreComponent 随着系统启动进行初始化，启动netty server  
-2、微信请求到达时，WeiXinChannel 开始工作，并进行白名单认证  
+1、WeChatCoreComponent 随着系统启动进行初始化，启动netty server  
+2、微信请求到达时，WeChatChannel 开始工作，并进行白名单认证  
 3、请求转发到EventBus  
 4、解析微信请求数据，根据event以及MsgType 查找注册到ioc容器中到监听器（即自己写的业务监听器）  
 5、调用监听器的handler方法，执行相关业务  
 6、向微信服务器返回数据  
 
 ### 传统模式
-1、微信数据请求发送到WeiXinMessageController，并进行白名单认证。
+1、微信数据请求发送到WeChatMessageController，并进行白名单认证。
 2、请求转发到EventBus  
 3、解析微信请求数据，根据event以及MsgType 查找注册到ioc容器中到监听器（即自己写的业务监听器）  
 4、调用监听器的handler方法，执行相关业务  
@@ -47,7 +47,7 @@ UnKnowWeiXinMessageListener
 ## 基本功能（还在不断完善中）
 1、客服接口推送  
   ```
-  使用 net.jlxxw.component.weixin.function.push.PushCustomer进行推送
+  使用 net.jlxxw.component.function.push.PushCustomer进行推送
     @Autowired
     public PushCustomer pushCustomer;
     
@@ -65,7 +65,7 @@ UnKnowWeiXinMessageListener
 
 2、微信模版推送
  ```
-  使用 net.jlxxw.component.weixin.function.push.PushCustomer进行推送
+  使用 net.jlxxw.component.function.push.PushCustomer进行推送
   
     @Autowired
     private PushTemplate pushTemplate;
@@ -90,7 +90,7 @@ UnKnowWeiXinMessageListener
 3、自动管理token
  ```
     定时任务每两小时刷新一次token
-    net.jlxxw.component.weixin.schedul.*
+    net.jlxxw.component.schedul.*
     执行逻辑：
     1、项目启动时，自动创建数据库token表 wei_xin_token
     2、定时任务执行时，获取数据库中最后一条存储的token的创建时间（使用行锁 for update）
@@ -99,13 +99,13 @@ UnKnowWeiXinMessageListener
     
     在项目的任何位置获取token
     @Autowired
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
     
-    String token = weiXinTokenManager.getTokenFromLocal();
+    String token = weChatTokenManager.getTokenFromLocal();
     
  ```
 
-4、微信回调接口:默认为netty接口，需要配置nginx反向代理，也提供/weixin/core 接口  
+4、微信回调接口:默认为netty接口，需要配置nginx反向代理，也提供/weChat 接口  
     nginx.conf
  ```
  
@@ -193,9 +193,9 @@ http {
     通过配置文件进行开启,开启时，会在本地缓存微信服务器白名单ip列表，每次接收微信数据时  
  都会进行白名单检查，如果不在白名单中，返回403
 ```
-weixin:
+we-chat:
   # 是否启用回调接口安全检查，如果启用，每3小时更新一次微信回调接口ip白名单
-  enable-wei-xin-call-back-server-security-check: true
+  enable-we-chat-call-back-server-security-check: true
 ```
     
 7、简单的用户管理  
@@ -205,7 +205,7 @@ weixin:
      通过配置文件开启,开启后，会对信息进行加密和解密，需要在微信后台---基本配置---服务器配置  
      设置 消息加解密方式为：安全模式
 ```
-weixin:
+we-chat:
   # 是否启用微信加密传输
   enable-message-enc: true
   # 公众平台配置的消息加解密密钥，长度43位
@@ -213,7 +213,7 @@ weixin:
 ```
 # yml配置文件如下
 ```
-weixin:
+we-chat:
   app-id: xxx
   secret: xxxx
   grant-type: client_credential
@@ -225,8 +225,8 @@ weixin:
   verify-token: xxxxxxxxxxx
  
   # 是否启用回调接口安全检查，如果启用，每3小时更新一次微信回调接口ip白名单
-  enable-wei-xin-call-back-server-security-check: true
-  # 是否启用默认的token管理策略，如果使用自定义策略，需要实现 WeiXinTokenManager 接口
+  enable-we-chat-call-back-server-security-check: true
+  # 是否启用默认的token管理策略，如果使用自定义策略，需要实现 WeChatTokenManager 接口
   enable-default-token-manager: true
   netty:
     server:
@@ -241,51 +241,51 @@ weixin:
 ```
 
 # 使用说明
-微信回调事件均使用事件总线进行管理，参考代码net.jlxxw.component.weixin.component.EventBus  
+微信回调事件均使用事件总线进行管理，参考代码net.jlxxw.component.component.EventBus  
 在使用netty时，不推荐在业务逻辑中启用异步处理
 
 ## 消息处理器
 ### 注册普通消息处理器
 #### 消息包括以下类型
-文本信息 WeiXinMessageTypeEnum.TEXT  
-图片信息 WeiXinMessageTypeEnum.IMAGE  
-语音信息 WeiXinMessageTypeEnum.VOICE  
-视频信息 WeiXinMessageTypeEnum.VIDEO  
-小视频信息 WeiXinMessageTypeEnum.SHORT_VIDEO  
-地理位置信息 WeiXinMessageTypeEnum.LOCATION  
-链接信息 WeiXinMessageTypeEnum.LINK  
-参考枚举：```WeiXinMessageTypeEnum```
+文本信息 WeChatMessageTypeEnum.TEXT  
+图片信息 WeChatMessageTypeEnum.IMAGE  
+语音信息 WeChatMessageTypeEnum.VOICE  
+视频信息 WeChatMessageTypeEnum.VIDEO  
+小视频信息 WeChatMessageTypeEnum.SHORT_VIDEO  
+地理位置信息 WeChatMessageTypeEnum.LOCATION  
+链接信息 WeChatMessageTypeEnum.LINK  
+参考枚举：```WeChatMessageTypeEnum```
 
 数据传输入参，即  
-```AbstractWeiXinMessageListener.handler```方法参数  
-可以参考```net.jlxxw.component.weixin.dto.message.*Message``` 进行数据类型强制转换
+```AbstractWeChatMessageListener.handler```方法参数  
+可以参考```net.jlxxw.component.dto.message.*Message``` 进行数据类型强制转换
 
-返回信息类型可使用```WeiXinMessageResponse``` 进行创建
+返回信息类型可使用```WeChatMessageResponse``` 进行创建
 例如:
 ```
     // 返回图文信息，具体内容补充方法参数即可
-    WeiXinMessageResponse.buildArticle();
+    WeChatMessageResponse.buildArticle();
     // 返回图片信息，具体内容补充方法参数即可
-    WeiXinMessageResponse.buildImage();
+    WeChatMessageResponse.buildImage();
     // 返回音乐信息，具体内容补充方法参数即可
-    WeiXinMessageResponse.buildMusic();
+    WeChatMessageResponse.buildMusic();
     // 返回文本信息，具体内容补充方法参数即可
-    WeiXinMessageResponse.buildText();
+    WeChatMessageResponse.buildText();
     // 返回视频信息，具体内容补充方法参数即可
-    WeiXinMessageResponse.buildVideo();
+    WeChatMessageResponse.buildVideo();
     // 返回音频信息，具体内容补充方法参数即可
-    WeiXinMessageResponse.buildVoice();
+    WeChatMessageResponse.buildVoice();
 ```
 #### 使用方法
 1、新建class
 
-2、继承 AbstractWeiXinMessageListener
+2、继承 AbstractWeChatMessageListener
 
 3、添加 @Component注解  
 例如，接收用户传输对文字内容
 ```
 @Component
-public class TextListener extends AbrstractWeiXinMessageListener {
+public class TextListener extends AbrstractWeChatMessageListener {
 
     /**
      * 支持的消息事件类型
@@ -293,26 +293,26 @@ public class TextListener extends AbrstractWeiXinMessageListener {
      * @return
      */
     @Override
-    public WeiXinMessageTypeEnum supportMessageType() {
-        return WeiXinMessageTypeEnum.TEXT;
+    public WeChatMessageTypeEnum supportMessageType() {
+        return WeChatMessageTypeEnum.TEXT;
     }
     
     /**
      * 处理微信消息 ,return null时，会转换为 "" 返回到微信服务器
      *
-     * @param abstractWeiXinMessage
+     * @param abstractWeChatMessage
      * @return
      */
     @Override
-    public WeiXinMessageResponse handler(WeiXinMessage abstractWeiXinMessage) {
-        TextMessage textMessage = (TextMessage)abstractWeiXinMessage;
+    public WeChatMessageResponse handler(WeChatMessage abstractWeChatMessage) {
+        TextMessage textMessage = (TextMessage)abstractWeChatMessage;
         // 用户发送的内容
         String content = textMessage.getContent();
         // 用户的openId
         String fromUserName = textMessage.getFromUserName();
         saveToDataBase(fromUserName,content);
         String returnContent = "服务端已收到";
-        WeiXinMessageResponse response = WeiXinMessageResponse.buildText(returnContent);
+        WeChatMessageResponse response = WeChatMessageResponse.buildText(returnContent);
         return response;
     }
     
@@ -327,7 +327,7 @@ public class TextListener extends AbrstractWeiXinMessageListener {
 ### 注册微信回调事件处理器（同消息处理器）
 1、新建class
 
-2、继承 AbstractWeiXinEventListener
+2、继承 AbstractWeChatEventListener
 
 3、添加 @Component注解
 

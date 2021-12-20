@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.dto.message.event;
 
-import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
+import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.dto.message.event.other.ScanCodeInfo;
 
 /**
@@ -10,7 +10,7 @@ import net.jlxxw.wechat.dto.message.event.other.ScanCodeInfo;
  * @date 2021-12-17 8:14 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#3">文档地址</a>
  */
-public class ScancodeWaitmsgEventMessage extends AbstractWeiXinMessage {
+public class ScancodeWaitmsgEventMessage extends AbstractWeChatMessage {
     /**
      * 事件KEY值，由开发者在创建菜单时设定
      */

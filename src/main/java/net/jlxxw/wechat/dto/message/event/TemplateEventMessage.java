@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.dto.message.event;
 
-import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
+import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 
 /**
  * 模版消息事件
@@ -9,7 +9,7 @@ import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
  * @date 2021/1/25 1:35 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html#%E4%BA%8B%E4%BB%B6%E6%8E%A8%E9%80%81">文档地址</a>
  */
-public class TemplateEventMessage extends AbstractWeiXinMessage {
+public class TemplateEventMessage extends AbstractWeChatMessage {
     /**
      * 消息id
      */

@@ -6,9 +6,9 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.context.SpringContextHolder;
 import net.jlxxw.wechat.dto.pay.jsapi.v3.OrderInfoDTO;
 import net.jlxxw.wechat.event.CreatePrePayEvent;
-import net.jlxxw.wechat.exception.WeiXinPayException;
-import net.jlxxw.wechat.properties.WeiXinPayProperties;
-import net.jlxxw.wechat.properties.WeiXinProperties;
+import net.jlxxw.wechat.exception.WeChatPayException;
+import net.jlxxw.wechat.properties.WeChatPayProperties;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.util.RSAUtils;
 import net.jlxxw.wechat.vo.jsapi.v3.ExecutePayVO;
 import net.jlxxw.wechat.vo.jsapi.v3.PayResultVO;
@@ -28,7 +28,7 @@ import java.util.Objects;
  * @date 2021-04-10 8:01 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
+@DependsOn({"weChatProperties", "weiXinTokenManager", "webClientUtils"})
 @Component
 public class SyncWeiXinPay {
     private static final int SUCCESS_CODE = 200;
@@ -37,9 +37,9 @@ public class SyncWeiXinPay {
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
-    private WeiXinProperties weiXinProperties;
+    private WeChatProperties weChatProperties;
     @Autowired
-    private WeiXinPayProperties weiXinPayProperties;
+    private WeChatPayProperties weChatPayProperties;
     @Autowired
     private SpringContextHolder springContextHolder;
 
@@ -51,9 +51,9 @@ public class SyncWeiXinPay {
      * @return 预支付交易会话标识。用于后续接口调用中使用，该值有效期为2小时
      * 长度：1-64
      * 示例值：wx201410272009395522657a690389285100
-     * @throws WeiXinPayException 微信接口返回状态码非200时，抛出异常，需要调用者自行处理
+     * @throws WeChatPayException 微信接口返回状态码非200时，抛出异常，需要调用者自行处理
      */
-    public PayResultVO createPrePay(OrderInfoDTO orderInfoDTO, String userAgent) throws WeiXinPayException {
+    public PayResultVO createPrePay(OrderInfoDTO orderInfoDTO, String userAgent) throws WeChatPayException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.add("Accept", MediaType.APPLICATION_JSON.toString());
@@ -70,7 +70,7 @@ public class SyncWeiXinPay {
             String code = body.getString("code");
             String message = body.getString("message");
             JSONObject detail = body.getJSONObject("detail");
-            throw new WeiXinPayException(code, message, detail);
+            throw new WeChatPayException(code, message, detail);
         }
         PayResultVO vo = new PayResultVO();
         vo.setPrePayId(body.getString("prepay_id"));
@@ -92,14 +92,14 @@ public class SyncWeiXinPay {
      * @see SyncWeiXinPay#createPrePay(OrderInfoDTO, java.lang.String)
      */
     public ExecutePayVO getExecutePayVO(String prePayId) throws Exception {
-        String appId = weiXinProperties.getAppId();
+        String appId = weChatProperties.getAppId();
         // 时间戳
         long l = System.currentTimeMillis() / 1000;
         int time = (int) l;
         String randomString = RandomStringUtils.random(32, STR);
 
         String str = appId + "\n" + time + "\n" + randomString + "\n" + prePayId + "\n";
-        String publicKey = weiXinPayProperties.getPublicKey();
+        String publicKey = weChatPayProperties.getPublicKey();
         // 加密后的字符串
         String encode = RSAUtils.encode(str, publicKey);
 

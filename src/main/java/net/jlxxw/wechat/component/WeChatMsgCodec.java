@@ -23,7 +23,7 @@ package net.jlxxw.wechat.component;
 
 import net.jlxxw.wechat.enums.AesExceptionEnum;
 import net.jlxxw.wechat.exception.AesException;
-import net.jlxxw.wechat.properties.WeiXinProperties;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.util.ByteGroup;
 import net.jlxxw.wechat.util.PKCS7Encoder;
 import net.jlxxw.wechat.util.SHA1;
@@ -68,14 +68,14 @@ import java.util.Random;
  */
 @Component
 @ConditionalOnProperty(value = "weixin.enable-message-enc", havingValue = "true")
-public class WeiXinMsgCodec {
+public class WeChatMsgCodec {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final Base64 BASE64 = new Base64();
     private byte[] aesKey;
     private String token;
     private String appId;
     @Autowired
-    private WeiXinProperties weiXinProperties;
+    private WeChatProperties weChatProperties;
 
     /**
      * 后置处理器
@@ -87,14 +87,14 @@ public class WeiXinMsgCodec {
      */
     @PostConstruct
     public void postConstruct() throws AesException {
-        String encodingAesKey = weiXinProperties.getEncodingAesKey();
+        String encodingAesKey = weChatProperties.getEncodingAesKey();
         // 消息加密密钥由43位字符组成
         if (encodingAesKey.length() != 43) {
             throw new AesException(AesExceptionEnum.ILLEGAL_AES_KEY);
         }
 
-        this.token = weiXinProperties.getVerifyToken();
-        this.appId = weiXinProperties.getAppId();
+        this.token = weChatProperties.getVerifyToken();
+        this.appId = weChatProperties.getAppId();
         aesKey = Base64.decodeBase64(encodingAesKey + "=");
     }
 

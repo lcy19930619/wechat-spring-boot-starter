@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.dto.message.event;
 
-import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
+import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.dto.message.event.other.SendLocationInfo;
 
 /**
@@ -10,7 +10,7 @@ import net.jlxxw.wechat.dto.message.event.other.SendLocationInfo;
  * @date 2021-12-19 6:12 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#7">文档地址</a>
  */
-public class LocationSelectEventMessage extends AbstractWeiXinMessage {
+public class LocationSelectEventMessage extends AbstractWeChatMessage {
 
     /**
      * 事件KEY值，由开发者在创建菜单时设定

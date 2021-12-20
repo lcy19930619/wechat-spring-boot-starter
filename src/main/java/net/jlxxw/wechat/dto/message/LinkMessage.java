@@ -7,7 +7,7 @@ package net.jlxxw.wechat.dto.message;
  * @date 2021/1/20 11:29 上午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E9%93%BE%E6%8E%A5%E6%B6%88%E6%81%AF">文档地址</a>
  */
-public class LinkMessage extends AbstractWeiXinMessage {
+public class LinkMessage extends AbstractWeChatMessage {
 
     /**
      * 消息标题

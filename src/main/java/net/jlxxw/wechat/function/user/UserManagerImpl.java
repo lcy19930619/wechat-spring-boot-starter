@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import net.jlxxw.wechat.enums.LanguageEnum;
-import net.jlxxw.wechat.exception.WeiXinException;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.exception.WeChatException;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import java.util.Set;
  * @date 2021/1/25 6:44 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
+@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component
 public class UserManagerImpl implements UserManager {
 
@@ -41,7 +41,7 @@ public class UserManagerImpl implements UserManager {
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
 
     /**
      * 获取全部用户的openId
@@ -51,7 +51,7 @@ public class UserManagerImpl implements UserManager {
     @Override
     public Set<String> findAll() {
         Set<String> openIdSet = new HashSet<>();
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
 
         int current = 0;
         int totle = 1;
@@ -74,9 +74,9 @@ public class UserManagerImpl implements UserManager {
                     });
                 }
             } else {
-                WeiXinException weiXinException = new WeiXinException("获取全部openId失败，微信返回值:" + resultData.toJSONString());
-                weiXinException.setErrorCode(resultData.getInteger("errcode"));
-                throw weiXinException;
+                WeChatException weChatException = new WeChatException("获取全部openId失败，微信返回值:" + resultData.toJSONString());
+                weChatException.setErrorCode(resultData.getInteger("errcode"));
+                throw weChatException;
             }
         }
         return openIdSet;
@@ -94,7 +94,7 @@ public class UserManagerImpl implements UserManager {
         if (CollectionUtils.isEmpty(openIdList)) {
             return result;
         }
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = UrlConstant.BATCH_USER_INFO_URL + token;
         int size = 100;
         // 统计需要分成几次
@@ -130,9 +130,9 @@ public class UserManagerImpl implements UserManager {
                 result.addAll(subscriptionUsers);
                 logger.info("用户数量总计:{},当前执行数量:{}", openIdList.size(), end);
             } else {
-                WeiXinException weiXinException = new WeiXinException("批量获取用户信息失败，微信返回值:" + resultData.toJSONString() + ",用户openId列表:" + JSON.toJSONString(tempList));
-                weiXinException.setErrorCode(resultData.getInteger("errcode"));
-                throw weiXinException;
+                WeChatException weChatException = new WeChatException("批量获取用户信息失败，微信返回值:" + resultData.toJSONString() + ",用户openId列表:" + JSON.toJSONString(tempList));
+                weChatException.setErrorCode(resultData.getInteger("errcode"));
+                throw weChatException;
             }
         }
 
@@ -151,7 +151,7 @@ public class UserManagerImpl implements UserManager {
         if (StringUtils.isBlank(openId)) {
             return null;
         }
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.ONE_USER_INFO_URL, token, openId, languageEnum.getCode());
         ResponseEntity<JSONObject> forEntity = restTemplate.getForEntity(url, JSONObject.class);
         JSONObject body = forEntity.getBody();
@@ -159,9 +159,9 @@ public class UserManagerImpl implements UserManager {
             // 执行成功
             return body.toJavaObject(SubscriptionResponse.class);
         }
-        WeiXinException weiXinException = new WeiXinException("获取用户信息失败，微信返回值:" + body.toJSONString() + ",用户openId:" + openId);
-        weiXinException.setErrorCode(body.getInteger("errcode"));
-        throw weiXinException;
+        WeChatException weChatException = new WeChatException("获取用户信息失败，微信返回值:" + body.toJSONString() + ",用户openId:" + openId);
+        weChatException.setErrorCode(body.getInteger("errcode"));
+        throw weChatException;
     }
 
 

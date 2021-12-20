@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.security;
 
 import net.jlxxw.wechat.context.SpringContextHolder;
-import net.jlxxw.wechat.schedul.ScheduledUpdateWeiXinServerIp;
+import net.jlxxw.wechat.schedul.ScheduledUpdateWeChatServerIp;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +20,13 @@ import java.util.Set;
  * @author chunyang.leng
  * @date 2021/1/25 4:20 下午
  */
-public class WeiXinServerSecurityCheck {
-    private static final Logger logger = LoggerFactory.getLogger(WeiXinServerSecurityCheck.class);
+public class WeChatServerSecurityCheck {
+    private static final Logger logger = LoggerFactory.getLogger(WeChatServerSecurityCheck.class);
 
     /**
      * ip存储器
      */
-    private WeiXinSecurityIpStore weiXinSecurityIpStore = null;
+    private WeChatSecurityIpStore weChatSecurityIpStore = null;
 
     @Autowired
     private SpringContextHolder springContextHolder;
@@ -34,16 +34,16 @@ public class WeiXinServerSecurityCheck {
     @PostConstruct
     private void init() {
         try {
-            weiXinSecurityIpStore = springContextHolder.getBean(WeiXinSecurityIpStore.class);
-            Class clazz = weiXinSecurityIpStore.getClass();
-            if (AopUtils.isAopProxy(weiXinSecurityIpStore)) {
-                clazz = AopUtils.getTargetClass(weiXinSecurityIpStore);
+            weChatSecurityIpStore = springContextHolder.getBean(WeChatSecurityIpStore.class);
+            Class clazz = weChatSecurityIpStore.getClass();
+            if (AopUtils.isAopProxy(weChatSecurityIpStore)) {
+                clazz = AopUtils.getTargetClass(weChatSecurityIpStore);
             }
             LoggerUtils.info(logger, "初始化微信安全ip存储器，使用外置存储,{}", clazz.getName());
         } catch (NoSuchBeanDefinitionException e) {
             LoggerUtils.info(logger, "初始化微信安全ip存储器，使用内置存储");
             // 没有这个bean，使用内部类
-            weiXinSecurityIpStore = new WeiXinSecurityIpStore() {
+            weChatSecurityIpStore = new WeChatSecurityIpStore() {
                 /**
                  * 微信服务器ip白名单地址
                  */
@@ -90,16 +90,16 @@ public class WeiXinServerSecurityCheck {
      * @return 是否安全
      */
     public boolean isSecurity(String requestIp) {
-        return weiXinSecurityIpStore.isSecurityIp(requestIp);
+        return weChatSecurityIpStore.isSecurityIp(requestIp);
     }
 
     /**
      * 获取微信服务器IP地址,并添加到白名单列表中，由定时任务控制
      *
-     * @see ScheduledUpdateWeiXinServerIp#update()
+     * @see ScheduledUpdateWeChatServerIp#update()
      */
     public void updateWeiXinServerIp(List<String> ipList) {
         logger.info("更新ip白名单：{}", ipList);
-        weiXinSecurityIpStore.addSecurityIp(ipList);
+        weChatSecurityIpStore.addSecurityIp(ipList);
     }
 }

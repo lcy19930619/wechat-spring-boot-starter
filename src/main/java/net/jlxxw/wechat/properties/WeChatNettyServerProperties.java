@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/1/19 5:31 下午
  */
 @Configuration
-@ConfigurationProperties("weixin.netty.server")
-public class WeiXinNettyServerProperties {
+@ConfigurationProperties("we-chat.netty.server")
+public class WeChatNettyServerProperties {
     /**
      * 是否启用netty作为微信的核心接口处理器
      */

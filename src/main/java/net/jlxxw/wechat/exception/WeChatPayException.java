@@ -8,7 +8,7 @@ import com.alibaba.fastjson.JSONObject;
  * @author chunyang.leng
  * @date 2021-04-10 8:06 下午
  */
-public class WeiXinPayException extends RuntimeException {
+public class WeChatPayException extends RuntimeException {
 
     /**
      * 微信返回的错误码
@@ -25,7 +25,7 @@ public class WeiXinPayException extends RuntimeException {
      */
     private final JSONObject detail;
 
-    public WeiXinPayException(String errorCode, String description, JSONObject detail) {
+    public WeChatPayException(String errorCode, String description, JSONObject detail) {
         super("微信支付产生了一个错误信息，错误码：" + errorCode + " 错误信息描述：" + description + " 错误信息详情：" + detail);
         this.errorCode = errorCode;
         this.description = description;

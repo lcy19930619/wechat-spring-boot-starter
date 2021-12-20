@@ -6,7 +6,7 @@ package net.jlxxw.wechat.dto.message;
  * @author chunyang.leng
  * @date 2021/1/20 11:25 上午
  */
-public class VideoMessage extends AbstractWeiXinMessage {
+public class VideoMessage extends AbstractWeChatMessage {
 
     /**
      * 视频消息媒体id，可以调用获取临时素材接口拉取数据。

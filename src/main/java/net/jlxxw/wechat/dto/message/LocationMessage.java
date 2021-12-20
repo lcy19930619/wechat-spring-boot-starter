@@ -10,7 +10,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
  * @date 2021/1/20 11:28 上午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E6%B6%88%E6%81%AF">文档地址</a>
  */
-public class LocationMessage extends AbstractWeiXinMessage {
+public class LocationMessage extends AbstractWeChatMessage {
 
     /**
      * 地理位置纬度

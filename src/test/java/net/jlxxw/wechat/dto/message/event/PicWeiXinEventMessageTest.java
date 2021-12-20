@@ -18,7 +18,7 @@ public class PicWeiXinEventMessageTest extends BaseTest {
     public void convertTest() throws IOException {
         ClassPathResource classPathResource = new ClassPathResource("mock/data/xml/event/PicPhotoOrAlbumEventMessage.xml");
         File file = classPathResource.getFile();
-        PicWeiXinEventMessage message = readXmlData(file, PicWeiXinEventMessage.class);
+        PicWeChatEventMessage message = readXmlData(file, PicWeChatEventMessage.class);
         Assert.assertNotNull(message);
     }
 }

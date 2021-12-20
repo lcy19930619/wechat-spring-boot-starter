@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.controller;
 
-import net.jlxxw.wechat.properties.WeiXinProperties;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +22,11 @@ import java.util.Arrays;
  */
 @RestController
 @RequestMapping("/")
-public class WeiXinDevelopmentCertification {
+public class WeChatDevelopmentCertification {
     @Autowired
-    private WeiXinProperties weiXinProperties;
+    private WeChatProperties weChatProperties;
 
-    private static final Logger logger = LoggerFactory.getLogger(WeiXinDevelopmentCertification.class);
+    private static final Logger logger = LoggerFactory.getLogger(WeChatDevelopmentCertification.class);
 
     @GetMapping("verifyToken")
     public String verifyToken(HttpServletRequest request) throws NoSuchAlgorithmException {
@@ -52,7 +52,7 @@ public class WeiXinDevelopmentCertification {
      * @return 是否为安全签名
      */
     private boolean verify(String msgSignature, String timeStamp, String nonce) throws NoSuchAlgorithmException {
-        String signature = sha1Sign(weiXinProperties.getVerifyToken(), timeStamp, nonce);
+        String signature = sha1Sign(weChatProperties.getVerifyToken(), timeStamp, nonce);
         if (!signature.equals(msgSignature)) {
             throw new RuntimeException("token认证失败");
         }

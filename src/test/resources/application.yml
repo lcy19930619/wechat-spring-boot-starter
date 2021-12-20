@@ -1,4 +1,4 @@
-weixin:
+we-chat:
   netty:
     server:
       enable-netty: true
@@ -7,7 +7,7 @@ weixin:
       queue-size: 200
   enable-message-enc: true
   enable-default-token-manager: true
-  enable-wei-xin-call-back-server-security-check: false
+  enable-we-chat-call-back-server-security-check: false
 server:
   port: 8081
 spring:

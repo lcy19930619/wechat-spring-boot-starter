@@ -2,7 +2,7 @@ package net.jlxxw.wechat.dto.message.event.other;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
+import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 
 /**
  * 发送的位置信息
@@ -10,7 +10,7 @@ import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
  * @author chunyang.leng
  * @date 2021-12-19 6:13 下午
  */
-public class SendLocationInfo extends AbstractWeiXinMessage {
+public class SendLocationInfo extends AbstractWeChatMessage {
 
 
     /**

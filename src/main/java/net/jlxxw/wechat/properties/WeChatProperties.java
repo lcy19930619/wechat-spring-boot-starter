@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/1/19 5:31 下午
  */
 @Configuration
-@ConfigurationProperties("weixin")
-public class WeiXinProperties {
+@ConfigurationProperties("we-chat")
+public class WeChatProperties {
 
     /**
      * 第三方用户唯一凭证
@@ -50,7 +50,7 @@ public class WeiXinProperties {
     /**
      * 是否开启微信回调服务器安全检查，防止非法ip调用回信回调接口
      */
-    private boolean enableWeiXinCallBackServerSecurityCheck = true;
+    private boolean enableWeChatCallBackServerSecurityCheck = true;
 
     public String getAppId() {
         return appId;
@@ -84,12 +84,12 @@ public class WeiXinProperties {
         this.enableDefaultTokenManager = enableDefaultTokenManager;
     }
 
-    public boolean isEnableWeiXinCallBackServerSecurityCheck() {
-        return enableWeiXinCallBackServerSecurityCheck;
+    public boolean isEnableWeChatCallBackServerSecurityCheck() {
+        return enableWeChatCallBackServerSecurityCheck;
     }
 
-    public void setEnableWeiXinCallBackServerSecurityCheck(boolean enableWeiXinCallBackServerSecurityCheck) {
-        this.enableWeiXinCallBackServerSecurityCheck = enableWeiXinCallBackServerSecurityCheck;
+    public void setEnableWeChatCallBackServerSecurityCheck(boolean enableWeChatCallBackServerSecurityCheck) {
+        this.enableWeChatCallBackServerSecurityCheck = enableWeChatCallBackServerSecurityCheck;
     }
 
     public String getVerifyToken() {

@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.schedul;
 
-import net.jlxxw.wechat.exception.WeiXinException;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.exception.WeChatException;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,27 +17,27 @@ import java.util.Date;
  * @date 2021/1/20 2:46 下午
  */
 @Configuration
-@ConditionalOnProperty(prefix = "weixin", name = "enable-default-token-manager", havingValue = "true")
+@ConditionalOnProperty(prefix = "we-chat", name = "enable-default-token-manager", havingValue = "true")
 public class ScheduledUpdateToken {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateToken.class);
     private TokenMapper tokenMapper;
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
 
-    public ScheduledUpdateToken(TokenMapper tokenMapper, WeiXinTokenManager weiXinTokenManager) {
+    public ScheduledUpdateToken(TokenMapper tokenMapper, WeChatTokenManager weChatTokenManager) {
         this.tokenMapper = tokenMapper;
-        this.weiXinTokenManager = weiXinTokenManager;
+        this.weChatTokenManager = weChatTokenManager;
     }
 
     /**
      * 每两个小时执行一次，更新数据库token
      */
     @Scheduled(cron = "0 0 */2 * * ?")
-    public void updateToken() throws WeiXinException {
+    public void updateToken() throws WeChatException {
         Date date = tokenMapper.lockSelectMaxDate();
         if (date == null) {
             // 第一次操作的时候，数据库没数据
-            String token = weiXinTokenManager.getTokenFromWeiXin();
-            weiXinTokenManager.saveToken(token);
+            String token = weChatTokenManager.getTokenFromWeiXin();
+            weChatTokenManager.saveToken(token);
             logger.info("更新token成功，当前时间:{}", LocalDateTime.now().toString());
             return;
         }
@@ -47,8 +47,8 @@ public class ScheduledUpdateToken {
             // 误差时间小于3分钟时，不做任何处理
             return;
         }
-        String token = weiXinTokenManager.getTokenFromWeiXin();
-        weiXinTokenManager.saveToken(token);
+        String token = weChatTokenManager.getTokenFromWeiXin();
+        weChatTokenManager.saveToken(token);
         logger.info("更新token成功，当前时间:{}", LocalDateTime.now().toString());
     }
 }

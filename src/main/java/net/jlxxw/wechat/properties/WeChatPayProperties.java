@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021-04-10 9:42 下午
  */
 @Configuration
-@ConfigurationProperties("weixin.pay")
-public class WeiXinPayProperties {
+@ConfigurationProperties("we-chat.pay")
+public class WeChatPayProperties {
 
     /**
      * 公钥

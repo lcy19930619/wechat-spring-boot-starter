@@ -3,9 +3,9 @@ package net.jlxxw.wechat.schedul;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
-import net.jlxxw.wechat.properties.WeiXinProperties;
-import net.jlxxw.wechat.security.WeiXinServerSecurityCheck;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
+import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
@@ -21,18 +21,18 @@ import javax.annotation.PostConstruct;
  * @author chunyang.leng
  * @date 2021/1/25 4:25 下午
  */
-public class ScheduledUpdateWeiXinServerIp {
-    private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateWeiXinServerIp.class);
-    private WeiXinTokenManager weiXinTokenManager;
+public class ScheduledUpdateWeChatServerIp {
+    private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateWeChatServerIp.class);
+    private WeChatTokenManager weChatTokenManager;
     private RestTemplate restTemplate;
-    private WeiXinServerSecurityCheck weiXinServerSecurityCheck;
-    private WeiXinProperties weiXinProperties;
+    private WeChatServerSecurityCheck weChatServerSecurityCheck;
+    private WeChatProperties weChatProperties;
 
-    public ScheduledUpdateWeiXinServerIp(WeiXinTokenManager weiXinTokenManager, RestTemplate restTemplate, WeiXinServerSecurityCheck weiXinServerSecurityCheck, WeiXinProperties weiXinProperties) {
-        this.weiXinTokenManager = weiXinTokenManager;
+    public ScheduledUpdateWeChatServerIp(WeChatTokenManager weChatTokenManager, RestTemplate restTemplate, WeChatServerSecurityCheck weChatServerSecurityCheck, WeChatProperties weChatProperties) {
+        this.weChatTokenManager = weChatTokenManager;
         this.restTemplate = restTemplate;
-        this.weiXinServerSecurityCheck = weiXinServerSecurityCheck;
-        this.weiXinProperties = weiXinProperties;
+        this.weChatServerSecurityCheck = weChatServerSecurityCheck;
+        this.weChatProperties = weChatProperties;
     }
 
     /**
@@ -41,18 +41,18 @@ public class ScheduledUpdateWeiXinServerIp {
     @PostConstruct
     @Scheduled(cron = "00 00 3,6,9,12,15,18,21 * * ?")
     public void update() {
-        if (!weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck()) {
+        if (!weChatProperties.isEnableWeChatCallBackServerSecurityCheck()) {
             return;
         }
-        if (weiXinTokenManager == null) {
+        if (weChatTokenManager == null) {
             throw new BeanCreationException("检查微信白名单时，必须配置WeiXinTokenManager的实现类，或配置weixin.enable-default-token-manager: true");
         }
-        String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         String forObject = restTemplate.getForObject(UrlConstant.WEIXIN_CALL_BACK_SERVER_IP_PREFIX + tokenFromLocal, String.class);
         JSONObject jsonObject = JSONObject.parseObject(forObject);
         final JSONArray ipList = jsonObject.getJSONArray("ip_list");
         if (!CollectionUtils.isEmpty(ipList)) {
-            weiXinServerSecurityCheck.updateWeiXinServerIp(ipList.toJavaList(String.class));
+            weChatServerSecurityCheck.updateWeiXinServerIp(ipList.toJavaList(String.class));
         }
     }
 }

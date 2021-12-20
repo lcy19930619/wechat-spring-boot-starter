@@ -2,8 +2,8 @@ package net.jlxxw.wechat.function.api;
 
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
-import net.jlxxw.wechat.properties.WeiXinProperties;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeiXinResponse;
 import net.jlxxw.wechat.response.api.ApiRequestRecord;
 import net.jlxxw.wechat.response.api.ApiResponse;
@@ -24,13 +24,13 @@ import java.text.MessageFormat;
  * @date 2021-11-23 2:22 下午
  */
 @Lazy
-@DependsOn({"weiXinProperties", "weiXinTokenManager", "webClientUtils"})
+@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component
 public class AsyncOpenApiManager {
     @Autowired
-    private WeiXinProperties weiXinProperties;
+    private WeChatProperties weChatProperties;
     @Autowired
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
     @Autowired
     private WebClientUtils webClientUtils;
 
@@ -52,8 +52,8 @@ public class AsyncOpenApiManager {
      * 4、由于指标计算方法或统计时间差异，实时调用量数据可能会出现误差，一般在1%以内<br/>
      */
     public Mono<WeiXinResponse> clean() {
-        String appId = weiXinProperties.getAppId();
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String appId = weChatProperties.getAppId();
+        String token = weChatTokenManager.getTokenFromLocal();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);
@@ -81,8 +81,8 @@ public class AsyncOpenApiManager {
         if (StringUtils.isBlank(cgiPath)) {
             throw new NullPointerException();
         }
-        String appId = weiXinProperties.getAppId();
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String appId = weChatProperties.getAppId();
+        String token = weChatTokenManager.getTokenFromLocal();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);
@@ -110,8 +110,8 @@ public class AsyncOpenApiManager {
         if (StringUtils.isBlank(rid)) {
             throw new NullPointerException();
         }
-        String appId = weiXinProperties.getAppId();
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String appId = weChatProperties.getAppId();
+        String token = weChatTokenManager.getTokenFromLocal();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);

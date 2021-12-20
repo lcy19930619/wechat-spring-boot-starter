@@ -1,8 +1,8 @@
 package net.jlxxw.wechat.controller;
 
 import net.jlxxw.wechat.component.EventBus;
-import net.jlxxw.wechat.properties.WeiXinProperties;
-import net.jlxxw.wechat.security.WeiXinServerSecurityCheck;
+import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
 import net.jlxxw.wechat.util.NetworkUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,20 +21,20 @@ import java.io.PrintWriter;
  */
 @Controller
 @ConditionalOnProperty(value = "weixin.netty.server.enable-netty", havingValue = "false")
-public class WeiXinMessageController {
+public class WeChatMessageController {
     @Autowired
     private EventBus eventBus;
     @Autowired(required = false)
-    private WeiXinServerSecurityCheck weiXinServerSecurityCheck;
+    private WeChatServerSecurityCheck weChatServerSecurityCheck;
     @Autowired
-    private WeiXinProperties weiXinProperties;
+    private WeChatProperties weChatProperties;
 
-    @RequestMapping("weixin")
+    @RequestMapping("weChat")
     public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (weiXinProperties.isEnableWeiXinCallBackServerSecurityCheck() && weiXinServerSecurityCheck != null) {
+        if (weChatProperties.isEnableWeChatCallBackServerSecurityCheck() && weChatServerSecurityCheck != null) {
             // 开启微信回调ip安全检查时执行
             final String ipAddress = NetworkUtil.getIpAddress(request);
-            if (!weiXinServerSecurityCheck.isSecurity(ipAddress)) {
+            if (!weChatServerSecurityCheck.isSecurity(ipAddress)) {
                 // 非法ip，不予处理
                 return;
             }

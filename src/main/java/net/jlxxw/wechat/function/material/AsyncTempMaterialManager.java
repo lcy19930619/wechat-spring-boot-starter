@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
-import net.jlxxw.wechat.exception.WeiXinException;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.exception.WeChatException;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.material.TempMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import net.jlxxw.wechat.util.WebClientUtils;
@@ -39,7 +39,7 @@ public class AsyncTempMaterialManager {
     @Autowired
     private WebClient webClient;
     @Autowired
-    private WeiXinTokenManager weiXinTokenManager;
+    private WeChatTokenManager weChatTokenManager;
 
     @Autowired
     private WebClientUtils webClientUtils;
@@ -52,7 +52,7 @@ public class AsyncTempMaterialManager {
      */
     public Mono<TempMaterialResponse> upload(MaterialEnum materialEnum, File file) {
 
-        String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(file);
 
         // 封装请求参数
@@ -68,9 +68,9 @@ public class AsyncTempMaterialManager {
         return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
                 // 存在错误码，说明上传出错
-                WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
-                weiXinException.setErrorCode(obj.getInteger("errcode"));
-                throw weiXinException;
+                WeChatException weChatException = new WeChatException(JSON.toJSONString(obj));
+                weChatException.setErrorCode(obj.getInteger("errcode"));
+                throw weChatException;
             }
             LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象
@@ -91,7 +91,7 @@ public class AsyncTempMaterialManager {
      * @param callbackMethod 回调方法
      */
     public Mono<TempMaterialResponse> upload(MaterialEnum materialEnum, URI uri, Consumer<TempMaterialResponse> callbackMethod) {
-        String tokenFromLocal = weiXinTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         FileSystemResource resource = new FileSystemResource(Paths.get(uri));
 
         // 封装请求参数
@@ -108,9 +108,9 @@ public class AsyncTempMaterialManager {
         return mono.map(obj -> {
             if (obj.getInteger("errcode") != null) {
                 // 存在错误码，说明上传出错上传出错
-                WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(obj));
-                weiXinException.setErrorCode(obj.getInteger("errcode"));
-                throw weiXinException;
+                WeChatException weChatException = new WeChatException(JSON.toJSONString(obj));
+                weChatException.setErrorCode(obj.getInteger("errcode"));
+                throw weChatException;
             }
             LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", JSON.toJSONString(obj));
             // 封装返回对象
@@ -128,7 +128,7 @@ public class AsyncTempMaterialManager {
      * @param mediaId 媒体文件ID
      */
     public Mono<Resource> download(String mediaId, MediaType mediaType) {
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时素材,不含视频url:{}", url);
         return webClientUtils.sendGet(url, Resource.class, mediaType);
@@ -141,7 +141,7 @@ public class AsyncTempMaterialManager {
      * @param mediaId 媒体文件ID
      */
     public Mono<String> downloadVideo(String mediaId) {
-        String token = weiXinTokenManager.getTokenFromLocal();
+        String token = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.DOWN_TEMP_MATERIAL, token, mediaId);
         LoggerUtils.debug(logger, "下载临时视频素材url:{}", url);
 

@@ -2,9 +2,9 @@ package net.jlxxw.wechat.function.token;
 
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.exception.WeiXinException;
+import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.mapper.TokenMapper;
-import net.jlxxw.wechat.properties.WeiXinProperties;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.token.WeChatTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,13 @@ import java.util.Objects;
  * @author chunyang.leng
  * @date 2021/1/19 5:30 下午
  */
-@DependsOn({"tokenMapper", "weiXinProperties"})
-@ConditionalOnProperty(prefix = "weixin", value = "enable-default-token-manager", havingValue = "true")
-@Component
-public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager {
-    private static final Logger logger = LoggerFactory.getLogger(DefaultWeiXinTokenManagerImpl.class);
+@DependsOn({"tokenMapper", "weChatProperties"})
+@ConditionalOnProperty(prefix = "we-chat", value = "enable-default-token-manager", havingValue = "true")
+@Component("weChatTokenManager")
+public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultWeChatTokenManagerImpl.class);
     @Autowired
-    private WeiXinProperties weiXinProperties;
+    private WeChatProperties weChatProperties;
     @Autowired
     private RestTemplate restTemplate;
     @Autowired
@@ -50,14 +50,14 @@ public class DefaultWeiXinTokenManagerImpl implements WeiXinTokenManager {
      * @return token
      */
     @Override
-    public String getTokenFromWeiXin() throws WeiXinException {
-        String url = MessageFormat.format(UrlConstant.TOKEN_URL, weiXinProperties.getAppId(), weiXinProperties.getSecret());
+    public String getTokenFromWeiXin() throws WeChatException {
+        String url = MessageFormat.format(UrlConstant.TOKEN_URL, weChatProperties.getAppId(), weChatProperties.getSecret());
         WeChatTokenResponse response = restTemplate.getForObject(url, WeChatTokenResponse.class);
         if (Objects.nonNull(response.getErrcode()) && 0 != response.getErrcode()) {
             logger.error("微信获取token返回值:{}", JSON.toJSONString(response));
-            WeiXinException weiXinException = new WeiXinException(JSON.toJSONString(response));
-            weiXinException.setErrorCode(response.getErrcode());
-            throw weiXinException;
+            WeChatException weChatException = new WeChatException(JSON.toJSONString(response));
+            weChatException.setErrorCode(response.getErrcode());
+            throw weChatException;
         }
         return response.getAccessToken();
     }

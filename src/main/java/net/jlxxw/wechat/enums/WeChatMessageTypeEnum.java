@@ -6,7 +6,7 @@ package net.jlxxw.wechat.enums;
  * @author chunyang.leng
  * @date 2021/1/20 11:45 上午
  */
-public enum WeiXinMessageTypeEnum {
+public enum WeChatMessageTypeEnum {
     /**
      * 文本
      */
@@ -42,7 +42,7 @@ public enum WeiXinMessageTypeEnum {
      */
     private final String description;
 
-    WeiXinMessageTypeEnum(String description) {
+    WeChatMessageTypeEnum(String description) {
         this.description = description;
     }
 

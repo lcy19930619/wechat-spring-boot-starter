@@ -1,8 +1,8 @@
 package net.jlxxw.wechat.listener.message;
 
 import net.jlxxw.wechat.component.listener.AbstractWeiXinMessageListener;
-import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
-import net.jlxxw.wechat.enums.WeiXinMessageTypeEnum;
+import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
+import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.response.WeiXinMessageResponse;
 import org.junit.Assert;
 import org.springframework.stereotype.Component;
@@ -19,19 +19,19 @@ public class ShortVideoMessageListener extends AbstractWeiXinMessageListener {
      * @return
      */
     @Override
-    public WeiXinMessageTypeEnum supportMessageType() {
-        return WeiXinMessageTypeEnum.SHORT_VIDEO;
+    public WeChatMessageTypeEnum supportMessageType() {
+        return WeChatMessageTypeEnum.SHORT_VIDEO;
     }
 
     /**
      * 处理微信消息 ,return null时，会转换为 "" 返回到微信服务器
      *
-     * @param abstractWeiXinMessage
+     * @param abstractWeChatMessage
      * @return
      */
     @Override
-    public WeiXinMessageResponse handler(AbstractWeiXinMessage abstractWeiXinMessage) {
-        Assert.assertNotNull("接收到的信息不应为空", abstractWeiXinMessage);
+    public WeiXinMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage) {
+        Assert.assertNotNull("接收到的信息不应为空", abstractWeChatMessage);
         return WeiXinMessageResponse.buildText(supportMessageType().getDescription() + "done");
     }
 }

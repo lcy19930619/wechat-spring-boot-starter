@@ -6,7 +6,7 @@ import java.util.List;
  * @author chunyang.leng
  * @date 2021-11-23 3:22 下午
  */
-public interface WeiXinSecurityIpStore {
+public interface WeChatSecurityIpStore {
 
     /**
      * 新增一个微信的服务器ip

@@ -3,12 +3,12 @@ package net.jlxxw.wechat;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
-import net.jlxxw.wechat.function.token.WeiXinTokenManager;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.mapper.TokenMapper;
-import net.jlxxw.wechat.properties.WeiXinProperties;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.schedul.ScheduledUpdateToken;
-import net.jlxxw.wechat.schedul.ScheduledUpdateWeiXinServerIp;
-import net.jlxxw.wechat.security.WeiXinServerSecurityCheck;
+import net.jlxxw.wechat.schedul.ScheduledUpdateWeChatServerIp;
+import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.mybatis.spring.annotation.MapperScan;
@@ -41,8 +41,8 @@ import java.util.concurrent.TimeUnit;
 @ComponentScan("net.jlxxw.wechat")
 @EnableScheduling
 @MapperScan("net.jlxxw.wechat.mapper")
-public class WeiXinComponentAutoConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(WeiXinComponentAutoConfiguration.class);
+public class WeChatComponentAutoConfiguration {
+    private static final Logger logger = LoggerFactory.getLogger(WeChatComponentAutoConfiguration.class);
 
     @Bean
     @ConditionalOnMissingBean(RestTemplate.class)
@@ -125,29 +125,29 @@ public class WeiXinComponentAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnProperty(prefix = "weixin", name = "enable-default-token-manager", havingValue = "true")
+    @ConditionalOnProperty(prefix = "we-chat", name = "enable-default-token-manager", havingValue = "true")
     public ScheduledUpdateToken weiXinTokenManager(TokenMapper tokenMapper,
-                                                   WeiXinTokenManager weiXinTokenManager) {
+                                                   WeChatTokenManager weChatTokenManager) {
         LoggerUtils.info(logger, "初始化默认token管理器");
-        return new ScheduledUpdateToken(tokenMapper, weiXinTokenManager);
+        return new ScheduledUpdateToken(tokenMapper, weChatTokenManager);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "weixin", name = "enable-wei-xin-call-back-server-security-check", havingValue = "true")
-    public ScheduledUpdateWeiXinServerIp scheduledUpdateWeiXinServerIp(
-            WeiXinTokenManager weiXinTokenManager,
+    @ConditionalOnProperty(prefix = "we-chat", name = "enable-we-chat-call-back-server-security-check", havingValue = "true")
+    public ScheduledUpdateWeChatServerIp scheduledUpdateWeChatServerIp(
+            WeChatTokenManager weChatTokenManager,
             RestTemplate restTemplate,
-            WeiXinServerSecurityCheck weiXinServerSecurityCheck,
-            WeiXinProperties weiXinProperties) {
+            WeChatServerSecurityCheck weChatServerSecurityCheck,
+            WeChatProperties weChatProperties) {
         LoggerUtils.info(logger, "初始化微信安全检查组件");
-        return new ScheduledUpdateWeiXinServerIp(weiXinTokenManager, restTemplate, weiXinServerSecurityCheck, weiXinProperties);
+        return new ScheduledUpdateWeChatServerIp(weChatTokenManager, restTemplate, weChatServerSecurityCheck, weChatProperties);
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "weixin", name = {"enable-wei-xin-call-back-server-security-check"}, havingValue = "true")
-    public WeiXinServerSecurityCheck weiXinServerSecurityCheck() {
+    @ConditionalOnProperty(prefix = "we-chat", name = {"enable-we-chat-call-back-server-security-check"}, havingValue = "true")
+    public WeChatServerSecurityCheck weChatServerSecurityCheck() {
         LoggerUtils.info(logger, "启用微信回调ip白名单管理器");
-        return new WeiXinServerSecurityCheck();
+        return new WeChatServerSecurityCheck();
     }
 
 

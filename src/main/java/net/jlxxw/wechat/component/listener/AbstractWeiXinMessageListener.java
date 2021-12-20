@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.component.listener;
 
-import net.jlxxw.wechat.dto.message.AbstractWeiXinMessage;
-import net.jlxxw.wechat.enums.WeiXinMessageTypeEnum;
+import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
+import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.response.WeiXinMessageResponse;
 
 /**
@@ -17,13 +17,13 @@ public abstract class AbstractWeiXinMessageListener {
      *
      * @return
      */
-    public abstract WeiXinMessageTypeEnum supportMessageType();
+    public abstract WeChatMessageTypeEnum supportMessageType();
 
     /**
      * 处理微信消息 ,return null时，会转换为 "" 返回到微信服务器
      *
-     * @param abstractWeiXinMessage
+     * @param abstractWeChatMessage
      * @return
      */
-    public abstract WeiXinMessageResponse handler(AbstractWeiXinMessage abstractWeiXinMessage);
+    public abstract WeiXinMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage);
 }

@@ -6,7 +6,7 @@ package net.jlxxw.wechat.enums;
  * @author chunyang.leng
  * @date 2021/1/20 1:03 下午
  */
-public enum WeiXinEventTypeEnum {
+public enum WeChatEventTypeEnum {
 
     /**
      * 事件类型：subscribe(订阅)
@@ -120,7 +120,7 @@ public enum WeiXinEventTypeEnum {
      */
     private final String description;
 
-    WeiXinEventTypeEnum(String eventCode, String description) {
+    WeChatEventTypeEnum(String eventCode, String description) {
         this.eventCode = eventCode;
         this.description = description;
     }

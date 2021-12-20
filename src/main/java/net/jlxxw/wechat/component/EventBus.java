@@ -15,10 +15,10 @@ import net.jlxxw.wechat.component.listener.UnKnowWeiXinEventListener;
 import net.jlxxw.wechat.component.listener.UnKnowWeiXinMessageListener;
 import net.jlxxw.wechat.dto.message.*;
 import net.jlxxw.wechat.dto.message.event.*;
-import net.jlxxw.wechat.enums.WeiXinEventTypeEnum;
-import net.jlxxw.wechat.enums.WeiXinMessageTypeEnum;
+import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
+import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.exception.AesException;
-import net.jlxxw.wechat.properties.WeiXinProperties;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeiXinMessageResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
@@ -54,9 +54,9 @@ public class EventBus {
     @Autowired(required = false)
     private List<AbstractWeiXinEventListener> abstractWeiXinEventListeners;
     @Autowired(required = false)
-    private WeiXinMsgCodec weiXinMsgCodec;
+    private WeChatMsgCodec weChatMsgCodec;
     @Autowired
-    private WeiXinProperties weiXinProperties;
+    private WeChatProperties weChatProperties;
     @Autowired(required = false)
     private UnKnowWeiXinEventListener unKnowWeiXinEventListener;
     @Autowired(required = false)
@@ -69,13 +69,13 @@ public class EventBus {
      * key 支持的消息类型
      * value 消息监听器
      */
-    private final Map<WeiXinMessageTypeEnum, AbstractWeiXinMessageListener> messageListenerMap = new HashMap<>();
+    private final Map<WeChatMessageTypeEnum, AbstractWeiXinMessageListener> messageListenerMap = new HashMap<>();
     /**
      * 消息处理监听器
      * key 支持的消息类型
      * value 消息监听器
      */
-    private final Map<WeiXinEventTypeEnum, AbstractWeiXinEventListener> eventListenerMap = new HashMap<>();
+    private final Map<WeChatEventTypeEnum, AbstractWeiXinEventListener> eventListenerMap = new HashMap<>();
 
 
     @PostConstruct
@@ -92,7 +92,7 @@ public class EventBus {
 
         if (!CollectionUtils.isEmpty(abstractWeiXinMessageListeners)) {
             // 如果已经配置了微信监听器，则按照支持到类型枚举，进行分类
-            Map<WeiXinMessageTypeEnum, List<AbstractWeiXinMessageListener>> map = abstractWeiXinMessageListeners.stream().collect(Collectors.groupingBy(AbstractWeiXinMessageListener::supportMessageType));
+            Map<WeChatMessageTypeEnum, List<AbstractWeiXinMessageListener>> map = abstractWeiXinMessageListeners.stream().collect(Collectors.groupingBy(AbstractWeiXinMessageListener::supportMessageType));
 
             map.forEach((k, v) -> {
                 if (v.size() > 1) {
@@ -104,8 +104,8 @@ public class EventBus {
         }
 
         // 警告信息打印，提示未注册的监听器
-        final WeiXinMessageTypeEnum[] values = WeiXinMessageTypeEnum.values();
-        for (WeiXinMessageTypeEnum value : values) {
+        final WeChatMessageTypeEnum[] values = WeChatMessageTypeEnum.values();
+        for (WeChatMessageTypeEnum value : values) {
             if (!messageListenerMap.containsKey(value)) {
                 LoggerUtils.warn(logger, value.getDescription() + "消息处理器未注册!!!");
             }
@@ -113,7 +113,7 @@ public class EventBus {
 
         if (!CollectionUtils.isEmpty(abstractWeiXinEventListeners)) {
             // 如果已经配置了微信监听器，则按照支持到类型枚举，进行分类
-            Map<WeiXinEventTypeEnum, List<AbstractWeiXinEventListener>> eventMap = abstractWeiXinEventListeners.stream().collect(Collectors.groupingBy(AbstractWeiXinEventListener::supportEventType));
+            Map<WeChatEventTypeEnum, List<AbstractWeiXinEventListener>> eventMap = abstractWeiXinEventListeners.stream().collect(Collectors.groupingBy(AbstractWeiXinEventListener::supportEventType));
             eventMap.forEach((k, v) -> {
                 if (v.size() > 1) {
                     // 因为每个事件都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
@@ -124,8 +124,8 @@ public class EventBus {
         }
 
         // 警告信息打印，提示未注册的监听器
-        final WeiXinEventTypeEnum[] eventValues = WeiXinEventTypeEnum.values();
-        for (WeiXinEventTypeEnum value : eventValues) {
+        final WeChatEventTypeEnum[] eventValues = WeChatEventTypeEnum.values();
+        for (WeChatEventTypeEnum value : eventValues) {
             if (!eventListenerMap.containsKey(value)) {
                 LoggerUtils.warn(logger, value.getDescription() + "事件处理器未注册!!!");
             }
@@ -167,7 +167,7 @@ public class EventBus {
      * @throws AesException 微信信息加解密异常
      */
     public String dispatcher(byte[] bytes, String uri) throws AesException {
-        if (weiXinProperties.isEnableMessageEnc()) {
+        if (weChatProperties.isEnableMessageEnc()) {
             // 微信发送进来的xml
             String inputXML = new String(bytes, StandardCharsets.UTF_8);
 
@@ -189,16 +189,16 @@ public class EventBus {
             // 获取随机串
             String nonce = map.get("nonce");
             // 消息解密
-            String decryptMsg = weiXinMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
+            String decryptMsg = weChatMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
             LoggerUtils.debug(logger, "微信消息解密成功，信息为:{}", decryptMsg);
             // 将解密后的数据，转换为byte数组，用于协议的具体处理
             bytes = decryptMsg.getBytes(StandardCharsets.UTF_8);
         }
         // 调用具体的分发器，实现数据的处理
         String result = dispatcher(bytes);
-        if (weiXinProperties.isEnableMessageEnc()) {
+        if (weChatProperties.isEnableMessageEnc()) {
             // 如果启用了信息加解密功能，则对返回值进行加密处理
-            result = weiXinMsgCodec.encrypt(result);
+            result = weChatMsgCodec.encrypt(result);
             LoggerUtils.debug(logger, "微信消息加密成功，信息为:{}", result);
         }
         return result;
@@ -232,42 +232,42 @@ public class EventBus {
         // 获取消息类型，根据类型寻找对应监听器进行处理
         final String msgType = objectNode.get("MsgType").textValue();
 
-        AbstractWeiXinMessage abstractWeiXinMessage;
+        AbstractWeChatMessage abstractWeChatMessage;
         switch (msgType) {
             case "text":
                 // 文本信息, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF
-                abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), TextMessage.class);
-                return handlerMessage(abstractWeiXinMessage, WeiXinMessageTypeEnum.TEXT);
+                abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), TextMessage.class);
+                return handlerMessage(abstractWeChatMessage, WeChatMessageTypeEnum.TEXT);
 
             case "image":
                 // 图片信息, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%9B%BE%E7%89%87%E6%B6%88%E6%81%AF
-                abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ImageMessage.class);
-                return handlerMessage(abstractWeiXinMessage, WeiXinMessageTypeEnum.IMAGE);
+                abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ImageMessage.class);
+                return handlerMessage(abstractWeChatMessage, WeChatMessageTypeEnum.IMAGE);
 
             case "voice":
                 // 音频信息, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E8%AF%AD%E9%9F%B3%E6%B6%88%E6%81%AF
-                abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), VoiceMessage.class);
-                return handlerMessage(abstractWeiXinMessage, WeiXinMessageTypeEnum.VOICE);
+                abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), VoiceMessage.class);
+                return handlerMessage(abstractWeChatMessage, WeChatMessageTypeEnum.VOICE);
 
             case "video":
                 // 视频信息, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E8%A7%86%E9%A2%91%E6%B6%88%E6%81%AF
-                abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), VideoMessage.class);
-                return handlerMessage(abstractWeiXinMessage, WeiXinMessageTypeEnum.VIDEO);
+                abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), VideoMessage.class);
+                return handlerMessage(abstractWeChatMessage, WeChatMessageTypeEnum.VIDEO);
 
             case "shortvideo":
                 // 短视频信息, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%B0%8F%E8%A7%86%E9%A2%91%E6%B6%88%E6%81%AF
-                abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ShortVideoMessage.class);
-                return handlerMessage(abstractWeiXinMessage, WeiXinMessageTypeEnum.SHORT_VIDEO);
+                abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ShortVideoMessage.class);
+                return handlerMessage(abstractWeChatMessage, WeChatMessageTypeEnum.SHORT_VIDEO);
 
             case "location":
                 // 地理位置信息, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E6%B6%88%E6%81%AF
-                abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LocationMessage.class);
-                return handlerMessage(abstractWeiXinMessage, WeiXinMessageTypeEnum.LOCATION);
+                abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LocationMessage.class);
+                return handlerMessage(abstractWeChatMessage, WeChatMessageTypeEnum.LOCATION);
 
             case "link":
                 // 链接信息, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_standard_messages.html#%E9%93%BE%E6%8E%A5%E6%B6%88%E6%81%AF
-                abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LinkMessage.class);
-                return handlerMessage(abstractWeiXinMessage, WeiXinMessageTypeEnum.LINK);
+                abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LinkMessage.class);
+                return handlerMessage(abstractWeChatMessage, WeChatMessageTypeEnum.LINK);
 
             case "event":
                 // 事件类型的请求内容
@@ -277,85 +277,85 @@ public class EventBus {
                     // 订阅事件, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E5%85%B3%E6%B3%A8-%E5%8F%96%E6%B6%88%E5%85%B3%E6%B3%A8%E4%BA%8B%E4%BB%B6
                     case "subscribe":
                         if (Objects.isNull(objectNode.get("EventKey"))) {
-                            abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeEventMessage.class);
-                            return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
+                            abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeEventMessage.class);
+                            return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.SUBSCRIBE);
                         }
                         String eventKey = objectNode.get("EventKey").textValue();
                         if (eventKey != null && eventKey.contains("qrscene_")) {
                             // 用户未关注时，进行关注后的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E6%89%AB%E6%8F%8F%E5%B8%A6%E5%8F%82%E6%95%B0%E4%BA%8C%E7%BB%B4%E7%A0%81%E4%BA%8B%E4%BB%B6
-                            abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeQrsceneEventMessage.class);
-                            return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE_QRSCENE);
+                            abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeQrsceneEventMessage.class);
+                            return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.SUBSCRIBE_QRSCENE);
                         }
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.SUBSCRIBE);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.SUBSCRIBE);
 
                     // 取消订阅, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E5%85%B3%E6%B3%A8-%E5%8F%96%E6%B6%88%E5%85%B3%E6%B3%A8%E4%BA%8B%E4%BB%B6
                     case "unsubscribe":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), UnSubscribeEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.UNSUBSCRIBE);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), UnSubscribeEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.UNSUBSCRIBE);
 
                     // 扫描二维码事件, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E6%89%AB%E6%8F%8F%E5%B8%A6%E5%8F%82%E6%95%B0%E4%BA%8C%E7%BB%B4%E7%A0%81%E4%BA%8B%E4%BB%B6
                     case "SCAN":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeScanEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.SCAN);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeScanEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.SCAN);
 
                     // 地理位置信息上报事件, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E4%B8%8A%E6%8A%A5%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E4%BA%8B%E4%BB%B6
                     case "LOCATION":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LocationEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.LOCATION);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LocationEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.LOCATION);
 
                     // 模版推送回调事件, https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html#%E4%BA%8B%E4%BB%B6%E6%8E%A8%E9%80%81
                     case "TEMPLATESENDJOBFINISH":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), TemplateEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.TEMPLATESENDJOBFINISH);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), TemplateEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.TEMPLATESENDJOBFINISH);
 
                     // ---------------------菜单类事件 开始---------------------
 
                     // 点击菜单拉取消息时的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#0
                     case "CLICK":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ClickMenuGetInfoEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.CLICK);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ClickMenuGetInfoEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.CLICK);
 
                     // 点击菜单跳转链接时的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#1
                     case "VIEW":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ClickMenuGotoLinkEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ClickMenuGotoLinkEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
 
 
                     // 扫码推事件的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#2
                     case "scancode_push":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ScancodePushEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ScancodePushEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
 
                     // 扫码推事件且弹出“消息接收中”提示框的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#3
                     case "scancode_waitmsg":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ScancodeWaitmsgEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ScancodeWaitmsgEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
 
                     // 弹出系统拍照发图的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#4
                     case "pic_sysphoto":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicSysphotoEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicSysphotoEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
 
                     // 弹出拍照或者相册发图的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#5
                     case "pic_photo_or_album":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicPhotoOrAlbumEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicPhotoOrAlbumEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
 
                     // 弹出微信相册发图器的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#6
                     case "pic_weixin":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicWeiXinEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), PicWeChatEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
 
                     // 弹出地理位置选择器的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#7
                     case "location_select":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LocationSelectEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), LocationSelectEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
 
                     // 点击菜单跳转小程序的事件推送, https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Custom_Menu_Push_Events.html#8
                     case "view_miniprogram":
-                        abstractWeiXinMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ViewMiniProgramEventMessage.class);
-                        return handlerEvent(abstractWeiXinMessage, WeiXinEventTypeEnum.VIEW);
+                        abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), ViewMiniProgramEventMessage.class);
+                        return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.VIEW);
                     // ---------------------菜单类事件 结束---------------------
 
 
@@ -380,27 +380,27 @@ public class EventBus {
     /**
      * 处理微信信息，若出现异常，则向返回空白字符串
      *
-     * @param abstractWeiXinMessage 微信消息
-     * @param weiXinMessageTypeEnum 消息类型枚举
+     * @param abstractWeChatMessage 微信消息
+     * @param weChatMessageTypeEnum 消息类型枚举
      * @return 处理完毕的xml字符串
      */
-    private String handlerMessage(AbstractWeiXinMessage abstractWeiXinMessage, WeiXinMessageTypeEnum weiXinMessageTypeEnum) {
+    private String handlerMessage(AbstractWeChatMessage abstractWeChatMessage, WeChatMessageTypeEnum weChatMessageTypeEnum) {
         if (CollectionUtils.isEmpty(abstractWeiXinMessageListeners)) {
             throw new IllegalArgumentException("未注册任何相关消息监听器，或监听器未加入到ioc容器中");
         }
-        final AbstractWeiXinMessageListener abstractWeiXinMessageListener = messageListenerMap.get(weiXinMessageTypeEnum);
+        final AbstractWeiXinMessageListener abstractWeiXinMessageListener = messageListenerMap.get(weChatMessageTypeEnum);
 
         if (Objects.isNull(abstractWeiXinMessageListener)) {
-            throw new IllegalArgumentException(weiXinMessageTypeEnum.name() + "消息监听器未注册");
+            throw new IllegalArgumentException(weChatMessageTypeEnum.name() + "消息监听器未注册");
         }
 
-        LoggerUtils.debug(logger, "接收到微信请求，请求类型:{},请求参数:{}", weiXinMessageTypeEnum.getDescription(), JSON.toJSONString(abstractWeiXinMessage));
-        WeiXinMessageResponse response = abstractWeiXinMessageListener.handler(abstractWeiXinMessage);
+        LoggerUtils.debug(logger, "接收到微信请求，请求类型:{},请求参数:{}", weChatMessageTypeEnum.getDescription(), JSON.toJSONString(abstractWeChatMessage));
+        WeiXinMessageResponse response = abstractWeiXinMessageListener.handler(abstractWeChatMessage);
         if (Objects.isNull(response)) {
             return "";
         }
-        String toUserName = abstractWeiXinMessage.getToUserName();
-        String fromUserName = abstractWeiXinMessage.getFromUserName();
+        String toUserName = abstractWeChatMessage.getToUserName();
+        String fromUserName = abstractWeChatMessage.getFromUserName();
         response.setFromUserName(toUserName);
         response.setCreateTime(System.currentTimeMillis() / 1000);
         response.setToUserName(fromUserName);
@@ -417,25 +417,25 @@ public class EventBus {
     /**
      * 处理微信事件，若出现异常，则向返回空白字符串
      *
-     * @param abstractWeiXinMessage 微信事件信息
-     * @param weiXinEventTypeEnum   微信事件枚举
+     * @param abstractWeChatMessage 微信事件信息
+     * @param weChatEventTypeEnum   微信事件枚举
      * @return 处理结果
      */
-    private String handlerEvent(AbstractWeiXinMessage abstractWeiXinMessage, WeiXinEventTypeEnum weiXinEventTypeEnum) {
+    private String handlerEvent(AbstractWeChatMessage abstractWeChatMessage, WeChatEventTypeEnum weChatEventTypeEnum) {
         if (CollectionUtils.isEmpty(abstractWeiXinEventListeners)) {
             throw new IllegalArgumentException("未注册相关事件监听器，或监听器未加入到ioc容器中");
         }
-        final AbstractWeiXinEventListener abstractWeiXinEventListener = eventListenerMap.get(weiXinEventTypeEnum);
+        final AbstractWeiXinEventListener abstractWeiXinEventListener = eventListenerMap.get(weChatEventTypeEnum);
 
         if (Objects.isNull(abstractWeiXinEventListener)) {
-            throw new IllegalArgumentException(weiXinEventTypeEnum.name() + "事件监听器未注册");
+            throw new IllegalArgumentException(weChatEventTypeEnum.name() + "事件监听器未注册");
         }
-        WeiXinMessageResponse response = abstractWeiXinEventListener.handler(abstractWeiXinMessage);
+        WeiXinMessageResponse response = abstractWeiXinEventListener.handler(abstractWeChatMessage);
         if (Objects.isNull(response)) {
             return "";
         }
-        String toUserName = abstractWeiXinMessage.getToUserName();
-        String fromUserName = abstractWeiXinMessage.getFromUserName();
+        String toUserName = abstractWeChatMessage.getToUserName();
+        String fromUserName = abstractWeChatMessage.getFromUserName();
         response.setFromUserName(toUserName);
         response.setCreateTime(System.currentTimeMillis() / 1000);
         response.setToUserName(fromUserName);
