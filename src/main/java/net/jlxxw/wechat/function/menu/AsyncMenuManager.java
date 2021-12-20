@@ -21,7 +21,7 @@ import java.text.MessageFormat;
 import java.util.List;
 
 /**
- * 公众号菜单管理 todo 未完成
+ * 公众号菜单管理
  *
  * @author chunyang.leng
  * @date 2021-12-13 2:04 下午
@@ -69,7 +69,7 @@ public class AsyncMenuManager {
     /**
      * 获取全部菜单
      *
-     * @return
+     * @return 菜单列表
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Querying_Custom_Menus.html">文档地址</a>
      */
     public Mono<MenuResponse> getMenu() {
