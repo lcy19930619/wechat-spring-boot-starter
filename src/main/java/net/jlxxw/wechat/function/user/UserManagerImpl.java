@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.dto.user.SubscriptionUser;
+import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import net.jlxxw.wechat.enums.LanguageEnum;
 import net.jlxxw.wechat.exception.WeiXinException;
 import net.jlxxw.wechat.function.token.WeiXinTokenManager;
@@ -89,8 +89,8 @@ public class UserManagerImpl implements UserManager {
      * @return 用户基本信息
      */
     @Override
-    public List<SubscriptionUser> findUserInfo(List<String> openIdList, LanguageEnum languageEnum) {
-        List<SubscriptionUser> result = new ArrayList<>();
+    public List<SubscriptionResponse> findUserInfo(List<String> openIdList, LanguageEnum languageEnum) {
+        List<SubscriptionResponse> result = new ArrayList<>();
         if (CollectionUtils.isEmpty(openIdList)) {
             return result;
         }
@@ -126,7 +126,7 @@ public class UserManagerImpl implements UserManager {
             JSONObject resultData = JSONObject.parseObject(responseEntity.getBody());
             if (resultData.getInteger("errcode") == null || resultData.getInteger("errcode") == 0) {
                 JSONArray infoList = resultData.getJSONArray("user_info_list");
-                List<SubscriptionUser> subscriptionUsers = JSONArray.parseArray(JSON.toJSONString(infoList), SubscriptionUser.class);
+                List<SubscriptionResponse> subscriptionUsers = JSONArray.parseArray(JSON.toJSONString(infoList), SubscriptionResponse.class);
                 result.addAll(subscriptionUsers);
                 logger.info("用户数量总计:{},当前执行数量:{}", openIdList.size(), end);
             } else {
@@ -147,7 +147,7 @@ public class UserManagerImpl implements UserManager {
      * @return 用户的基本信息
      */
     @Override
-    public SubscriptionUser getUserInfo(String openId, LanguageEnum languageEnum) {
+    public SubscriptionResponse getUserInfo(String openId, LanguageEnum languageEnum) {
         if (StringUtils.isBlank(openId)) {
             return null;
         }
@@ -157,7 +157,7 @@ public class UserManagerImpl implements UserManager {
         JSONObject body = forEntity.getBody();
         if (body.getInteger("errcode") == null || body.getInteger("errcode") == 0) {
             // 执行成功
-            return body.toJavaObject(SubscriptionUser.class);
+            return body.toJavaObject(SubscriptionResponse.class);
         }
         WeiXinException weiXinException = new WeiXinException("获取用户信息失败，微信返回值:" + body.toJSONString() + ",用户openId:" + openId);
         weiXinException.setErrorCode(body.getInteger("errcode"));

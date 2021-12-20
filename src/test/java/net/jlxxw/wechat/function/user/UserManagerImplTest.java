@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.function.user;
 
 import net.jlxxw.wechat.base.BaseTest;
-import net.jlxxw.wechat.dto.user.SubscriptionUser;
+import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import net.jlxxw.wechat.enums.LanguageEnum;
 import org.junit.Assert;
 import org.junit.Test;
@@ -33,14 +33,14 @@ public class UserManagerImplTest extends BaseTest {
     public void findUserInfoTest() {
         List<String> openIdList = new ArrayList<>();
         openIdList.add(openId);
-        List<SubscriptionUser> userInfo = userManagerImpl.findUserInfo(openIdList, LanguageEnum.ZH_CN);
+        List<SubscriptionResponse> userInfo = userManagerImpl.findUserInfo(openIdList, LanguageEnum.ZH_CN);
         Assert.assertFalse("查询到的用户信息不应为空", CollectionUtils.isEmpty(userInfo));
 
     }
 
     @Test
     public void getUserInfoTest() {
-        SubscriptionUser userInfo = userManagerImpl.getUserInfo(openId, LanguageEnum.ZH_CN);
+        SubscriptionResponse userInfo = userManagerImpl.getUserInfo(openId, LanguageEnum.ZH_CN);
         Assert.assertTrue("查询到的用户信息不应为空", Objects.nonNull(userInfo));
     }
 

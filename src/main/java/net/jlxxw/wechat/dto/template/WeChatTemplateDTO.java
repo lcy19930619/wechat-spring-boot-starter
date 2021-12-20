@@ -12,7 +12,7 @@ import java.util.Objects;
  * @author chunyang.leng
  * @date 2021/1/18 9:45 下午
  */
-public class WxTemplate {
+public class WeChatTemplateDTO {
     /**
      * 微信模版id
      */
@@ -60,7 +60,7 @@ public class WxTemplate {
      * @param url 跳转的url
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildUrl(String url) {
+    public WeChatTemplateDTO buildUrl(String url) {
         this.setUrl(url);
         return this;
     }
@@ -71,7 +71,7 @@ public class WxTemplate {
      * @param openId openId
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildToUser(String openId) {
+    public WeChatTemplateDTO buildToUser(String openId) {
         this.setTouser(openId);
         return this;
     }
@@ -82,7 +82,7 @@ public class WxTemplate {
      * @param templateCode 微信的模版id
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildTemplateCode(String templateCode) {
+    public WeChatTemplateDTO buildTemplateCode(String templateCode) {
         this.setTemplateId(templateCode);
         return this;
     }
@@ -94,7 +94,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildFirstData(String value, Color color) {
+    public WeChatTemplateDTO buildFirstData(String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }
@@ -109,7 +109,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildKeyWord1Data(String value, Color color) {
+    public WeChatTemplateDTO buildKeyWord1Data(String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }
@@ -124,7 +124,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildKeyWord2Data(String value, Color color) {
+    public WeChatTemplateDTO buildKeyWord2Data(String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }
@@ -139,7 +139,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildKeyWord3Data(String value, Color color) {
+    public WeChatTemplateDTO buildKeyWord3Data(String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }
@@ -154,7 +154,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildKeyWord4Data(String value, Color color) {
+    public WeChatTemplateDTO buildKeyWord4Data(String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }
@@ -169,7 +169,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildKeyWord5Data(String value, Color color) {
+    public WeChatTemplateDTO buildKeyWord5Data(String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }
@@ -184,7 +184,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildRemarkData(String value, Color color) {
+    public WeChatTemplateDTO buildRemarkData(String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }
@@ -199,7 +199,7 @@ public class WxTemplate {
      * @param color 颜色信息
      * @return 当前操作的模版对象
      */
-    public WxTemplate buildOtherData(String key, String value, Color color) {
+    public WeChatTemplateDTO buildOtherData(String key, String value, Color color) {
         if (Objects.isNull(this.getData())) {
             this.setData(new HashMap<>(16));
         }

@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.function.user;
 
-import net.jlxxw.wechat.dto.user.SubscriptionUser;
+import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import net.jlxxw.wechat.enums.LanguageEnum;
 
 import java.util.List;
@@ -27,7 +27,7 @@ public interface UserManager {
      * @param languageEnum 返回字体语言
      * @return 用户基本信息
      */
-    List<SubscriptionUser> findUserInfo(List<String> openIdList, LanguageEnum languageEnum);
+    List<SubscriptionResponse> findUserInfo(List<String> openIdList, LanguageEnum languageEnum);
 
     /**
      * 获取一个用户的基本信息
@@ -36,7 +36,7 @@ public interface UserManager {
      * @param languageEnum 返回字体语言
      * @return 用户的基本信息
      */
-    SubscriptionUser getUserInfo(String openId, LanguageEnum languageEnum);
+    SubscriptionResponse getUserInfo(String openId, LanguageEnum languageEnum);
 
 
 }

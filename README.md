@@ -75,15 +75,15 @@ UnKnowWeiXinMessageListener
     String url = "xxxxxx";
     String templateId = "xxxxx";
     
-    WxTemplate wxTemplate = new WxTemplate();
-    wxTemplate
+    WxTemplate weChatTemplateDTO = new WxTemplate();
+    weChatTemplateDTO
             .buildToUser(openId)
             .buildUrl(url)
             .buildTemplateCode(templateId)
             .buildFirstData("first DATA的具体值", ColorEnums.BLUE)
             .buildKeyWord1Data("keyword1 DATA的具体值",null)
             .buildOtherData("abc","abc DATA的具体值",ColorEnums.ORANGE);
-    pushTemplate.pushTemplate(wxTemplate,token);
+    pushTemplate.pushTemplate(weChatTemplateDTO,token);
 
   ```
 

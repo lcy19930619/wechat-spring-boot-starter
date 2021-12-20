@@ -3,7 +3,7 @@ package net.jlxxw.wechat.function.push;
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.component.BatchExecutor;
 import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.dto.template.WxTemplate;
+import net.jlxxw.wechat.dto.template.WeChatTemplateDTO;
 import net.jlxxw.wechat.function.token.WeiXinTokenManager;
 import net.jlxxw.wechat.response.WeiXinResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,17 +38,12 @@ public class SyncPushTemplate {
     private WeiXinTokenManager weiXinTokenManager;
 
     /**
-     * token 失效错误码
-     */
-    private static final int TOKEN_ERROR = 40001;
-
-    /**
      * 推送一个模版信息
      *
      * @param template 模版信息
      * @return 微信返回结果, 如果微信返回为null, 则该方法返回null
      */
-    public WeiXinResponse pushTemplate(WxTemplate template) {
+    public WeiXinResponse pushTemplate(WeChatTemplateDTO template) {
         Objects.requireNonNull(template);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -65,15 +60,15 @@ public class SyncPushTemplate {
      * @param templateList 多个模版信息
      * @return
      */
-    public List<WeiXinResponse> pushTemplate(List<WxTemplate> templateList) {
+    public List<WeiXinResponse> pushTemplate(List<WeChatTemplateDTO> templateList) {
         if (CollectionUtils.isEmpty(templateList)) {
             return new ArrayList<>();
         }
         List<WeiXinResponse> responseList = new ArrayList<>();
 
         batchExecutor.batchExecute(true, templateList, (list) -> {
-            for (WxTemplate wxTemplate : list) {
-                WeiXinResponse weiXinResponse = pushTemplate(wxTemplate);
+            for (WeChatTemplateDTO weChatTemplate : list) {
+                WeiXinResponse weiXinResponse = pushTemplate(weChatTemplate);
                 responseList.add(weiXinResponse);
             }
         });
