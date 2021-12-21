@@ -3,6 +3,8 @@ package net.jlxxw.wechat.response.menu;
 import com.alibaba.fastjson.annotation.JSONField;
 import net.jlxxw.wechat.response.WeChatResponse;
 
+import java.util.List;
+
 /**
  * 个性化菜单匹配结果
  * @author chunyang.leng
@@ -16,7 +18,7 @@ public class MatchPersonalizedMenuButton extends WeChatResponse {
     private String name;
 
     @JSONField(name = "sub_button")
-    private MatchPersonalizedMenuButton subButton;
+    private List<MatchPersonalizedMenuButton> subButton;
 
     /**
      * 菜单的类型，公众平台官网上能够设置的菜单类型
@@ -85,11 +87,11 @@ public class MatchPersonalizedMenuButton extends WeChatResponse {
         this.name = name;
     }
 
-    public MatchPersonalizedMenuButton getSubButton() {
+    public List<MatchPersonalizedMenuButton> getSubButton() {
         return subButton;
     }
 
-    public void setSubButton(MatchPersonalizedMenuButton subButton) {
+    public void setSubButton(List<MatchPersonalizedMenuButton> subButton) {
         this.subButton = subButton;
     }
 
