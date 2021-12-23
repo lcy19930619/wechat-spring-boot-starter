@@ -64,7 +64,7 @@ public class EventBus {
     private UnKnowWeChatMessageListener unKnowWeChatMessageListener;
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
-   ///111
+
     /**
      * 消息处理监听器
      * key 支持的消息类型
