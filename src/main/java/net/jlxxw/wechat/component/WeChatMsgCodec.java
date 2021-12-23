@@ -67,7 +67,7 @@ import java.util.Random;
  * @author lcy
  */
 @Component
-@ConditionalOnProperty(value = "weixin.enable-message-enc", havingValue = "true")
+@ConditionalOnProperty(value = "we-chat.enable-message-enc", havingValue = "true")
 public class WeChatMsgCodec {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final Base64 BASE64 = new Base64();
