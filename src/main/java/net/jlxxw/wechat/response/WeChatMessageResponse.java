@@ -71,6 +71,11 @@ public class WeChatMessageResponse {
      */
     private Voice voice;
 
+    /**
+     * 客服接口数据
+     */
+    private TransInfo transInfo;
+
     public String getToUserName() {
         return toUserName;
     }
@@ -157,6 +162,14 @@ public class WeChatMessageResponse {
 
     public void setVoice(Voice voice) {
         this.voice = voice;
+    }
+
+    public TransInfo getTransInfo() {
+        return transInfo;
+    }
+
+    public void setTransInfo(TransInfo transInfo) {
+        this.transInfo = transInfo;
     }
 
     /**
@@ -255,6 +268,32 @@ public class WeChatMessageResponse {
         weChatMessageResponse.setMsgType("news");
         weChatMessageResponse.setArticleCount(articles.length);
         weChatMessageResponse.setArticles(Arrays.asList(articles));
+        return weChatMessageResponse;
+    }
+
+    /**
+     * 转发到客服系统
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Service_Center_messages.html">文档地址</a>
+     * @return
+     */
+    public static WeChatMessageResponse buildTransferCustomerService(){
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("transfer_customer_service");
+        return weChatMessageResponse;
+    }
+
+    /**
+     * 转发到客服系统，并指定客服提供服务
+     * @param kfAccount 客服账号,完整客服帐号，格式为：帐号前缀@公众号微信号
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Service_Center_messages.html">文档地址</a>
+     * @return
+     */
+    public static WeChatMessageResponse buildTransferCustomerService(String kfAccount){
+        WeChatMessageResponse weChatMessageResponse = new WeChatMessageResponse();
+        weChatMessageResponse.setMsgType("transfer_customer_service");
+        TransInfo transInfo = new TransInfo();
+        transInfo.setKfAccount(kfAccount);
+        weChatMessageResponse.setTransInfo(transInfo);
         return weChatMessageResponse;
     }
 
@@ -459,6 +498,26 @@ public class WeChatMessageResponse {
 
         public void setUrl(String url) {
             this.url = url;
+        }
+    }
+
+    /**
+     * 转发至客服系统
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Service_Center_messages.html">文档地址</a>
+     */
+    public static class TransInfo{
+        /**
+         * 指定会话接入的客服账号
+         * 完整客服帐号，格式为：帐号前缀@公众号微信号
+         */
+        private String kfAccount;
+
+        public String getKfAccount() {
+            return kfAccount;
+        }
+
+        public void setKfAccount(String kfAccount) {
+            this.kfAccount = kfAccount;
         }
     }
 }
