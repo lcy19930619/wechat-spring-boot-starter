@@ -273,7 +273,7 @@ public class WeChatMessageResponse {
 
     /**
      * 转发到客服系统
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Service_Center_messages.html">文档地址</a>
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Customer_Service/Forwarding_of_messages_to_service_center.html">文档地址</a>
      * @return
      */
     public static WeChatMessageResponse buildTransferCustomerService(){
@@ -285,7 +285,7 @@ public class WeChatMessageResponse {
     /**
      * 转发到客服系统，并指定客服提供服务
      * @param kfAccount 客服账号,完整客服帐号，格式为：帐号前缀@公众号微信号
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Service_Center_messages.html">文档地址</a>
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Customer_Service/Forwarding_of_messages_to_service_center.html">文档地址</a>
      * @return
      */
     public static WeChatMessageResponse buildTransferCustomerService(String kfAccount){
@@ -503,7 +503,7 @@ public class WeChatMessageResponse {
 
     /**
      * 转发至客服系统
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Service_Center_messages.html">文档地址</a>
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Customer_Service/Forwarding_of_messages_to_service_center.html">文档地址</a>
      */
     public static class TransInfo{
         /**
