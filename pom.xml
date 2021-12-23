@@ -5,7 +5,7 @@
 
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>1.0.1.20211219</version>
+    <version>1.0.1.20211221</version>
     <name>wechat-spring-boot-starter</name>
     <description>微信公众号快速开发组件</description>
     <url>https://github.com/lcy19930619/weixin-spring-boot-starter</url>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.69</version>
+            <version>1.2.70</version>
         </dependency>
         <!--数据库连接池-->
         <dependency>

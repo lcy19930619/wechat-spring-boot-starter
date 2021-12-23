@@ -20,7 +20,7 @@ import java.io.PrintWriter;
  * @date 2021/1/20 12:48 下午
  */
 @Controller
-@ConditionalOnProperty(value = "weixin.netty.server.enable-netty", havingValue = "false")
+@ConditionalOnProperty(value = "we-chat.netty.server.enable-netty", havingValue = "false")
 public class WeChatMessageController {
     @Autowired
     private EventBus eventBus;
