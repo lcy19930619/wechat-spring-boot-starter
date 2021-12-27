@@ -14,7 +14,7 @@
 <dependency>
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>1.0.1.20211221</version>
+    <version>1.0.1.20211227</version>
 </dependency>
 ```
 

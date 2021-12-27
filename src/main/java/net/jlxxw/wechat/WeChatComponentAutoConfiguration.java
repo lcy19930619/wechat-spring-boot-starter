@@ -123,7 +123,7 @@ public class WeChatComponentAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "we-chat", name = {"enable-we-chat-call-back-server-security-check"}, havingValue = "true")
+    @ConditionalOnProperty(prefix = "we-chat", name = "enable-we-chat-call-back-server-security-check", havingValue = "true")
     public WeChatServerSecurityCheck weChatServerSecurityCheck() {
         LoggerUtils.info(logger, "启用微信回调ip白名单管理器");
         return new WeChatServerSecurityCheck();
