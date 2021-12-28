@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.properties;
 
+import io.netty.util.NettyRuntime;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,7 +31,7 @@ public class WeChatNettyServerProperties {
     /**
      * 工作组线程数
      */
-    private Integer maxThreadSize = 200;
+    private Integer maxThreadSize = NettyRuntime.availableProcessors() * 2;
 
     public Boolean getEnableNetty() {
         return enableNetty;
