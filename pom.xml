@@ -5,7 +5,7 @@
 
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>1.0.1.20211227</version>
+    <version>1.0.2.20220107</version>
     <name>wechat-spring-boot-starter</name>
     <description>微信公众号快速开发组件</description>
     <url>https://github.com/lcy19930619/weixin-spring-boot-starter</url>
@@ -43,9 +43,9 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-boot.version>2.4.1</spring-boot.version>
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-boot.version>2.6.2</spring-boot.version>
     </properties>
 
     <dependencies>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.1.20</version>
+            <version>1.2.8</version>
         </dependency>
         <!--数据库连接池-->
         <dependency>
@@ -93,13 +93,14 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.1.4</version>
+            <version>2.2.0</version>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
+            <version>8.0.27</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -107,16 +108,22 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 解决m1芯片使用webclient报错问题-->
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.1.70.Final</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-common</artifactId>
-            <version>4.1.70.Final</version>
+        </dependency>
+        <!-- 解决m1芯片使用webclient报错问题-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-tcnative-boringssl-static</artifactId>
         </dependency>
         <!-- 解决m1芯片使用webclient报错问题-->
         <dependency>
@@ -150,7 +157,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>2.7</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
