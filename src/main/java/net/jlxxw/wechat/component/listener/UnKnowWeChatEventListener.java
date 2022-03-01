@@ -3,7 +3,7 @@ package net.jlxxw.wechat.component.listener;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * 未知到微信事件处理器
+ * 未知的微信事件处理器
  *
  * @author chunyang.leng
  * @date 2021-03-08 4:38 下午

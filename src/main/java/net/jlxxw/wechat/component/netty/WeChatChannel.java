@@ -61,6 +61,8 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
         byte[] reqContent = new byte[content.readableBytes()];
         // 缓存数据加载至byte数组中
         content.readBytes(reqContent);
+        // 释放
+        content.release();
         // 获取请求的uri
         String uri = fullHttpRequest.uri();
         // 事件总线开始执行处理逻辑
