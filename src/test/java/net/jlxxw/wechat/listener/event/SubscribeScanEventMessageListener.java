@@ -20,7 +20,7 @@ public class SubscribeScanEventMessageListener extends AbstractWeChatEventListen
      */
     @Override
     public WeChatEventTypeEnum supportEventType() {
-        return WeChatEventTypeEnum.SUBSCRIBE_QRSCENE;
+        return WeChatEventTypeEnum.QRSCENE_SUBSCRIBE;
     }
 
     /**
