@@ -9,6 +9,7 @@ import net.jlxxw.wechat.dto.message.*;
  * @date 2021/1/20 11:45 上午
  */
 public enum WeChatMessageTypeEnum {
+
     /**
      * 文本
      *

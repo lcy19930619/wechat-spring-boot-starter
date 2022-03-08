@@ -8,6 +8,8 @@ we-chat:
   enable-message-enc: true
   enable-default-token-manager: true
   enable-we-chat-call-back-server-security-check: false
+  pay:
+    public-key: xxxxxxx
 server:
   port: 8081
 spring:

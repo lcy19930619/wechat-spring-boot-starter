@@ -1,5 +1,7 @@
 package net.jlxxw.wechat.dto.message.event;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * 用户未关注时，进行关注后的事件推送
  *

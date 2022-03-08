@@ -7,6 +7,7 @@ import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.dto.menu.MenuDTO;
 import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
@@ -20,6 +21,7 @@ public class AsyncMenuManagerTest extends BaseTest {
     @Autowired
     private AsyncMenuManager asyncMenuManager;
 
+    @Test
     public void createMenuTest() {
         JSONObject jsonObject = JSON.parseObject(getMockMenuData());
         JSONArray jsonArray = jsonObject.getJSONArray("button");

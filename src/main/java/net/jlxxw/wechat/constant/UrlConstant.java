@@ -90,12 +90,12 @@ public interface UrlConstant {
     /**
      * 创建菜单
      */
-    String CREATE_MENU_URL = " https://api.weixin.qq.com/cgi-bin/menu/create?access_token={0}";
+    String CREATE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token={0}";
 
     /**
      * 删除菜单
      */
-    String DELETE_MENU_URL = " https://api.weixin.qq.com/cgi-bin/menu/delete?access_token={0}";
+    String DELETE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token={0}";
 
     /**
      * 获取全部菜单
