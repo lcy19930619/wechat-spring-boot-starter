@@ -13,7 +13,10 @@ public class WeChatException extends RuntimeException {
     public WeChatException() {
         super();
     }
-
+    public WeChatException(Integer code,String message) {
+        super(message);
+        this.errorCode = code;
+    }
     public WeChatException(String message) {
         super(message);
     }

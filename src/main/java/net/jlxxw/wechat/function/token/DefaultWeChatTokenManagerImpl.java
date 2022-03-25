@@ -1,8 +1,7 @@
 package net.jlxxw.wechat.function.token;
 
-import com.alibaba.fastjson.JSON;
-import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.WeChatException;
+import net.jlxxw.wechat.feign.WechatFeignClient;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.token.WeChatTokenResponse;
@@ -11,15 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
-import java.text.MessageFormat;
-import java.util.Objects;
-
-import static net.jlxxw.wechat.constant.UrlConstant.GET_JS_API_TICKET_URL;
 
 /**
  * @author chunyang.leng
@@ -33,9 +26,9 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
     @Autowired
     private WeChatProperties weChatProperties;
     @Autowired
-    private RestTemplate restTemplate;
-    @Autowired
     private TokenMapper tokenMapper;
+    @Autowired
+    private WechatFeignClient wechatFeignClient;
     @PostConstruct
     public void postConstruct() {
         tokenMapper.createTokenTable();
@@ -60,15 +53,11 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
      */
     @Override
     public String getTokenFromWeiXin() throws WeChatException {
-        String url = MessageFormat.format(UrlConstant.TOKEN_URL, weChatProperties.getAppId(), weChatProperties.getSecret());
-        WeChatTokenResponse response = restTemplate.getForObject(url, WeChatTokenResponse.class);
-        if (Objects.nonNull(response.getErrcode()) && 0 != response.getErrcode()) {
-            logger.error("微信获取token返回值:{}", JSON.toJSONString(response));
-            WeChatException weChatException = new WeChatException(JSON.toJSONString(response));
-            weChatException.setErrorCode(response.getErrcode());
-            throw weChatException;
+        WeChatTokenResponse tokenResponse = wechatFeignClient.getToken(weChatProperties.getAppId(), weChatProperties.getSecret());
+        if(tokenResponse.isSuccessful()){
+            return tokenResponse.getAccessToken();
         }
-        return response.getAccessToken();
+        throw new WeChatException(tokenResponse.getErrcode(),tokenResponse.getErrmsg());
     }
 
     /**
@@ -100,16 +89,11 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
      */
     @Override
     public String getJsApiTicketFromWeiXin() throws WeChatException {
-        String url = MessageFormat.format(GET_JS_API_TICKET_URL,getTokenFromLocal());
-        ResponseEntity<WeChatTokenResponse> response = restTemplate.getForEntity(url, WeChatTokenResponse.class);
-        WeChatTokenResponse body = response.getBody();
-        if (Objects.nonNull(body.getErrcode()) && 0 != body.getErrcode()) {
-            logger.error("微信获取token返回值:{}", JSON.toJSONString(response));
-            WeChatException weChatException = new WeChatException(JSON.toJSONString(response));
-            weChatException.setErrorCode(body.getErrcode());
-            throw weChatException;
+        WeChatTokenResponse tokenResponse = wechatFeignClient.getTicket(getTokenFromLocal());
+        if(tokenResponse.isSuccessful()){
+            return tokenResponse.getTicket();
         }
-        return body.getTicket();
+        throw new WeChatException(tokenResponse.getErrcode(),tokenResponse.getErrmsg());
     }
 
     /**
