@@ -5,6 +5,7 @@ import net.jlxxw.wechat.feign.WechatFeignClient;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.token.WeChatTokenResponse;
+import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,14 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
     private TokenMapper tokenMapper;
     @Autowired
     private WechatFeignClient wechatFeignClient;
+
     @PostConstruct
     public void postConstruct() {
         tokenMapper.createTokenTable();
+        LoggerUtils.info(logger,"已自动创建 token 表");
         tokenMapper.createJsApiTicketTable();
+        LoggerUtils.info(logger,"已自动创建 js_api 表");
+
     }
 
     /**

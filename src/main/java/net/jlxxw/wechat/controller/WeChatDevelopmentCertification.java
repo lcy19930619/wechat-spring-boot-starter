@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.controller;
 
 import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.util.LoggerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,11 @@ import java.util.Arrays;
 @RestController
 @RequestMapping("/")
 public class WeChatDevelopmentCertification {
+    private static final Logger logger = LoggerFactory.getLogger(WeChatDevelopmentCertification.class);
+
     @Autowired
     private WeChatProperties weChatProperties;
 
-    private static final Logger logger = LoggerFactory.getLogger(WeChatDevelopmentCertification.class);
 
     @GetMapping("verifyToken")
     public String verifyToken(HttpServletRequest request) throws NoSuchAlgorithmException {
@@ -34,12 +36,12 @@ public class WeChatDevelopmentCertification {
         String msgTimestamp = request.getParameter("timestamp");
         String msgNonce = request.getParameter("nonce");
         String echostr = request.getParameter("echostr");
-        logger.info("接收到微信请求：signature={},timestamp={},nonce={},echostr={}", msgSignature, msgTimestamp, msgNonce, echostr);
+        LoggerUtils.info(logger,"接收到微信请求：signature={},timestamp={},nonce={},echostr={}", msgSignature, msgTimestamp, msgNonce, echostr);
         if (verify(msgSignature, msgTimestamp, msgNonce)) {
-            logger.info("验证通过");
+            LoggerUtils.info(logger,"验证通过");
             return echostr;
         }
-        logger.info("验证失败");
+        LoggerUtils.info(logger,"验证失败");
         return null;
     }
 
