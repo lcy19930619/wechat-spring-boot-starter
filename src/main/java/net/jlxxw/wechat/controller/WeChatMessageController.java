@@ -3,7 +3,10 @@ package net.jlxxw.wechat.controller;
 import net.jlxxw.wechat.component.EventBus;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
+import net.jlxxw.wechat.util.LoggerUtils;
 import net.jlxxw.wechat.util.NetworkUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
@@ -22,6 +25,7 @@ import java.io.PrintWriter;
 @Controller
 @ConditionalOnProperty(value = "we-chat.netty.server.enable-netty", havingValue = "false")
 public class WeChatMessageController {
+    private static final Logger logger = LoggerFactory.getLogger(WeChatMessageController.class);
     @Autowired
     private EventBus eventBus;
     @Autowired(required = false)
@@ -36,6 +40,7 @@ public class WeChatMessageController {
             final String ipAddress = NetworkUtil.getIpAddress(request);
             if (!weChatServerSecurityCheck.isSecurity(ipAddress)) {
                 // 非法ip，不予处理
+                LoggerUtils.warn(logger,"发现非法ip访问:{}",ipAddress);
                 return;
             }
         }

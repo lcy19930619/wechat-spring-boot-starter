@@ -51,20 +51,40 @@ public class EventBus {
     private static final Logger logger = LoggerFactory.getLogger(EventBus.class);
     private static final XmlMapper XML_MAPPER = new XmlMapper();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    @Autowired(required = false)
-    private List<AbstractWeChatMessageListener> abstractWeChatMessageListeners;
-    @Autowired(required = false)
-    private List<AbstractWeChatEventListener> abstractWeChatEventListeners;
-    @Autowired(required = false)
-    private WeChatMsgCodec weChatMsgCodec;
     @Autowired
     private WeChatProperties weChatProperties;
-    @Autowired(required = false)
-    private UnKnowWeChatEventListener unKnowWeChatEventListener;
-    @Autowired(required = false)
-    private UnKnowWeChatMessageListener unKnowWeChatMessageListener;
     @Autowired
     private ThreadPoolTaskExecutor eventBusThreadPool;
+    /**
+     * 有可能未注册任何消息处理器
+     */
+    @Autowired(required = false)
+    private List<AbstractWeChatMessageListener> abstractWeChatMessageListeners;
+
+    /**
+     * 有可能未注册任何事件处理器
+     */
+    @Autowired(required = false)
+    private List<AbstractWeChatEventListener> abstractWeChatEventListeners;
+
+    /**
+     * 有可能未启用微信加解密功能
+     */
+    @Autowired(required = false)
+    private WeChatMsgCodec weChatMsgCodec;
+
+
+    /**
+     * 有可能未注册兜底策略
+     */
+    @Autowired(required = false)
+    private UnKnowWeChatEventListener unKnowWeChatEventListener;
+    /**
+     * 有可能未注册兜底策略
+     */
+    @Autowired(required = false)
+    private UnKnowWeChatMessageListener unKnowWeChatMessageListener;
+
 
     /**
      * 消息处理监听器

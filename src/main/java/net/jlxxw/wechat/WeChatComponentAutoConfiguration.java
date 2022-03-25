@@ -3,6 +3,7 @@ package net.jlxxw.wechat;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
+import net.jlxxw.wechat.controller.WeChatMessageController;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.properties.WeChatProperties;
@@ -112,11 +113,12 @@ public class WeChatComponentAutoConfiguration {
     }
 
     /**
-     * 事件总线线程池
-     *
+     * 事件总线线程池,用于处理微信回调，仅在controller启用时生效
+     * @see WeChatMessageController#coreController(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      * @return
      */
     @Bean("eventBusThreadPool")
+    @ConditionalOnMissingBean(ThreadPoolTaskExecutor.class)
     public ThreadPoolTaskExecutor eventBusThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //获取到服务器的cpu内核
@@ -125,7 +127,7 @@ public class WeChatComponentAutoConfiguration {
         executor.setCorePoolSize(i * 2 - 1);
         //最大线程数
         executor.setMaxPoolSize(i * 4);
-        //队列程度
+        //队列长度
         executor.setQueueCapacity(1000);
         //线程空闲时间
         executor.setKeepAliveSeconds(1000);
