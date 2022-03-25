@@ -33,4 +33,12 @@ public class WeChatResponse {
         this.errmsg = errmsg;
     }
 
+    /**
+     * 判断操作是否成功
+     * @return
+     */
+    public boolean isSuccessful(){
+        return errcode == null || errcode == 0;
+    }
+
 }
