@@ -19,10 +19,23 @@ public class SpringContextHolder implements ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
+    /**
+     * 根据类型获取 Spring bean 实例对象
+     * @param clazz 指定的类型
+     * @param <T> 指定的类型
+     * @return Spring bean 实例对象
+     */
     public <T> T getBean(Class<T> clazz) {
         return applicationContext.getBean(clazz);
     }
 
+    /**
+     * 根据名字和类型获取 Spring bean 实例对象
+     * @param clazz 指定的类型
+     * @param <T> 指定的类型
+     * @param beanName 指定名字
+     * @return Spring bean 实例对象
+     */
     public <T> T getBean(Class<T> clazz, String beanName) {
         return applicationContext.getBean(clazz, beanName);
     }

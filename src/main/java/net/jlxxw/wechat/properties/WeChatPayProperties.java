@@ -4,6 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
+ * 微信支付相关配置
  * @author chunyang.leng
  * @date 2021-04-10 9:42 下午
  */

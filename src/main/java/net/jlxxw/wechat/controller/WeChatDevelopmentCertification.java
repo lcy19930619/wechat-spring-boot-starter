@@ -30,6 +30,12 @@ public class WeChatDevelopmentCertification {
     private WeChatProperties weChatProperties;
 
 
+    /**
+     * 微信 token 校验
+     * @param request 请求参数
+     * @return 返回给微信的信息
+     * @throws NoSuchAlgorithmException 编解码失败
+     */
     @GetMapping("verifyToken")
     public String verifyToken(HttpServletRequest request) throws NoSuchAlgorithmException {
         String msgSignature = request.getParameter("signature");
@@ -61,6 +67,14 @@ public class WeChatDevelopmentCertification {
         return true;
     }
 
+    /**
+     * 进行 sha1 签名运算
+     * @param token 项目中配置的 微信验证token
+     * @param timestamp 时间戳
+     * @param nonce 随机字符串
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
     private static String sha1Sign(String token, String timestamp, String nonce) throws NoSuchAlgorithmException {
         if (StringUtils.isBlank(token)) {
             throw new IllegalArgumentException("verify-token不能为空");
