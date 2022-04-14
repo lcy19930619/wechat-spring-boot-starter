@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.response.api;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author chunyang.leng
@@ -10,6 +11,7 @@ public class Quota {
     /**
      * 当天该账号可调用该接口的次数
      */
+    @JsonProperty("daily_limit")
     @JSONField(name = "daily_limit")
     private Integer dailyLimit;
     /**
