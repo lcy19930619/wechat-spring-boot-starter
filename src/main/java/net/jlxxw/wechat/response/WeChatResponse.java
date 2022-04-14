@@ -9,7 +9,7 @@ package net.jlxxw.wechat.response;
  */
 public class WeChatResponse {
     /**
-     * 正常时是0
+     * 正常时是0，或者 null
      */
     private Integer errcode;
     /**
@@ -35,7 +35,7 @@ public class WeChatResponse {
 
     /**
      * 判断操作是否成功
-     * @return
+     * @return true 成功，false 失败
      */
     public boolean isSuccessful(){
         return errcode == null || errcode == 0;
