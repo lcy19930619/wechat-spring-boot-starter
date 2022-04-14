@@ -23,7 +23,8 @@ public interface WechatApiFeignClient {
 
 
     /**
-     * @return <br/>
+     * @return
+     * <br/>
      * 返回码	errmsg	说明
      * <br/>
      * 0	    ok	    查询成功
@@ -38,6 +39,8 @@ public interface WechatApiFeignClient {
      * 2、如果是第三方服务商代公众号或者小程序清除quota，则需要用authorizer_access_token<br/>
      * 3、每个帐号每月共10次清零操作机会，清零生效一次即用掉一次机会；第三方帮助公众号/小程序调用时，实际上是在消耗公众号/小程序自身的quota<br/>
      * 4、由于指标计算方法或统计时间差异，实时调用量数据可能会出现误差，一般在1%以内<br/>
+     * @param apiDTO 请求参数 appId
+     * @param token 调用的token
      */
     @PostMapping("cgi-bin/clear_quota?access_token={token}")
     WeChatResponse openApiClean(@RequestBody ApiDTO apiDTO, @PathVariable("token") String token);
@@ -57,6 +60,9 @@ public interface WechatApiFeignClient {
      * 3、每个接口都有调用次数限制，请开发者合理调用接口
      * 4、”/xxx/sns/xxx“这类接口不支持使用该接口，会出现76022报错。
      * </pre>
+     * @param apiDTO 查询参数 cgiPath api的请求地址，例如"/cgi-bin/message/custom/send";不要前缀“https://api.weixin.qq.com” ，也不要漏了"/",否则都会76003的报错
+     * @param token 查询token
+     * @return 查询结果
      */
     @PostMapping("cgi-bin/openapi/quota/get?access_token={token}")
     ApiResponse selectQuota(@RequestBody ApiQuotaDTO apiDTO, @PathParam("token") String token) ;
@@ -73,6 +79,9 @@ public interface WechatApiFeignClient {
      *
      * 3、rid的有效期只有7天，即只可查询最近7天的rid，查询超过7天的rid会出现报错，错误码为76001
      * </pre>
+     * @param apiDTO 请求参数 ,查询rid信息
+     * @param token 查询token
+     * @return rid请求信息记录结果
      */
     @PostMapping("cgi-bin/openapi/quota/get?access_token={token}")
     ApiRequestRecord selectRid(@RequestBody ApiRidDTO apiDTO, @PathVariable("token") String token) ;
