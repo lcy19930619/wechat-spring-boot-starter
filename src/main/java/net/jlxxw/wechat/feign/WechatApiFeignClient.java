@@ -1,38 +1,26 @@
-package net.jlxxw.wechat.function.api;
+package net.jlxxw.wechat.feign;
 
-import com.alibaba.fastjson.JSONObject;
-import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
-import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.dto.feign.api.ApiDTO;
+import net.jlxxw.wechat.dto.feign.api.ApiQuotaDTO;
+import net.jlxxw.wechat.dto.feign.api.ApiRidDTO;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.api.ApiRequestRecord;
 import net.jlxxw.wechat.response.api.ApiResponse;
-import net.jlxxw.wechat.util.WebClientUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-import java.text.MessageFormat;
+import javax.websocket.server.PathParam;
 
 /**
- * 微信 openApi 管理
- *
+ * 微信open api 相关接口信息查询
  * @author chunyang.leng
- * @date 2021-11-23 2:22 下午
+ * @date 2022-04-14 11:19 AM
  */
-@Lazy
-@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
-@Component
-public class AsyncOpenApiManager {
-    @Autowired
-    private WeChatProperties weChatProperties;
-    @Autowired
-    private WeChatTokenManager weChatTokenManager;
-    @Autowired
-    private WebClientUtils webClientUtils;
+@FeignClient(value = "wechat-api-client", url = "https://api.weixin.qq.com")
+public interface WechatApiFeignClient {
+
 
     /**
      * @return <br/>
@@ -51,18 +39,11 @@ public class AsyncOpenApiManager {
      * 3、每个帐号每月共10次清零操作机会，清零生效一次即用掉一次机会；第三方帮助公众号/小程序调用时，实际上是在消耗公众号/小程序自身的quota<br/>
      * 4、由于指标计算方法或统计时间差异，实时调用量数据可能会出现误差，一般在1%以内<br/>
      */
-    public Mono<WeChatResponse> clean() {
-        String appId = weChatProperties.getAppId();
-        String token = weChatTokenManager.getTokenFromLocal();
+    @PostMapping("cgi-bin/clear_quota?access_token={token}")
+    WeChatResponse openApiClean(@RequestBody ApiDTO apiDTO, @PathVariable("token") String token);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("appid", appId);
-        String url = MessageFormat.format(UrlConstant.OPEN_API_CLEAN, token);
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), WeChatResponse.class);
-    }
 
     /**
-     * @param cgiPath api的请求地址，例如"/cgi-bin/message/custom/send";不要前缀“https://api.weixin.qq.com” ，也不要漏了"/",否则都会76003的报错
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_api_quota.html">文档地址</a>
      * <p>
      * 查询openAPI调用quota
@@ -77,22 +58,10 @@ public class AsyncOpenApiManager {
      * 4、”/xxx/sns/xxx“这类接口不支持使用该接口，会出现76022报错。
      * </pre>
      */
-    public Mono<ApiResponse> selectQuota(String cgiPath) {
-        if (StringUtils.isBlank(cgiPath)) {
-            throw new NullPointerException();
-        }
-        String token = weChatTokenManager.getTokenFromLocal();
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("cgi_path", cgiPath);
-
-        String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_QUOTA, token);
-
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiResponse.class);
-    }
+    @PostMapping("cgi-bin/openapi/quota/get?access_token={token}")
+    ApiResponse selectQuota(@RequestBody ApiQuotaDTO apiDTO, @PathParam("token") String token) ;
 
     /**
-     * @param rid
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/openApi/get_rid_info.html">文档地址</a>
      * 查询rid信息
      * 本接口用于查询调用公众号/小程序/第三方平台等接口报错返回的rid详情信息，辅助开发者高效定位问题
@@ -105,18 +74,6 @@ public class AsyncOpenApiManager {
      * 3、rid的有效期只有7天，即只可查询最近7天的rid，查询超过7天的rid会出现报错，错误码为76001
      * </pre>
      */
-    public Mono<ApiRequestRecord> selectRid(String rid) {
-        if (StringUtils.isBlank(rid)) {
-            throw new NullPointerException();
-        }
-        String appId = weChatProperties.getAppId();
-        String token = weChatTokenManager.getTokenFromLocal();
-
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("rid", rid);
-
-        String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_QUOTA, token);
-
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), ApiRequestRecord.class);
-    }
+    @PostMapping("cgi-bin/openapi/quota/get?access_token={token}")
+    ApiRequestRecord selectRid(@RequestBody ApiRidDTO apiDTO, @PathVariable("token") String token) ;
 }
