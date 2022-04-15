@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.feign;
+package net.jlxxw.wechat.feign.menu;
 
 import net.jlxxw.wechat.dto.feign.menu.ButtonDTO;
 import net.jlxxw.wechat.response.WeChatResponse;

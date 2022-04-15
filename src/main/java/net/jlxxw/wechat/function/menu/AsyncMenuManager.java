@@ -26,6 +26,7 @@ import java.util.List;
  * @author chunyang.leng
  * @date 2021-12-13 2:04 下午
  */
+@Deprecated
 @DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component
 public class AsyncMenuManager {

@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.dto.menu;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.jlxxw.wechat.enums.MenuTypeEnum;
 
 import java.util.List;
@@ -44,6 +45,7 @@ public class MenuDTO {
      * media_id类型和view_limited类型必须
      * 调用新增永久素材接口返回的合法media_id
      */
+    @JsonProperty("media_id")
     @JSONField(name = "media_id")
     private String mediaId;
     /**
@@ -62,11 +64,13 @@ public class MenuDTO {
      * article_id类型和article_view_limited类型必须
      * 发布后获得的合法 article_id
      */
+    @JsonProperty("article_id")
     @JSONField(name = "article_id")
     private String articleId;
     /**
      * 二级菜单数组，个数应为1~5个
      */
+    @JsonProperty("sub_button")
     @JSONField(name = "sub_button")
     private List<MenuDTO> subButtonList;
 

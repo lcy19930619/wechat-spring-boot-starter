@@ -23,6 +23,7 @@ import java.text.MessageFormat;
  * @author chunyang.leng
  * @date 2021-11-23 2:22 下午
  */
+@Deprecated
 @Lazy
 @DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component

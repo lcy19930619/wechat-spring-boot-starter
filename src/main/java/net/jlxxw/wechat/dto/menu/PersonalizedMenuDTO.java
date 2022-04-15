@@ -1,5 +1,12 @@
 package net.jlxxw.wechat.dto.menu;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import net.jlxxw.wechat.aop.check.group.Delete;
+import net.jlxxw.wechat.aop.check.group.Select;
+
+import javax.validation.constraints.NotBlank;
+
 /**
  * 个性化菜单
  * @author chunyang.leng
@@ -11,13 +18,48 @@ public class PersonalizedMenuDTO extends MenuDTO{
     /**
      * 菜单匹配规则
      */
-    private MatchRule matchrule;
+    @JSONField(name = "matchrule")
+    @JsonProperty("matchrule")
+    private MatchRule matchRule;
 
-    public MatchRule getMatchrule() {
-        return matchrule;
+    /**
+     * 菜单id
+     */
+    @NotBlank(groups = Delete.class,message = "菜单id不能为空")
+    @JSONField(name = "menuid")
+    @JsonProperty("menuid")
+    private String menuId;
+
+
+    /**
+     * 可以是粉丝的OpenID，也可以是粉丝的微信号。
+     */
+    @NotBlank(groups = Select.class,message = "用户id不能为空")
+    @JSONField(name = "user_id")
+    @JsonProperty("user_id")
+    private String userId;
+
+    public MatchRule getMatchRule() {
+        return matchRule;
     }
 
-    public void setMatchrule(MatchRule matchrule) {
-        this.matchrule = matchrule;
+    public void setMatchRule(MatchRule matchRule) {
+        this.matchRule = matchRule;
+    }
+
+    public String getMenuId() {
+        return menuId;
+    }
+
+    public void setMenuId(String menuId) {
+        this.menuId = menuId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

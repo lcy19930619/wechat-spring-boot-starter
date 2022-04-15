@@ -1,19 +1,16 @@
-package net.jlxxw.wechat.function.menu;
+package net.jlxxw.wechat.feign.menu;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import net.jlxxw.wechat.constant.UrlConstant;
+import net.jlxxw.wechat.aop.check.group.Delete;
+import net.jlxxw.wechat.aop.check.group.Select;
 import net.jlxxw.wechat.dto.menu.PersonalizedMenuDTO;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.MatchPersonalizedMenuResponse;
 import net.jlxxw.wechat.response.menu.PersonalizedMenuResponse;
-import net.jlxxw.wechat.util.WebClientUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
-import java.text.MessageFormat;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <pre>
@@ -58,55 +55,54 @@ import java.text.MessageFormat;
  * </pre>
  *
  * @author chunyang.leng
- * @date 2021-12-20 3:35 下午
+ * @date 2021-04-15 02:12 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
  */
-@Deprecated
-@Component
-public class AsyncPersonalizedMenuManager {
-    @Autowired
-    private WebClientUtils webClientUtils;
-    @Autowired
-    private WeChatTokenManager weChatTokenManager;
+@FeignClient(value = "wechat-personalize-menu-client", url = "https://api.weixin.qq.com")
+public interface WechatPersonalizedMenuFeignClient {
 
     /**
      * 创建个性化菜单
      *
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
      * @param personalizedMenuDTO 个性化菜单数据
-     * @return 正确时的返回JSON数据包{"menuid":"208379533"}
+     * @param token token
+     * @return
+     * 正确时的返回JSON数据包 ,例如：{"menuid":"208379533"}
+     * <br/>
+     * 注意
+     * 请留意参数说明表中已废止的字段，这些字段涉及公民个人隐私，如填写这些字段，接口将返回以下结果：
+     * <pre>
+     *     {"errcode":65320,"errmsg":"match rule violates privacy"}
+     * </pre>
+     *
      * 错误时的返回码请见接口返回码说明。
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html#0">文档地址</a>
      */
-    public Mono<PersonalizedMenuResponse> createMenu(PersonalizedMenuDTO personalizedMenuDTO) {
-        String url = MessageFormat.format(UrlConstant.CREATE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
-        return webClientUtils.sendPostJSON(url, JSON.toJSONString(personalizedMenuDTO), PersonalizedMenuResponse.class);
-    }
+    @PostMapping("cgi-bin/menu/addconditional?access_token={token}")
+    PersonalizedMenuResponse createMenu(@Validated @RequestBody PersonalizedMenuDTO personalizedMenuDTO,
+                                        @Validated @PathVariable("token") String token);
+
 
     /**
      * 删除菜单数据
      *
-     * @param menuId 要删除的个性化菜单条件id
+     * @param personalizedMenuDTO menu_id 要删除的个性化菜单条件id
      * @return 正确时的返回JSON数据包 {"errcode":0,"errmsg":"ok"}，错误时的返回码请见接口返回码说明。
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
      */
-    public Mono<WeChatResponse> deleteMenu(String menuId) {
-        String url = MessageFormat.format(UrlConstant.DELETE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("menuid", menuId);
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), WeChatResponse.class);
-    }
+    @PostMapping("cgi-bin/menu/delconditional?access_token={token}")
+    WeChatResponse deleteMenu(@Validated(Delete.class) @RequestBody PersonalizedMenuDTO personalizedMenuDTO,
+                              @Validated @PathVariable("token") String token);
 
 
     /**
      * 尝试匹配用户信息
      *
-     * @param uid 可以是粉丝的OpenID，也可以是粉丝的微信号。
+     * @param personalizedMenuDTO user_id 可以是粉丝的OpenID，也可以是粉丝的微信号。
+     * @param token token
      * @return 菜单信息列表
      */
-    public Mono<MatchPersonalizedMenuResponse> tryMatch(String uid) {
-        String url = MessageFormat.format(UrlConstant.TRY_MATCH_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("user_id", uid);
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), MatchPersonalizedMenuResponse.class);
-    }
+    @PostMapping("cgi-bin/menu/trymatch?access_token={token}")
+    MatchPersonalizedMenuResponse tryMatch(@Validated(Select.class) @RequestBody PersonalizedMenuDTO personalizedMenuDTO,
+                                           @Validated @PathVariable("token") String token);
 }
