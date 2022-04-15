@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * 公众号菜单管理
- *
+ * @deprecated 准备移除 async 入口，改成 feign 调用
  * @author chunyang.leng
  * @date 2021-12-13 2:04 下午
  */

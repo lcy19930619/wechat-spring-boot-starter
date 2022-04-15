@@ -57,6 +57,7 @@ import java.text.MessageFormat;
  * 根据上述匹配规则，为了避免菜单生效时间的混淆，决定不予提供个性化菜单编辑API，开发者需要更新菜单时，需将完整配置重新发布一轮。
  * </pre>
  *
+ * @deprecated 准备移除 async 入口，改成 feign 调用
  * @author chunyang.leng
  * @date 2021-12-20 3:35 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>

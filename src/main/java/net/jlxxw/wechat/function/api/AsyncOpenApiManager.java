@@ -20,6 +20,7 @@ import java.text.MessageFormat;
 /**
  * 微信 openApi 管理
  *
+ * @deprecated 准备移除 async 入口，改成 feign 调用
  * @author chunyang.leng
  * @date 2021-11-23 2:22 下午
  */
