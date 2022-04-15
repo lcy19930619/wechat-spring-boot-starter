@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
+import java.util.Objects;
 
 import static io.netty.buffer.Unpooled.copiedBuffer;
 
@@ -48,7 +49,7 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
             // 获取远程ip地址信息
             String ipAddress = socketAddress.getAddress().getHostAddress();
             LoggerUtils.debug(logger, "微信回调ip安全检查执行,远程ip:{}", ipAddress);
-            if (!weChatServerSecurityCheck.isSecurity(ipAddress)) {
+            if (Objects.nonNull(weChatServerSecurityCheck) && !weChatServerSecurityCheck.isSecurity(ipAddress)) {
                 LoggerUtils.warn(logger, "非法ip，不予处理:{}", ipAddress);
                 // 非法ip，不予处理
                 channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN, copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);
@@ -73,7 +74,9 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
         FullHttpResponse response = responseOK(HttpResponseStatus.OK, responseData);
         // 发送响应
         channelHandlerContext
+                // 发送应答数据
                 .writeAndFlush(response)
+                // 处理完毕，关闭连接
                 .addListener(ChannelFutureListener.CLOSE);
     }
 
@@ -91,5 +94,17 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
         return response;
     }
 
-
+    /**
+     * 异常信息记录
+     * @param ctx
+     * @param cause
+     * @throws Exception
+     */
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        // 记录异常日志
+        LoggerUtils.error(logger,"wechat-netty-thread 发生未知异常",cause);
+        // 关闭异常连接
+        ctx.close();
+    }
 }
