@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * 批量执行工具
@@ -104,5 +106,46 @@ public class BatchExecutor {
         }
     }
 
+    /**
+     * 批量处理
+     * @param useThreadPool 是否使用线程池
+     * @param data 待处理的数据
+     * @param consumer 处理数据的逻辑
+     * @param limit 批量处理数据的大小
+     * @param <T> 数据的类型
+     */
+    public <T> void  batchExecute(boolean useThreadPool, List<T> data, Consumer<List<T>> consumer,long limit) {
+        if(CollectionUtils.isEmpty(data)){
+            return;
+        }
+        if(limit <= 0 ){
+            throw new IllegalArgumentException("limit 不能小雨等于0 ");
+        }
+        if(Objects.isNull(consumer)){
+            throw new IllegalArgumentException("consumer 不应为null");
+        }
+        int size = data.size();
+        long count = 0;
+        if (size % limit == 0) {
+            count= size / limit;
+        } else {
+            count= size / limit + 1;
+        }
+
+        for (int i = 0; i < count; i++) {
+            List<T> collect = data
+                                .stream()
+                                .skip(i * limit)
+                                .limit(limit)
+                                .collect(Collectors.toList());
+            if(useThreadPool){
+                batchExecuteThreadPool.execute(()->{
+                    consumer.accept(collect);
+                });
+            }else{
+                consumer.accept(collect);
+            }
+        }
+    }
 
 }
