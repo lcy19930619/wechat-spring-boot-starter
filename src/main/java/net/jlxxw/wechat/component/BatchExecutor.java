@@ -138,6 +138,9 @@ public class BatchExecutor {
                                 .skip(i * limit)
                                 .limit(limit)
                                 .collect(Collectors.toList());
+            if(CollectionUtils.isEmpty(collect)){
+                return;
+            }
             if(useThreadPool){
                 batchExecuteThreadPool.execute(()->{
                     consumer.accept(collect);
