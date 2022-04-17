@@ -118,7 +118,6 @@ public class WeChatComponentAutoConfiguration {
      * @return
      */
     @Bean("eventBusThreadPool")
-    @ConditionalOnProperty(value = "we-chat.netty.server.enable-netty", havingValue = "false")
     public ThreadPoolTaskExecutor eventBusThreadPool() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         //获取到服务器的cpu内核
