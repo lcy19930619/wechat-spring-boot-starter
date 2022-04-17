@@ -211,42 +211,51 @@ public class EventBus {
      * @param uri   微信携带的uri，用于获取加解密参数内容
      * @throws AesException 微信信息加解密异常
      */
-    public String dispatcher(byte[] bytes, String uri) throws AesException {
-        if (weChatProperties.isEnableMessageEnc()) {
-            // 微信发送进来的xml
-            String inputXML = new String(bytes, StandardCharsets.UTF_8);
-
-            /*
-                处理微信uri参数，并封装到map中
-             */
-            Map<String, String> map = new HashMap<>(16);
-            int index = uri.indexOf("?");
-            String str = uri.substring(index + 1);
-            String[] split = str.split("&");
-            for (String s : split) {
-                String[] arr = s.split("=");
-                map.put(arr[0], arr[1]);
+    public String dispatcher(byte[] bytes, String uri)  {
+        final byte[] finalBytes = bytes;
+        final Future<String> future = eventBusThreadPool.submit(() -> {
+            byte[] data = finalBytes;
+            if (weChatProperties.isEnableMessageEnc()) {
+                // 微信发送进来的xml
+                String inputXML = new String(data, StandardCharsets.UTF_8);
+                /*
+                    处理微信uri参数，并封装到map中
+                 */
+                Map<String, String> map = new HashMap<>(16);
+                int index = uri.indexOf("?");
+                String str = uri.substring(index + 1);
+                String[] split = str.split("&");
+                for (String s : split) {
+                    String[] arr = s.split("=");
+                    map.put(arr[0], arr[1]);
+                }
+                // 获取签名
+                String msgSignature = map.get("msg_signature");
+                // 获取时间戳
+                String timestamp = map.get("timestamp");
+                // 获取随机串
+                String nonce = map.get("nonce");
+                // 消息解密
+                String decryptMsg = weChatMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
+                LoggerUtils.debug(logger, "微信消息解密成功，信息为:{}", decryptMsg);
+                // 将解密后的数据，转换为byte数组，用于协议的具体处理
+                data = decryptMsg.getBytes(StandardCharsets.UTF_8);
             }
-            // 获取签名
-            String msgSignature = map.get("msg_signature");
-            // 获取时间戳
-            String timestamp = map.get("timestamp");
-            // 获取随机串
-            String nonce = map.get("nonce");
-            // 消息解密
-            String decryptMsg = weChatMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
-            LoggerUtils.debug(logger, "微信消息解密成功，信息为:{}", decryptMsg);
-            // 将解密后的数据，转换为byte数组，用于协议的具体处理
-            bytes = decryptMsg.getBytes(StandardCharsets.UTF_8);
+            // 调用具体的分发器，实现数据的处理
+            String result = dispatcher(data);
+            if (weChatProperties.isEnableMessageEnc()) {
+                // 如果启用了信息加解密功能，则对返回值进行加密处理
+                result = weChatMsgCodec.encrypt(result);
+                LoggerUtils.debug(logger, "微信消息加密成功，信息为:{}", result);
+            }
+            return result;
+        });
+        try {
+            return future.get(5, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            logger.error("事件分发处理出现异常,微信参数:" + new String(bytes, StandardCharsets.UTF_8) + " ,uri参数:" + uri + ",异常信息:" ,e);
+            return "";
         }
-        // 调用具体的分发器，实现数据的处理
-        String result = dispatcher(bytes);
-        if (weChatProperties.isEnableMessageEnc()) {
-            // 如果启用了信息加解密功能，则对返回值进行加密处理
-            result = weChatMsgCodec.encrypt(result);
-            LoggerUtils.debug(logger, "微信消息加密成功，信息为:{}", result);
-        }
-        return result;
     }
 
     /**

@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.component.netty;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -62,17 +63,20 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
         byte[] reqContent = new byte[content.readableBytes()];
         // 缓存数据加载至byte数组中
         content.readBytes(reqContent);
-        // 释放
-        content.release();
         // 获取请求的uri
         String uri = fullHttpRequest.uri();
         // 事件总线开始执行处理逻辑
         final String resultData = eventBus.dispatcher(reqContent, uri);
         // 响应数据刷新到缓冲区
-        ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
+        // ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
+
+        // 切换直接内存写入
+        ByteBuf byteBuf = Unpooled.directBuffer(resultData.length());
+        byteBuf.writeCharSequence(resultData, CharsetUtil.UTF_8);
         // 包装响应结果
-        FullHttpResponse response = responseOK(HttpResponseStatus.OK, responseData);
-        // 发送响应
+        FullHttpResponse response = responseOK(HttpResponseStatus.OK, byteBuf);
+        // 发送响应,应答数据采用直接写入方式,减少 pipeline 处理流程,提升效率
+        // 如果要采用全部 pipeline 处理，应改为 channelHandlerContext.channel().writeAndFlush()
         channelHandlerContext
                 // 发送应答数据
                 .writeAndFlush(response)
