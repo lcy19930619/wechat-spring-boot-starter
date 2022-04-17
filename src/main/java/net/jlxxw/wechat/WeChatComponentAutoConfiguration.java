@@ -113,7 +113,7 @@ public class WeChatComponentAutoConfiguration {
     }
 
     /**
-     * 事件总线线程池,用于处理微信回调，仅在controller启用时生效
+     * 事件总线线程池,用于处理微信回调
      * @see WeChatMessageController#coreController(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      * @return
      */
