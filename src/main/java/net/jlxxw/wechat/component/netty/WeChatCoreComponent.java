@@ -11,7 +11,10 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.ReadTimeoutHandler;
 import net.jlxxw.wechat.properties.WeChatNettyServerProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
@@ -55,6 +58,10 @@ public class WeChatCoreComponent {
                         .childHandler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
+
+                                // 指标采集监控
+                                socketChannel.pipeline().addLast(new MetricsHandler());
+
                                 // 请求解码器
                                 socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
                                 LoggerUtils.debug(logger, "初始化 netty 请求解码器 成功");
@@ -70,6 +77,12 @@ public class WeChatCoreComponent {
                                 // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
                                 socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
                                 LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
+
+                                // 读空闲检测，超时时间 15 秒,作为微信客户端，只需要检测读超时即可
+                                socketChannel.pipeline().addLast(new ReadTimeoutHandler(15));
+
+                                // 日志调试，debug级别
+                                socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
 
                                 // 自定义处理handler
                                 socketChannel.pipeline().addLast("http-server", weChatChannel);

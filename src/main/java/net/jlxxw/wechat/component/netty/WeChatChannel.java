@@ -7,6 +7,7 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
+import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.component.EventBus;
 import net.jlxxw.wechat.properties.WeChatProperties;
@@ -106,6 +107,11 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        if (cause instanceof ReadTimeoutException){
+            // 15秒未接收到服务器信息，自动断开链接
+            ctx.close();
+            return;
+        }
         // 记录异常日志
         LoggerUtils.error(logger,"wechat-netty-thread 发生未知异常",cause);
         // 关闭异常连接
