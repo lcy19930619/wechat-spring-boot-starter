@@ -33,6 +33,16 @@ public class WeChatNettyServerProperties {
      */
     private Integer maxThreadSize = NettyRuntime.availableProcessors() * 2;
 
+    /**
+     * 开启日志监控
+     */
+    private boolean enableLog = false;
+
+    /**
+     * 开启指标分析
+     */
+    private boolean enableMetrics = false;
+
     public Boolean getEnableNetty() {
         return enableNetty;
     }
@@ -63,5 +73,21 @@ public class WeChatNettyServerProperties {
 
     public void setMaxThreadSize(Integer maxThreadSize) {
         this.maxThreadSize = maxThreadSize;
+    }
+
+    public boolean isEnableLog() {
+        return enableLog;
+    }
+
+    public void setEnableLog(boolean enableLog) {
+        this.enableLog = enableLog;
+    }
+
+    public boolean isEnableMetrics() {
+        return enableMetrics;
+    }
+
+    public void setEnableMetrics(boolean enableMetrics) {
+        this.enableMetrics = enableMetrics;
     }
 }

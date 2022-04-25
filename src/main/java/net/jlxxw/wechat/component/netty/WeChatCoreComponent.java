@@ -58,9 +58,10 @@ public class WeChatCoreComponent {
                         .childHandler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
-
-                                // 指标采集监控
-                                socketChannel.pipeline().addLast(new MetricsHandler());
+                                if (weChatNettyServerProperties.isEnableMetrics()){
+                                    // 指标采集监控
+                                    socketChannel.pipeline().addLast(new MetricsHandler());
+                                }
 
                                 // 请求解码器
                                 socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
@@ -81,8 +82,10 @@ public class WeChatCoreComponent {
                                 // 读空闲检测，超时时间 15 秒,作为微信客户端，只需要检测读超时即可
                                 socketChannel.pipeline().addLast(new ReadTimeoutHandler(15));
 
-                                // 日志调试，debug级别
-                                socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
+                                if (weChatNettyServerProperties.isEnableLog()){
+                                    // 日志调试，info 级别
+                                    socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
+                                }
 
                                 // 自定义处理handler
                                 socketChannel.pipeline().addLast("http-server", weChatChannel);
