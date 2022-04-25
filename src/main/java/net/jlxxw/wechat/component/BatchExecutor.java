@@ -19,7 +19,10 @@ import java.util.stream.Collectors;
  */
 @Component
 public class BatchExecutor {
-
+    /**
+     * 默认的处理数量
+     */
+    private static final long DEFAULT_LIMIT = 500;
     @Autowired
     @Qualifier("batchExecuteThreadPool")
     private ThreadPoolTaskExecutor batchExecuteThreadPool;
@@ -32,28 +35,7 @@ public class BatchExecutor {
      * @param <T>      具体的数据类型
      */
     private <T> void batchExecute(List<T> data, Consumer<List<T>> consumer) {
-        if (CollectionUtils.isEmpty(data)) {
-            return;
-        }
-        // 统计需要分成几次
-        int countFor = countFor(data.size());
-        int start = 0;
-        int end = 0;
-
-        //每512条处理一次
-        for (int i = 0; i < countFor; i++) {
-            if (i < countFor - 1) {
-                start = i << 9;
-                end = (i + 1) << 9;
-            } else {
-                start = i << 9;
-                end = data.size();
-            }
-            int finalStart = start;
-            int finalEnd = end;
-            List<T> tempList = data.subList(finalStart, finalEnd);
-            consumer.accept(tempList);
-        }
+        execute(false,data,consumer,DEFAULT_LIMIT);
     }
 
     /**
@@ -65,90 +47,43 @@ public class BatchExecutor {
      * @param <T>
      */
     public <T> void batchExecute(boolean useThreadPool, List<T> data, Consumer<List<T>> consumer) {
-        if (CollectionUtils.isEmpty(data)) {
-            return;
-        }
-        if (useThreadPool) {
-            // 统计需要分成几次
-            int countFor = countFor(data.size());
-            int start = 0;
-            int end = 0;
-
-            //每512条执行一次
-            for (int i = 0; i < countFor; i++) {
-                if (i < countFor - 1) {
-                    start = i << 9;
-                    end = (i + 1) << 9;
-                } else {
-                    start = i << 9;
-                    end = data.size();
-                }
-                int finalStart = start;
-                int finalEnd = end;
-                batchExecuteThreadPool.execute(() -> {
-                    List<T> tempList = data.subList(finalStart, finalEnd);
-                    consumer.accept(tempList);
-                });
-            }
-        } else {
-            batchExecute(data, consumer);
-        }
-    }
-
-    private int countFor(int size) {
-        //批量插入数据大小
-        int i = 1 << 9;
-
-        if (size % i == 0) {
-            return size / i;
-        } else {
-            return size / i + 1;
-        }
+        execute(useThreadPool,data,consumer,DEFAULT_LIMIT);
     }
 
     /**
      * 批量处理
+     *
      * @param useThreadPool 是否使用线程池
-     * @param data 待处理的数据
-     * @param consumer 处理数据的逻辑
-     * @param limit 批量处理数据的大小
-     * @param <T> 数据的类型
+     * @param data          待处理的数据
+     * @param consumer      处理数据的逻辑
+     * @param limit         批量处理数据的大小
+     * @param <T>           数据的类型
      */
-    public <T> void  batchExecute(boolean useThreadPool, List<T> data, Consumer<List<T>> consumer,long limit) {
-        if(CollectionUtils.isEmpty(data)){
+    public <T> void execute(boolean useThreadPool,List<T> data, Consumer<List<T>> consumer, long limit) {
+        if (CollectionUtils.isEmpty(data)) {
             return;
         }
-        if(limit <= 0 ){
+        if (limit <= 0) {
             throw new IllegalArgumentException("limit 不能小雨等于0 ");
         }
-        if(Objects.isNull(consumer)){
+        if (Objects.isNull(consumer)) {
             throw new IllegalArgumentException("consumer 不应为null");
         }
-        int size = data.size();
-        long count = 0;
-        if (size % limit == 0) {
-            count= size / limit;
-        } else {
-            count= size / limit + 1;
-        }
 
-        for (int i = 0; i < count; i++) {
+        long endIndex = data.size() - 1;
+        long startIndex = 0;
+        do {
             List<T> collect = data
-                                .stream()
-                                .skip(i * limit)
-                                .limit(limit)
-                                .collect(Collectors.toList());
-            if(CollectionUtils.isEmpty(collect)){
-                return;
-            }
+                    .stream()
+                    .skip(startIndex)
+                    .limit(limit)
+                    .collect(Collectors.toList());
             if(useThreadPool){
-                batchExecuteThreadPool.execute(()->{
-                    consumer.accept(collect);
-                });
+                batchExecuteThreadPool.execute(()-> consumer.accept(collect));
             }else{
                 consumer.accept(collect);
             }
-        }
+            startIndex += limit;
+        } while (startIndex <= endIndex);
     }
-
 }
