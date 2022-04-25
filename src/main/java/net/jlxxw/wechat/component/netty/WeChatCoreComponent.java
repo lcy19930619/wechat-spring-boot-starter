@@ -68,7 +68,7 @@ public class WeChatCoreComponent {
                                 LoggerUtils.debug(logger, "初始化 netty 请求解码器 成功");
 
                                 // 将HTTP消息的多个部分合成一条完整的HTTP消息
-                                socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(65535));
+                                socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(weChatNettyServerProperties.getHttpAggregatorMaxLength()));
                                 LoggerUtils.debug(logger, "初始化 netty http聚合器 成功");
 
                                 // 响应转码器
@@ -79,8 +79,8 @@ public class WeChatCoreComponent {
                                 socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
                                 LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
 
-                                // 读空闲检测，超时时间 15 秒,作为微信客户端，只需要检测读超时即可
-                                socketChannel.pipeline().addLast(new ReadTimeoutHandler(15));
+                                // 读空闲检测，超时时间，默认 15 秒,作为微信客户端，只需要检测读超时即可
+                                socketChannel.pipeline().addLast(new ReadTimeoutHandler(weChatNettyServerProperties.getChannelTimeout()));
 
                                 if (weChatNettyServerProperties.isEnableLog()){
                                     // 日志调试，info 级别
@@ -96,7 +96,7 @@ public class WeChatCoreComponent {
                         .localAddress(weChatNettyServerProperties.getNettyPort())
                         //设置队列大小
                         .option(ChannelOption.SO_BACKLOG, weChatNettyServerProperties.getQueueSize())
-                        // 不保持常链接
+                        // 不保持长链接
                         .childOption(ChannelOption.SO_KEEPALIVE, false);
                 //绑定端口,开始接收进来的连接
                 try {
@@ -114,7 +114,7 @@ public class WeChatCoreComponent {
                 }
             }
         };
-        t.setName("WeChat-netty-thread-listener");
+        t.setName(weChatNettyServerProperties.getMainThreadName());
         t.setDaemon(false);
         t.start();
     }

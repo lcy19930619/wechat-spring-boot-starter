@@ -34,14 +34,29 @@ public class WeChatNettyServerProperties {
     private Integer maxThreadSize = NettyRuntime.availableProcessors() * 2;
 
     /**
-     * 开启日志监控
+     * 是否开启日志监控
      */
     private boolean enableLog = false;
 
     /**
-     * 开启指标分析
+     * 是否开启指标分析
      */
     private boolean enableMetrics = false;
+
+    /**
+     * 通道连接超时时间，单位：秒
+     */
+    private int channelTimeout = 15;
+
+    /**
+     * 聚合内容的最大长度，单位：字节
+     */
+    private int httpAggregatorMaxLength = 65535;
+
+    /**
+     * netty 主线程名称
+     */
+    private String mainThreadName = "WeChat-netty-thread-listener";
 
     public Boolean getEnableNetty() {
         return enableNetty;
@@ -89,5 +104,29 @@ public class WeChatNettyServerProperties {
 
     public void setEnableMetrics(boolean enableMetrics) {
         this.enableMetrics = enableMetrics;
+    }
+
+    public int getChannelTimeout() {
+        return channelTimeout;
+    }
+
+    public void setChannelTimeout(int channelTimeout) {
+        this.channelTimeout = channelTimeout;
+    }
+
+    public int getHttpAggregatorMaxLength() {
+        return httpAggregatorMaxLength;
+    }
+
+    public void setHttpAggregatorMaxLength(int httpAggregatorMaxLength) {
+        this.httpAggregatorMaxLength = httpAggregatorMaxLength;
+    }
+
+    public String getMainThreadName() {
+        return mainThreadName;
+    }
+
+    public void setMainThreadName(String mainThreadName) {
+        this.mainThreadName = mainThreadName;
     }
 }
