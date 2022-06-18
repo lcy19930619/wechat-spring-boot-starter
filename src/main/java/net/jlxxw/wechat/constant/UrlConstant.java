@@ -55,7 +55,7 @@ public interface UrlConstant {
     /**
      * 上传永久素材
      */
-    String UPLOAD_PERMANENT_MATERIAL = "https https://api.weixin.qq.com/cgi-bin/material/add_material?access_token={0}&type={1}";
+    String UPLOAD_PERMANENT_MATERIAL = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token={0}&type={1}";
 
     /**
      * 下载永久素材
