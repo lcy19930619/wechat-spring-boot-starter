@@ -1,11 +1,14 @@
 package net.jlxxw.wechat.dto.message;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
+
 /**
  * 微信信息
  *
  * @author chunyang.leng
  * @date 2021/1/20 11:15 上午
  */
+@JsonRootName("xml")
 public abstract class AbstractWeChatMessage {
     /**
      * 开发者微信号
