@@ -23,10 +23,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author chunyang.leng
@@ -70,11 +67,13 @@ public class UserManagerImpl implements UserManager {
                 logger.info("total:" + totle + ",current:" + current + ",nextId:" + nextOpenId + ",size:"+openIdSet.size());
 
                 JSONObject data = resultData.getJSONObject("data");
-                final JSONArray array = data.getJSONArray("openid");
-                if (!CollectionUtils.isEmpty(array)) {
-                    array.forEach(o -> {
-                        openIdSet.add(o.toString());
-                    });
+                if (Objects.nonNull(data)){
+                    final JSONArray array = data.getJSONArray("openid");
+                    if (!CollectionUtils.isEmpty(array)) {
+                        array.forEach(o -> {
+                            openIdSet.add(o.toString());
+                        });
+                    }
                 }
             } else {
                 WeChatException weChatException = new WeChatException("获取全部openId失败，微信返回值:" + resultData.toJSONString());
