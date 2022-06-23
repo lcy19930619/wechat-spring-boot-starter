@@ -67,7 +67,10 @@ public class UserManagerImpl implements UserManager {
                 current += resultData.getInteger("count");
                 nextOpenId = resultData.getString("next_openid");
 
-                final JSONArray array = resultData.getJSONArray("openid");
+                logger.info("total:" + totle + ",current:" + current + ",nextId:" + nextOpenId + ",size:"+openIdSet.size());
+
+                JSONObject data = resultData.getJSONObject("data");
+                final JSONArray array = data.getJSONArray("openid");
                 if (!CollectionUtils.isEmpty(array)) {
                     array.forEach(o -> {
                         openIdSet.add(o.toString());
