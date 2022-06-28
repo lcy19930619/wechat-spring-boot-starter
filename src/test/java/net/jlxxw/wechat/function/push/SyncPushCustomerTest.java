@@ -1,10 +1,5 @@
 package net.jlxxw.wechat.function.push;
 
-/**
- * @author chunyang.leng
- * @date 2021-03-08 3:18 下午
- */
-
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;
@@ -17,7 +12,11 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * 单元测试
+ * @author chunyang.leng
+ * @date 2021-03-08 3:18 下午
+ */
 public class SyncPushCustomerTest extends BaseTest {
 
     @Autowired
@@ -26,7 +25,7 @@ public class SyncPushCustomerTest extends BaseTest {
     @Test
     public void pushCustomerTest() {
         ArticlesDTO articlesDTO = new ArticlesDTO();
-        articlesDTO.setPicurl("测试图片url");
+        articlesDTO.setPicUrl("测试图片url");
         articlesDTO.setTitle("这里一个测试的标题");
         articlesDTO.setUrl("测试跳转链接");
         articlesDTO.setDescription("测试描述信息");
@@ -42,7 +41,7 @@ public class SyncPushCustomerTest extends BaseTest {
      */
     public void pushCustomerListTest() {
         ArticlesDTO articlesDTO = new ArticlesDTO();
-        articlesDTO.setPicurl("测试图片url");
+        articlesDTO.setPicUrl("测试图片url");
         articlesDTO.setTitle("这里一个测试的标题");
         articlesDTO.setUrl("测试跳转链接");
         articlesDTO.setDescription("测试描述信息");
