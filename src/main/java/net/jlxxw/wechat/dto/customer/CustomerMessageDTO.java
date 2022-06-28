@@ -328,7 +328,7 @@ public class CustomerMessageDTO {
      * @param dto 小程序消息
      * @return 客服接口数据传输对象
      */
-    public static CustomerMessageDTO buildMenu(String openId , MiniProgramPageDTO dto){
+    public static CustomerMessageDTO buildMiniProgramPage(String openId , MiniProgramPageDTO dto){
         CustomerMessageDTO customerMessageDTO = new CustomerMessageDTO();
         customerMessageDTO.setTouser(openId);
         customerMessageDTO.setMsgtype("miniprogrampage");
