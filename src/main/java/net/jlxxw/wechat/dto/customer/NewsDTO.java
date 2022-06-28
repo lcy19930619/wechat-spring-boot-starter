@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.dto.customer.news;
+package net.jlxxw.wechat.dto.customer;
 
 import java.util.List;
 

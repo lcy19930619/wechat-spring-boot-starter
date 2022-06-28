@@ -8,7 +8,7 @@ package net.jlxxw.wechat.function.push;
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;
-import net.jlxxw.wechat.dto.customer.news.ArticlesDTO;
+import net.jlxxw.wechat.dto.customer.ArticlesDTO;
 import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
 import org.junit.Test;
