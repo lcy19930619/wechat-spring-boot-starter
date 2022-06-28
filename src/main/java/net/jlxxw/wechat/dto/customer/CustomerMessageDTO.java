@@ -270,7 +270,7 @@ public class CustomerMessageDTO {
      * @param dto 音乐消息
      * @return 客服接口数据传输对象
      */
-    public static CustomerMessageDTO buildVideo(String openId , MusicDTO dto){
+    public static CustomerMessageDTO buildMusic(String openId , MusicDTO dto){
         CustomerMessageDTO customerMessageDTO = new CustomerMessageDTO();
         customerMessageDTO.setTouser(openId);
         customerMessageDTO.setMsgtype("music");
@@ -292,6 +292,17 @@ public class CustomerMessageDTO {
         return customerMessageDTO;
     }
 
+    /**
+     * 构建大图文消息信息模板
+     * @param openId 接收用户
+     * @param mediaId 大图文消息id
+     * @return 客服接口数据传输对象
+     */
+    public static CustomerMessageDTO buildMpNews(String openId , String mediaId ){
+        MpnewsDTO dto = new MpnewsDTO();
+        dto.setMediaId(mediaId);
+        return buildMpNews(openId,dto);
+    }
     /**
      * 构建菜单消息信息模板
      * @param openId 接收用户
