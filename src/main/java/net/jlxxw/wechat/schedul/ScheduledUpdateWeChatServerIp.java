@@ -52,7 +52,7 @@ public class ScheduledUpdateWeChatServerIp {
         JSONObject jsonObject = JSONObject.parseObject(forObject);
         final JSONArray ipList = jsonObject.getJSONArray("ip_list");
         if (!CollectionUtils.isEmpty(ipList)) {
-            weChatServerSecurityCheck.updateWeiXinServerIp(ipList.toJavaList(String.class));
+            weChatServerSecurityCheck.updateWeiXinServerIpRange(ipList.toJavaList(String.class));
         }
     }
 }

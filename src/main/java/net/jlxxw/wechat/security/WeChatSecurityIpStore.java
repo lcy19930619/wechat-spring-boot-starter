@@ -9,11 +9,11 @@ import java.util.List;
 public interface WeChatSecurityIpStore {
 
     /**
-     * 新增一个微信的服务器ip
+     * 新增一个微信的服务器ip段
      *
-     * @param ip 微信服务器ip
+     * @param ipRange 微信服务器ip段
      */
-    void addSecurityIp(String ip);
+    void addSecurityIpRange(String ipRange);
 
     /**
      * 判断当前访问ip是否是安全的
@@ -24,9 +24,9 @@ public interface WeChatSecurityIpStore {
     boolean isSecurityIp(String ip);
 
     /**
-     * 新增一组微信的服务器ip
+     * 新增一组微信的服务器ip段
      *
-     * @param ipList 微信服务器ip
+     * @param ipRangeList 微信服务器ip段
      */
-    void addSecurityIp(List<String> ipList);
+    void addSecurityIpRange(List<String> ipRangeList);
 }

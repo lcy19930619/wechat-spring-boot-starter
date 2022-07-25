@@ -44,19 +44,20 @@ public class WeChatServerSecurityCheck {
             LoggerUtils.info(logger, "初始化微信安全ip存储器，使用内置存储");
             // 没有这个bean，使用内部类
             weChatSecurityIpStore = new WeChatSecurityIpStore() {
-                /**
-                 * 微信服务器ip白名单地址
-                 */
-                private final Set<String> ipWhitelist = new HashSet<>();
 
                 /**
-                 * 新增一个微信的服务器ip
+                 * 微信服务器ip段白名单地址
+                 */
+                private final Set<String> ipRangeWhitelist = new HashSet<>();
+
+                /**
+                 * 新增一个微信的服务器ip段
                  *
-                 * @param ip 微信服务器ip
+                 * @param ipRange 微信服务器ip段
                  */
                 @Override
-                public void addSecurityIp(String ip) {
-                    ipWhitelist.add(ip);
+                public void addSecurityIpRange(String ipRange) {
+                    ipRangeWhitelist.add(ipRange);
                 }
 
                 /**
@@ -67,17 +68,23 @@ public class WeChatServerSecurityCheck {
                  */
                 @Override
                 public boolean isSecurityIp(String ip) {
-                    return ipWhitelist.contains(ip);
+                    boolean security = false;
+                    for (String ipRange : ipRangeWhitelist) {
+                        if ( inRange(ip,ipRange) ){
+                            return true;
+                        }
+                    }
+                    return security;
                 }
 
                 /**
-                 * 新增一组微信的服务器ip
+                 * 新增一组微信的服务器ip段
                  *
-                 * @param ipList 微信服务器ip
+                 * @param ipRangeList 微信服务器ip段
                  */
                 @Override
-                public void addSecurityIp(List<String> ipList) {
-                    ipWhitelist.addAll(ipList);
+                public void addSecurityIpRange(List<String> ipRangeList) {
+                    ipRangeWhitelist.addAll(ipRangeList);
                 }
             };
         }
@@ -94,12 +101,35 @@ public class WeChatServerSecurityCheck {
     }
 
     /**
-     * 获取微信服务器IP地址,并添加到白名单列表中，由定时任务控制
+     * 获取微信服务器IP段地址,并添加到白名单列表中，由定时任务控制
      *
      * @see ScheduledUpdateWeChatServerIp#update()
      */
-    public void updateWeiXinServerIp(List<String> ipList) {
-        logger.info("更新ip白名单：{}", ipList);
-        weChatSecurityIpStore.addSecurityIp(ipList);
+    public void updateWeiXinServerIpRange(List<String> ipRangeList) {
+        logger.info("更新ip白名单：{}", ipRangeList);
+        weChatSecurityIpStore.addSecurityIpRange(ipRangeList);
+    }
+
+    /**
+     * 判断ip是否在范围内
+     * @param ip 要检测的ip
+     * @param ipRange 要检测段ip段
+     * @return
+     */
+    public static boolean inRange(String ip, String ipRange) {
+        String[] ips = ip.split("\\.");
+        int ipAddr = (Integer.parseInt(ips[0]) << 24)
+                | (Integer.parseInt(ips[1]) << 16)
+                | (Integer.parseInt(ips[2]) << 8) | Integer.parseInt(ips[3]);
+        int type = Integer.parseInt(ipRange.replaceAll(".*/", ""));
+        int mask = 0xFFFFFFFF << (32 - type);
+        String cidrIp = ipRange.replaceAll("/.*", "");
+        String[] cidrIps = cidrIp.split("\\.");
+        int cidrIpAddr = (Integer.parseInt(cidrIps[0]) << 24)
+                | (Integer.parseInt(cidrIps[1]) << 16)
+                | (Integer.parseInt(cidrIps[2]) << 8)
+                | Integer.parseInt(cidrIps[3]);
+
+        return (ipAddr & mask) == (cidrIpAddr & mask);
     }
 }
