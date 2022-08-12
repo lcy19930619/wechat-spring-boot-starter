@@ -17,15 +17,15 @@ import java.util.Set;
  * @author zhanxiumei
  */
 
-public class UserManagerImplTest extends BaseTest {
+public class UserManagerTest extends BaseTest {
 
     @Autowired
-    public UserManagerImpl userManagerImpl;
+    public UserManager userManager;
 
 
     @Test
     public void findAllTest() {
-        Set<String> all = userManagerImpl.findAll();
+        Set<String> all = userManager.findAll();
         Assert.assertFalse("查询到的用户不应为空", CollectionUtils.isEmpty(all));
     }
 
@@ -33,14 +33,14 @@ public class UserManagerImplTest extends BaseTest {
     public void findUserInfoTest() {
         List<String> openIdList = new ArrayList<>();
         openIdList.add(openId);
-        List<SubscriptionResponse> userInfo = userManagerImpl.findUserInfo(openIdList, LanguageEnum.ZH_CN);
+        List<SubscriptionResponse> userInfo = userManager.findUserInfo(openIdList, LanguageEnum.ZH_CN);
         Assert.assertFalse("查询到的用户信息不应为空", CollectionUtils.isEmpty(userInfo));
 
     }
 
     @Test
     public void getUserInfoTest() {
-        SubscriptionResponse userInfo = userManagerImpl.getUserInfo(openId, LanguageEnum.ZH_CN);
+        SubscriptionResponse userInfo = userManager.getUserInfo(openId, LanguageEnum.ZH_CN);
         Assert.assertTrue("查询到的用户信息不应为空", Objects.nonNull(userInfo));
     }
 

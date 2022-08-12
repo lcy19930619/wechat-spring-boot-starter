@@ -23,6 +23,7 @@ import java.text.MessageFormat;
  * @deprecated 准备移除 async 入口，改成 feign 调用
  * @author chunyang.leng
  * @date 2021-11-23 2:22 下午
+ * @deprecated 异步回调不好用，正在改成同步调用
  */
 @Deprecated
 @Lazy

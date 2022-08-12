@@ -31,7 +31,9 @@ import java.text.MessageFormat;
  *
  * @author chunyang.leng
  * @date 2021-03-05 5:53 下午
+ * @deprecated 异步回调不好用，正在改成同步调用
  */
+@Deprecated
 @DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component
 public class AsyncPermanentMaterialManager {
