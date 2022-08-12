@@ -31,7 +31,7 @@ import java.util.Set;
 @Order(-1)
 public class ParamCheckAOP {
 
-    @Pointcut("@within(org.springframework.cloud.openfeign.FeignClient)")
+    @Pointcut("@within(org.springframework.cloud.openfeign.FeignClient) || execution(public * net.jlxxw.wechat.function.*.*.*(..))")
     public void pointcut() {
     }
 

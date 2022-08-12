@@ -49,7 +49,7 @@ public class BaseTest {
     /**
      * 测试用的token
      */
-    protected String token = "";
+    protected String token = "x";
 
     @Autowired
     private RestTemplate restTemplate;

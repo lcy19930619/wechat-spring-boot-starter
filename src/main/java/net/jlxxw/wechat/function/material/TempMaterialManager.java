@@ -20,6 +20,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.ByteArrayInputStream;
@@ -52,7 +53,8 @@ public class TempMaterialManager {
      * @return
      * @throws WeChatException
      */
-    public TempMaterialResponse upload(MaterialEnum materialEnum, File file) throws WeChatException{
+    public TempMaterialResponse upload( @Validated MaterialEnum materialEnum,
+                                        @Validated File file) throws WeChatException{
         FileSystemResource resource = new FileSystemResource(file);
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
         //参数
