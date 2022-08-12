@@ -59,6 +59,10 @@ public interface UrlConstant {
 
 
     /**
+     * 统计素材使用情况
+     */
+    String MATERIAL_COUNT = "https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token={0}";
+    /**
      * 上传永久素材
      */
     String UPLOAD_PERMANENT_MATERIAL = "https://api.weixin.qq.com/cgi-bin/material/add_material?access_token={0}&type={1}";

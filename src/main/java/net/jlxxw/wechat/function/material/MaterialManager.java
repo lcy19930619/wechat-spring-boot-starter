@@ -1,10 +1,17 @@
 package net.jlxxw.wechat.function.material;
 
+import com.alibaba.fastjson.JSON;
+import net.jlxxw.wechat.constant.UrlConstant;
+import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
+import net.jlxxw.wechat.response.material.MaterialCountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
 
 /**
  * 素材管理
@@ -26,9 +33,17 @@ public class MaterialManager {
      * 统计素材使用情况
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Get_the_total_of_all_materials.html">接口文档地址</a>
      */
-    public void materialCount(){
+    public MaterialCountResponse materialCount() throws WeChatException{
+        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String url = MessageFormat.format(UrlConstant.MATERIAL_COUNT, tokenFromLocal);
 
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        String json = response.getBody();
+        MaterialCountResponse body = JSON.toJavaObject(JSON.parseObject(json),MaterialCountResponse.class);
+        if (!body.isSuccessful()){
+            throw new WeChatException(body);
+        }
+        return body;
     }
-
-
 }
