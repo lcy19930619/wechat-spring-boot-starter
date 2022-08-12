@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import net.jlxxw.wechat.TestApplication;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
@@ -41,19 +40,17 @@ public class BaseTest {
     /**
      * 测试用的openId
      */
-    protected String openId = "";
+    protected String openId = "oFNc6s4hmaVobZhVQ0H4NUysNEmw";
     /**
      * 测试用的模版Id
      */
-    protected String templateId = "";
+    protected String templateId = "xx";
 
     /**
      * 测试用的token
      */
     protected String token = "";
 
-    @Autowired
-    private WeChatTokenManager weChatTokenManager;
     @Autowired
     private RestTemplate restTemplate;
     @Value("${we-chat.netty.server.netty-port}")
@@ -74,14 +71,13 @@ public class BaseTest {
 
     @Before
     public void setOpenId() {
-        Assert.assertTrue("测试openId不能为空", StringUtils.isBlank(openId));
-        Assert.assertTrue("测试模版Id不能为空", StringUtils.isBlank(templateId));
-        token = getToken();
-        Assert.assertTrue("测试token不能为空", StringUtils.isBlank(token));
+        Assert.assertTrue("测试openId不能为空", StringUtils.isNotBlank(openId));
+        Assert.assertTrue("测试模版Id不能为空", StringUtils.isNotBlank(templateId));
+        Assert.assertTrue("测试token不能为空", StringUtils.isNotBlank(token));
     }
 
     protected String getToken() {
-        return weChatTokenManager.getTokenFromLocal();
+        return token;
     }
 
 

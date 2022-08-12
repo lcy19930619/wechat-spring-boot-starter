@@ -27,11 +27,6 @@ public class SyncPushTemplateTest extends BaseTest {
     @Autowired
     private WeChatTokenManager weChatTokenManager;
 
-    /**
-     * 多线程共享token
-     */
-    private final Supplier<String> volatileToken = this::getToken;
-
     @Test
     public void pushTemplateTest() {
         String token = weChatTokenManager.getTokenFromLocal();

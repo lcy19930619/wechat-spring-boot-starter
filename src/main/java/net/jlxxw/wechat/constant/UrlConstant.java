@@ -45,12 +45,18 @@ public interface UrlConstant {
     /**
      * 上传临时素材
      */
-    String UPLOAD_TEMP_MATERIAL = "https https://api.weixin.qq.com/cgi-bin/media/upload?access_token={0}&type={1}";
+    String UPLOAD_TEMP_MATERIAL = "https://api.weixin.qq.com/cgi-bin/media/upload?access_token={0}&type={1}";
 
     /**
      * 下载临时素材
      */
-    String DOWN_TEMP_MATERIAL = "https://api.weixin.qq.com/cgi-bin/media/get/jssdk?access_token={0}&media_id={1}";
+    String DOWN_TEMP_MATERIAL = "https://api.weixin.qq.com/cgi-bin/media/get?access_token={0}&media_id={1}";
+
+    /**
+     * 下载高清语音接口
+     */
+    String DOWN_HD_VOICE = "https://api.weixin.qq.com/cgi-bin/media/get/jssdk?access_token={0}&media_id={1}";
+
 
     /**
      * 上传永久素材

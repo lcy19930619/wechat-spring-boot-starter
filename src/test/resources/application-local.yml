@@ -20,7 +20,7 @@ we-chat:
       netty-port: 19191
       queue-size: 200
   enable-message-enc: false
-  enable-default-token-manager: true
+  enable-default-token-manager: false
   enable-we-chat-call-back-server-security-check: false
   # 需要替换为真实数据
   encoding-aes-key: 9hFP1tCoPIRB8rFk4ukaYn6bw1Gbxs53yIGVplNsxxx
