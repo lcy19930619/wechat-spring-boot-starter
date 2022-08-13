@@ -45,7 +45,7 @@ public class TempMaterialManagerTest extends BaseTest {
         TempMaterialResponse upload = null;
         try (InputStream inputStream = classPathResource.getInputStream()) {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available());
-            upload = tempMaterialManager.upload(MaterialEnum.IMAGE, bytes, "1.jpg");
+            upload = tempMaterialManager.upload(MaterialEnum.IMAGE, bytes, "");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

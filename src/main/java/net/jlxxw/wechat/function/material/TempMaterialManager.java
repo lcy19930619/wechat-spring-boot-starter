@@ -2,6 +2,13 @@ package net.jlxxw.wechat.function.material;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
+import javax.validation.constraints.NotBlank;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.WeChatException;
@@ -16,19 +23,16 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 
 /**
  * 临时素材管理
@@ -85,7 +89,9 @@ public class TempMaterialManager {
      * @return
      * @throws WeChatException
      */
-    public TempMaterialResponse upload(MaterialEnum materialEnum, byte[] fileData,String fileName) throws WeChatException{
+    public TempMaterialResponse upload( @Validated MaterialEnum materialEnum,
+                                        @Validated byte[] fileData,
+                                        @Validated @NotBlank(message = "文件名称不能为空") String fileName) throws WeChatException{
 
         Resource resource = new AbstractResource() {
             @Override

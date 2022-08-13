@@ -5,6 +5,8 @@ we-chat:
       max-thread-size: 200
       netty-port: 19191
       queue-size: 200
+      enableLog: true
+      enableMetrics: true
   enable-message-enc: true
   enable-default-token-manager: true
   enable-we-chat-call-back-server-security-check: false
@@ -57,8 +59,8 @@ spring:
         url-pattern: "/druid/*"
         #允许那些ip   这里做一下改变
         allow: 127.0.0.1
-        login-username: ${spring.dataresource.username}
-        login-password: ${spring.dataresource.password}
+        login-username: ${spring.datasource.username}
+        login-password: ${spring.datasource.password}
         #禁止那些ip
         deny:
         #是否可以重置

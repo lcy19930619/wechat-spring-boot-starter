@@ -1,5 +1,23 @@
 package net.jlxxw.wechat.aop;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import javax.annotation.PostConstruct;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorFactory;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -8,18 +26,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorDescriptor;
+import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
+import org.hibernate.validator.internal.metadata.core.ConstraintHelper;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * 调用微信接口参数检查
@@ -30,6 +44,23 @@ import java.util.Set;
 @Component
 @Order(-1)
 public class ParamCheckAOP {
+
+    private static final ConstraintHelper constraintHelper = ConstraintHelper.forAllBuiltinConstraints();
+    private static final ConstraintValidatorFactory factory = new ConstraintValidatorFactoryImpl();
+    private Map<Class<? extends Annotation>, List<? extends ConstraintValidatorDescriptor<?>>> enabledBuiltinConstraints = new HashMap<>();
+
+
+    @PostConstruct
+    private void init(){
+        Field field = ReflectionUtils.findField(ConstraintHelper.class, "enabledBuiltinConstraints");
+        try {
+            field.setAccessible(true);
+            enabledBuiltinConstraints = (Map<Class<? extends Annotation>, List<? extends ConstraintValidatorDescriptor<?>>> )field.get(constraintHelper);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Pointcut("@within(org.springframework.cloud.openfeign.FeignClient) || execution(public * net.jlxxw.wechat.function.*.*.*(..))")
     public void pointcut() {
@@ -48,6 +79,8 @@ public class ParamCheckAOP {
         for (int i = 0; i < parameterAnnotations.length; i++) {
             Object param = args[i];
             int length = parameterAnnotations[i].length;
+            List<Class<?>> validatedSet = new LinkedList<>();
+            Set<String> validResult = new HashSet<>();
             for (int j = 0; j < length; j++) {
                 Annotation annotation = parameterAnnotations[i][j];
                 if (annotation instanceof Validated) {
@@ -57,27 +90,59 @@ public class ParamCheckAOP {
                     }
                     Validated validated = (Validated) annotation;
                     Class<?>[] classList = validated.value();
-                    String validResult = valid(param, classList);
-                    if (StringUtils.isNotEmpty(validResult)) {
-                        //  自定义异常
-                        throw new ParamCheckException(validResult);
+                    validResult.addAll (valid(param, classList));
+                    validatedSet = Arrays.asList(classList);
+                }else {
+                    try {
+                        Class<? extends Annotation> annotationType = annotation.annotationType();
+                        if (!enabledBuiltinConstraints.containsKey(annotationType)){
+                            continue;
+                        }
+                        Field groups = ReflectionUtils.findField(annotationType, "groups");
+                        if (Objects.nonNull(groups)){
+                            groups.setAccessible(true);
+                            Class<?>[] groupArray = (Class<?>[])groups.get(annotation);
+                            if (groupArray != null &&  !CollectionUtils.containsAny(validatedSet,Arrays.asList(groupArray))){
+                                continue;
+                            }
+                        }
+                        List<? extends ConstraintValidatorDescriptor<? extends Annotation>> descriptors = constraintHelper.getAllValidatorDescriptors(annotationType);
+                        if (!CollectionUtils.isEmpty(descriptors)){
+
+                            for (ConstraintValidatorDescriptor<? extends Annotation> descriptor : descriptors) {
+                                ConstraintValidator validator = descriptor.newInstance(factory);
+                                validator.initialize(annotation);
+                                boolean valid = validator.isValid(param, null);
+                                if (!valid){
+                                    Method message = ReflectionUtils.findMethod(annotationType, "message");
+                                    String invoke = (String)message.invoke(annotation);
+                                    validResult.add(invoke);
+                                }
+                            }
+                        }
+                    }catch (Exception e){
+                        // ignore
                     }
+                }
+                if (!CollectionUtils.isEmpty(validResult)){
+                    String message = String.join("\n", validResult);
+                    throw new ParamCheckException(message);
                 }
             }
         }
     }
 
-    private String valid(Object obj, Class[] clazz) {
+    private Set<String> valid(Object obj, Class[] clazz) {
         ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
         Validator validator = validatorFactory.getValidator();
         Set<ConstraintViolation<Object>> validate = validator.validate(obj, clazz);
-        StringBuffer stringBuffer = new StringBuffer();
+        Set<String> set = new HashSet<>();
         validate.forEach(o -> {
             String message = o.getMessage();
             if (StringUtils.isNotBlank(message)) {
-                stringBuffer.append(message).append("\n");
+                set.add(message);
             }
         });
-        return stringBuffer.toString();
+        return set;
     }
 }
