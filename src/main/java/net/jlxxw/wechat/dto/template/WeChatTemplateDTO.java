@@ -2,6 +2,7 @@ package net.jlxxw.wechat.dto.template;
 
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.jlxxw.wechat.enums.Color;
 
 import java.util.HashMap;
@@ -17,6 +18,7 @@ public class WeChatTemplateDTO {
      * 微信模版id
      */
     @JSONField(name = "template_id")
+    @JsonProperty("template_id")
     private String templateId;
     private String touser;
     private String url;
