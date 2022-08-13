@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.dto.customer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -9,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class WxCardDTO {
 
+    @JSONField(name = "card_id")
     @JsonProperty(value = "card_id")
     private String cardId;
 

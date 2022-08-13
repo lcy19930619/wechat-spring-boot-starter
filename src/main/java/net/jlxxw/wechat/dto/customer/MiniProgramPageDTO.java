@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.dto.customer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -20,12 +21,14 @@ public class MiniProgramPageDTO {
     /**
      * 必填，小程序的页面路径，跟 app.json 对齐，支持参数，比如pages/index/index?foo=bar
      */
+    @JSONField(name = "pagepath")
     @JsonProperty(value = "pagepath")
     private String pagePath;
 
     /**
      * 必填，缩略图/小程序卡片图片的媒体ID，小程序卡片图片建议大小为520*416
      */
+    @JSONField(name = "thumb_media_id")
     @JsonProperty(value = "thumb_media_id")
     private String thumbMediaId;
 

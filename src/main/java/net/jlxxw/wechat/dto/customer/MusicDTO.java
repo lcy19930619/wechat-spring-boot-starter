@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.dto.customer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -21,17 +22,20 @@ public class MusicDTO {
     /**
      * 必填，音乐链接
      */
+    @JSONField(name = "musicurl")
     @JsonProperty(value = "musicurl")
     private String musicUrl;
 
     /**
      * 必填，高品质音乐链接，wifi环境优先使用该链接播放音乐
      */
+    @JSONField(name = "hqmusicurl")
     @JsonProperty(value = "hqmusicurl")
     private String hqMusicUrl;
     /**
      * 必填，缩略图/小程序卡片图片的媒体ID，小程序卡片图片建议大小为520*416
      */
+    @JSONField(name = "thumb_media_id")
     @JsonProperty(value = "thumb_media_id")
     private String thumbMediaId;
 

@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.dto.customer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -11,11 +12,13 @@ public class VideoDTO {
     /**
      * 必填，发送的图片/语音/视频/图文消息（点击跳转到图文消息页）的媒体ID
      */
+    @JSONField(name = "media_id")
     @JsonProperty(value = "media_id")
     private String mediaId;
     /**
      * 必填，缩略图/小程序卡片图片的媒体ID，小程序卡片图片建议大小为520*416
      */
+    @JSONField(name = "thumb_media_id")
     @JsonProperty(value = "thumb_media_id")
     private String thumbMediaId;
 

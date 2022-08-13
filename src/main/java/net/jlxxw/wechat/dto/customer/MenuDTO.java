@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.dto.customer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -13,12 +14,14 @@ public class MenuDTO {
     /**
      * 首部内容
      */
+    @JSONField(name = "head_content")
     @JsonProperty(value = "head_content")
     private String headContent;
 
     /**
      * 尾部内容
      */
+    @JSONField(name = "tail_content")
     @JsonProperty(value = "tail_content")
     private String tailContent;
 

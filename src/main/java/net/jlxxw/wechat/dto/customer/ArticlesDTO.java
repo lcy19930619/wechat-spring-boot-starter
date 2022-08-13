@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.dto.customer;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -28,6 +29,7 @@ public class ArticlesDTO {
      * 非必填图文消息的图片链接，支持JPG、PNG格式，较好的效果为大图640*320，小图80*80
      */
     @JsonProperty(value = "picurl")
+    @JSONField(name = "picurl")
     private String picUrl;
 
     public String getTitle() {
