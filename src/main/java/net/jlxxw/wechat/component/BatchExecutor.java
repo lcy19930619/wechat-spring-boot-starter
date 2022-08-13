@@ -64,7 +64,7 @@ public class BatchExecutor {
             return;
         }
         if (limit <= 0) {
-            throw new IllegalArgumentException("limit 不能小雨等于0 ");
+            throw new IllegalArgumentException("limit 不能小于等于0 ");
         }
         if (Objects.isNull(consumer)) {
             throw new IllegalArgumentException("consumer 不应为null");

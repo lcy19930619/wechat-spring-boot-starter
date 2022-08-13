@@ -4,15 +4,21 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import net.jlxxw.wechat.component.BatchExecutor;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.LanguageEnum;
+import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
+import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -29,10 +35,11 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * 用户信息管理
+ *
  * @author chunyang.leng
  * @date 2021/1/25 6:44 下午
  */
-@DependsOn({"weChatProperties", "weChatTokenManager"})
+@DependsOn({"weChatTokenManager"})
 @Component
 public class UserManager {
 
@@ -41,14 +48,17 @@ public class UserManager {
     private RestTemplate restTemplate;
     @Autowired
     private WeChatTokenManager weChatTokenManager;
+    @Autowired
+    private BatchExecutor batchExecutor;
 
     /**
      * 获取全部用户的openId
      *
      * @return 全部在关用户的openId
      * @throws WeChatException 微信异常
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Getting_a_User_List.html">文档地址</a>
      */
-    public Set<String> findAll() throws WeChatException{
+    public Set<String> findAll() throws WeChatException {
         Set<String> openIdSet = new HashSet<>();
 
         int current = 0;
@@ -67,10 +77,10 @@ public class UserManager {
                 current += resultData.getInteger("count");
                 nextOpenId = resultData.getString("next_openid");
 
-                logger.info("total:" + totle + ",current:" + current + ",nextId:" + nextOpenId + ",size:"+openIdSet.size());
+                logger.info("total:" + totle + ",current:" + current + ",nextId:" + nextOpenId + ",size:" + openIdSet.size());
 
                 JSONObject data = resultData.getJSONObject("data");
-                if (Objects.nonNull(data)){
+                if (Objects.nonNull(data)) {
                     final JSONArray array = data.getJSONArray("openid");
                     if (!CollectionUtils.isEmpty(array)) {
                         array.forEach(o -> {
@@ -92,24 +102,18 @@ public class UserManager {
      *
      * @param openIdList openId列表
      * @return 用户基本信息
+     * @throws WeChatException     微信异常
+     * @throws ParamCheckException 方法执行前，参数检查不通过
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId">文档地址</a>
      */
-    public List<SubscriptionResponse> findUserInfo(List<String> openIdList, LanguageEnum languageEnum) throws WeChatException {
-        List<SubscriptionResponse> result = new ArrayList<>();
+    public List<SubscriptionResponse> findUserInfo(@NotEmpty(message = "待查询待openId列表不应为空") List<String> openIdList,
+                                                   @NotNull(message = "语言枚举不应为空") LanguageEnum languageEnum) throws WeChatException, ParamCheckException {
+        List<SubscriptionResponse> result = new LinkedList<>();
         if (CollectionUtils.isEmpty(openIdList)) {
             return result;
         }
 
-        int size = 100;
-        // 统计需要分成几次
-        int countFor = countFor(openIdList.size());
-        int start = 0;
-        int end = 0;
-
-        //每100条处理一次
-        for (int i = 0; i < countFor; i++) {
-            start = i * size;
-            end = Math.min((i + 1) * size, openIdList.size());
-            List<String> tempList = openIdList.subList(start, end);
+        batchExecutor.execute(true, openIdList, (tempList -> {
 
             JSONObject requestParam = new JSONObject();
             JSONArray jsonArray = new JSONArray();
@@ -120,6 +124,7 @@ public class UserManager {
                 jsonArray.add(param);
             }
             requestParam.put("user_list", jsonArray);
+
             String token = weChatTokenManager.getTokenFromLocal();
             String url = UrlConstant.BATCH_USER_INFO_URL + token;
             HttpHeaders headers = new HttpHeaders();
@@ -128,17 +133,16 @@ public class UserManager {
             HttpEntity<String> request = new HttpEntity<>(json, headers);
             ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
             JSONObject resultData = JSONObject.parseObject(responseEntity.getBody());
-            if (resultData.getInteger("errcode") == null || resultData.getInteger("errcode") == 0) {
-                JSONArray infoList = resultData.getJSONArray("user_info_list");
-                List<SubscriptionResponse> subscriptionUsers = JSONArray.parseArray(JSON.toJSONString(infoList), SubscriptionResponse.class);
-                result.addAll(subscriptionUsers);
-                logger.info("用户数量总计:{},当前执行数量:{}", openIdList.size(), end);
-            } else {
-                WeChatException weChatException = new WeChatException("批量获取用户信息失败，微信返回值:" + resultData.toJSONString() + ",用户openId列表:" + JSON.toJSONString(tempList));
-                weChatException.setErrorCode(resultData.getInteger("errcode"));
-                throw weChatException;
+
+            WeChatResponse response = resultData.toJavaObject(WeChatResponse.class);
+            if (!response.isSuccessful()) {
+                throw new WeChatException(response);
             }
-        }
+            JSONArray infoList = resultData.getJSONArray("user_info_list");
+            List<SubscriptionResponse> subscriptionUsers = JSONArray.parseArray(JSON.toJSONString(infoList), SubscriptionResponse.class);
+            result.addAll(subscriptionUsers);
+
+        }), 100L);
 
         return result;
     }
@@ -149,8 +153,12 @@ public class UserManager {
      * @param openId       用户的openId
      * @param languageEnum 返回语言
      * @return 用户的基本信息
+     * @throws WeChatException     微信异常
+     * @throws ParamCheckException 调用方法前，参数检查不通过
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId">文档地址</a>
      */
-    public SubscriptionResponse getUserInfo(String openId, LanguageEnum languageEnum) throws WeChatException {
+    public SubscriptionResponse getUserInfo(@NotBlank(message = "待查询待openId不应为空") String openId,
+                                            @NotNull(message = "语言选择不应为空") LanguageEnum languageEnum) throws WeChatException, ParamCheckException {
         if (StringUtils.isBlank(openId)) {
             return null;
         }
@@ -158,24 +166,11 @@ public class UserManager {
         String url = MessageFormat.format(UrlConstant.ONE_USER_INFO_URL, token, openId, languageEnum.getCode());
         ResponseEntity<JSONObject> forEntity = restTemplate.getForEntity(url, JSONObject.class);
         JSONObject body = forEntity.getBody();
-        if (body.getInteger("errcode") == null || body.getInteger("errcode") == 0) {
-            // 执行成功
-            return body.toJavaObject(SubscriptionResponse.class);
+
+        SubscriptionResponse response = body.toJavaObject(SubscriptionResponse.class);
+        if (!response.isSuccessful()) {
+            throw new WeChatException(response);
         }
-        WeChatException weChatException = new WeChatException("获取用户信息失败，微信返回值:" + body.toJSONString() + ",用户openId:" + openId);
-        weChatException.setErrorCode(body.getInteger("errcode"));
-        throw weChatException;
-    }
-
-
-    private int countFor(int size) {
-        //批量插入数据大小
-        int i = 100;
-
-        if (size % i == 0) {
-            return size / i;
-        } else {
-            return size / i + 1;
-        }
+        return response;
     }
 }
