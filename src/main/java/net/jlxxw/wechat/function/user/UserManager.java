@@ -144,6 +144,14 @@ public class UserManager {
 
         }), 100L);
 
+        while (result.size() != openIdList.size()){
+            try{
+                Thread.sleep(1000);
+            }catch (InterruptedException e) {
+               return result;
+            }
+        }
+
         return result;
     }
 
