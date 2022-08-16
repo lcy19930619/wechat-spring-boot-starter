@@ -136,7 +136,7 @@ public class TempMaterialManager {
      * @param mediaId 素材id
      * @return 下载文件的二进制数据
      */
-    public byte[] downloadMaterial(String mediaId) throws WeChatException{
+    public byte[] downloadMaterial(@NotBlank(message = "素材id不能为空") String mediaId) throws WeChatException{
         String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.DOWN_TEMP_MATERIAL, tokenFromLocal, mediaId);
         LoggerUtils.debug(logger, "下载临时素材url:{}", url);
