@@ -26,7 +26,7 @@ public class PermanentMaterialManagerTest extends BaseTest {
 
     @Test(expected = ParamCheckException.class)
     public void uploadExceptionTest() {
-        permanentMaterialManager.upload(MaterialEnum.IMAGE, null);
+        permanentMaterialManager.upload(MaterialEnum.IMAGE, null,null,null);
     }
 
     @Test
@@ -39,7 +39,7 @@ public class PermanentMaterialManagerTest extends BaseTest {
         try (InputStream inputStream = classPathResource.getInputStream()
         ) {
             FileUtils.copyToFile(inputStream, file);
-            PermanentMaterialResponse response = permanentMaterialManager.upload(MaterialEnum.IMAGE, file);
+            PermanentMaterialResponse response = permanentMaterialManager.upload(MaterialEnum.IMAGE, file,null,null);
             Assert.assertNotNull("应答不应该为空", response);
             Assert.assertTrue("文件id不应该为空",  StringUtils.isNotBlank(response.getMediaId()));
             Assert.assertTrue("文件url不应该为空", StringUtils.isNotBlank(response.getUrl()));
@@ -61,7 +61,7 @@ public class PermanentMaterialManagerTest extends BaseTest {
         PermanentMaterialResponse upload = null;
         try (InputStream inputStream = classPathResource.getInputStream()) {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available());
-            upload = permanentMaterialManager.upload(MaterialEnum.IMAGE, bytes, "img.png");
+            upload = permanentMaterialManager.upload(MaterialEnum.IMAGE, bytes, "img.png",null,null);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

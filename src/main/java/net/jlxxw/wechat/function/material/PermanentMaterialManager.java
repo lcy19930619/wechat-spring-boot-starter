@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.function.material;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -48,16 +49,27 @@ public class PermanentMaterialManager {
      * 上传永久素材
      * @param materialEnum 素材类型
      * @param file 上传的文件
+     * @param videoTitle 上传视频时，视频素材的标题
+     * @param videoIntroduction 上传视频时，视频素材的描述
      * @return
      * @throws WeChatException
      */
     public PermanentMaterialResponse upload( @NotNull(message = "文件类型不能为空") MaterialEnum materialEnum,
-                                             @NotNull(message = "文件不能为空") File file) throws WeChatException{
+                                             @NotNull(message = "文件不能为空") File file,
+                                             String videoTitle,
+                                             String videoIntroduction) throws WeChatException{
         FileSystemResource resource = new FileSystemResource(file);
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
         //参数
         param.add("media", resource);
         param.add("type", materialEnum.name().toLowerCase());
+        if (materialEnum.equals(MaterialEnum.VIDEO)){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("title",videoTitle);
+            jsonObject.put("introduction",videoIntroduction);
+            param.add("description",JSON.toJSONString(jsonObject));
+        }
+
         String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增永久素材url:{}", url);
@@ -80,12 +92,16 @@ public class PermanentMaterialManager {
      * @param materialEnum 素材类型
      * @param fileData 上传的文件二进制数据
      * @param fileName  文件名称
+     * @param videoTitle 上传视频时，视频素材的标题
+     * @param videoIntroduction 上传视频时，视频素材的描述
      * @return
      * @throws WeChatException
      */
     public PermanentMaterialResponse upload( @NotNull(message = "文件类型不能为空") MaterialEnum materialEnum,
                                              @NotNull(message = "文件数据不能为空") byte[] fileData,
-                                             @NotBlank(message = "文件名称不能为空") String fileName) throws WeChatException{
+                                             @NotBlank(message = "文件名称不能为空") String fileName,
+                                             String videoTitle,
+                                             String videoIntroduction) throws WeChatException{
 
         Resource resource = new AbstractResource() {
             @Override
@@ -107,6 +123,12 @@ public class PermanentMaterialManager {
         //参数
         param.add("media", resource);
         param.add("type", materialEnum.name().toLowerCase());
+        if (materialEnum.equals(MaterialEnum.VIDEO)){
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("title",videoTitle);
+            jsonObject.put("introduction",videoIntroduction);
+            param.add("description",JSON.toJSONString(jsonObject));
+        }
         String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增永久素材url:{}", url);
