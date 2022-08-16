@@ -15,7 +15,7 @@ public interface UrlConstant {
     /**
      * 客服信息推送地址前缀
      */
-    String PUSH_CUSTOMER_PREFIX = "https://api.weixin.qq.com/cgi-bin/message/mass/send?access_token={0}";
+    String PUSH_CUSTOMER_PREFIX = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={0}";
 
     /**
      * 获取token的URL

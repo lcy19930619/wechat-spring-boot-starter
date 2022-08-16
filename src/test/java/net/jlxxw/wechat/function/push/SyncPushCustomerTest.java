@@ -1,17 +1,15 @@
 package net.jlxxw.wechat.function.push;
 
-import com.alibaba.fastjson.JSON;
+import java.util.ArrayList;
+import java.util.List;
 import net.jlxxw.wechat.base.BaseTest;
-import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;
 import net.jlxxw.wechat.dto.customer.ArticlesDTO;
+import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;
 import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 /**
  * 单元测试
  * @author chunyang.leng
@@ -31,14 +29,14 @@ public class SyncPushCustomerTest extends BaseTest {
         articlesDTO.setDescription("测试描述信息");
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId, articlesDTO);
         WeChatResponse weChatResponse = syncPushCustomer.pushCustomer(dto);
-
-        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weChatResponse), 0L, (int) weChatResponse.getErrcode());
+        Assert.assertTrue("微信返回结果应该为成功",weChatResponse.isSuccessful());
 
     }
 
     /**
      * 批量推送
      */
+    @Test
     public void pushCustomerListTest() {
         ArticlesDTO articlesDTO = new ArticlesDTO();
         articlesDTO.setPicUrl("测试图片url");

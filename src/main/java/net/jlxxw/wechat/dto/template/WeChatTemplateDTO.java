@@ -3,6 +3,8 @@ package net.jlxxw.wechat.dto.template;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotBlank;
+import net.jlxxw.wechat.aop.check.group.Inster;
 import net.jlxxw.wechat.enums.Color;
 
 import java.util.HashMap;
@@ -17,9 +19,12 @@ public class WeChatTemplateDTO {
     /**
      * 微信模版id
      */
+    @NotBlank(groups = Inster.class,message = "模版id不能为空")
     @JSONField(name = "template_id")
     @JsonProperty("template_id")
     private String templateId;
+
+    @NotBlank(groups = Inster.class,message = "用户openId不能为空")
     private String touser;
     private String url;
     private Map<String, TemplateData> data;

@@ -1,19 +1,16 @@
 package net.jlxxw.wechat.function.push;
 
 import com.alibaba.fastjson.JSON;
+import java.util.ArrayList;
+import java.util.List;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.dto.template.WeChatTemplateDTO;
 import net.jlxxw.wechat.enums.ColorEnums;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * @author chunyang.leng
@@ -24,12 +21,9 @@ public class SyncPushTemplateTest extends BaseTest {
 
     @Autowired
     private SyncPushTemplate syncPushTemplate;
-    @Autowired
-    private WeChatTokenManager weChatTokenManager;
 
     @Test
     public void pushTemplateTest() {
-        String token = weChatTokenManager.getTokenFromLocal();
         String url = "xxxxxx";
 
         WeChatTemplateDTO weChatTemplateDTO = new WeChatTemplateDTO();
@@ -50,7 +44,6 @@ public class SyncPushTemplateTest extends BaseTest {
      */
     @Test
     public void pushTemplateListTest() {
-        String token = weChatTokenManager.getTokenFromLocal();
         String url = "xxxxxx";
 
         WeChatTemplateDTO weChatTemplateDTO = new WeChatTemplateDTO();

@@ -44,7 +44,7 @@ public class BaseTest {
     /**
      * 测试用的模版Id
      */
-    protected String templateId = "xx";
+    protected String templateId = "UB7TV635X6AGDAhZzAiCNkOa7V74hUkl9Yb5kY-Yxvw";
 
     /**
      * 测试用的token
