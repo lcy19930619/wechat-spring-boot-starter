@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Objects;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.enums.MaterialEnum;
+import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.response.material.TempMaterialResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -29,7 +30,11 @@ public class TempMaterialManagerTest extends BaseTest {
     public void uploadTest() {
         String mediaId = upload();
         Assert.assertTrue("上传临时素材mediaId不应该为null", StringUtils.isNotBlank(mediaId));
+    }
 
+    @Test(expected = ParamCheckException.class)
+    public void uploadExceptionTest() {
+        tempMaterialManager.upload(MaterialEnum.IMAGE, null);
     }
 
     @Test
@@ -65,7 +70,7 @@ public class TempMaterialManagerTest extends BaseTest {
         TempMaterialResponse upload = null;
         try (InputStream inputStream = classPathResource.getInputStream()) {
             byte[] bytes = IOUtils.readFully(inputStream, inputStream.available());
-            upload = tempMaterialManager.upload(MaterialEnum.IMAGE, bytes, "");
+            upload = tempMaterialManager.upload(MaterialEnum.IMAGE, bytes, "img.png");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

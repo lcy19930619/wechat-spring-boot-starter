@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.WeChatException;
@@ -31,7 +32,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -57,8 +57,8 @@ public class TempMaterialManager {
      * @return
      * @throws WeChatException
      */
-    public TempMaterialResponse upload( @Validated MaterialEnum materialEnum,
-                                        @Validated File file) throws WeChatException{
+    public TempMaterialResponse upload( @NotNull(message = "文件类型不能为空") MaterialEnum materialEnum,
+                                        @NotNull(message = "文件不能为空") File file) throws WeChatException{
         FileSystemResource resource = new FileSystemResource(file);
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
         //参数
@@ -89,9 +89,9 @@ public class TempMaterialManager {
      * @return
      * @throws WeChatException
      */
-    public TempMaterialResponse upload( @Validated MaterialEnum materialEnum,
-                                        @Validated byte[] fileData,
-                                        @Validated @NotBlank(message = "文件名称不能为空") String fileName) throws WeChatException{
+    public TempMaterialResponse upload( @NotNull(message = "文件类型不能为空") MaterialEnum materialEnum,
+                                        @NotNull(message = "文件数据不能为空") byte[] fileData,
+                                        @NotBlank(message = "文件名称不能为空") String fileName) throws WeChatException{
 
         Resource resource = new AbstractResource() {
             @Override
