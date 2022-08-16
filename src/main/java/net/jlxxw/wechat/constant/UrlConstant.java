@@ -98,6 +98,11 @@ public interface UrlConstant {
     String OPEN_API_SELECT_QUOTA = "https://api.weixin.qq.com/cgi-bin/openapi/quota/get?access_token={0}";
 
     /**
+     * 查询api quota 调用情况
+     */
+    String OPEN_API_SELECT_RID = "https://api.weixin.qq.com/cgi-bin/openapi/rid/get?access_token={0}";
+
+    /**
      * 创建菜单
      */
     String CREATE_MENU_URL = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token={0}";

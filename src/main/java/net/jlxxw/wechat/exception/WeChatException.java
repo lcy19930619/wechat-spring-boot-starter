@@ -18,7 +18,7 @@ public class WeChatException extends RuntimeException {
         super();
     }
     public WeChatException(Integer code,String message) {
-        super(message);
+        super("errorCode:" + code + "," +message);
         this.errorCode = code;
     }
     public WeChatException(String message) {
