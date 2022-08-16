@@ -55,7 +55,7 @@ public class UserManager {
      * 获取全部用户的openId
      *
      * @return 全部在关用户的openId
-     * @throws WeChatException 微信异常
+     * @throws WeChatException 微信服务端验证异常
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Getting_a_User_List.html">文档地址</a>
      */
     public Set<String> findAll() throws WeChatException {
@@ -102,8 +102,8 @@ public class UserManager {
      *
      * @param openIdList openId列表
      * @return 用户基本信息
-     * @throws WeChatException     微信异常
-     * @throws ParamCheckException 方法执行前，参数检查不通过
+     * @throws WeChatException 微信服务端验证异常
+     * @throws ParamCheckException 方法调用前，参数检查异常
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId">文档地址</a>
      */
     public List<SubscriptionResponse> findUserInfo(@NotEmpty(message = "待查询待openId列表不应为空") List<String> openIdList,
@@ -161,8 +161,8 @@ public class UserManager {
      * @param openId       用户的openId
      * @param languageEnum 返回语言
      * @return 用户的基本信息
-     * @throws WeChatException     微信异常
-     * @throws ParamCheckException 调用方法前，参数检查不通过
+     * @throws WeChatException 微信服务端验证异常
+     * @throws ParamCheckException 方法调用前，参数检查异常
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId">文档地址</a>
      */
     public SubscriptionResponse getUserInfo(@NotBlank(message = "待查询待openId不应为空") String openId,
