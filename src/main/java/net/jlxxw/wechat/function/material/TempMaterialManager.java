@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.function.material;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -159,6 +160,13 @@ public class TempMaterialManager {
             String videoUrl = jsonObject.getString("video_url");
             ResponseEntity<byte[]> videoResponse = restTemplate.exchange(videoUrl, HttpMethod.GET,new HttpEntity<>(headers), byte[].class);
             return videoResponse.getBody();
+        }
+        try{
+            JSONObject jsonObject = JSON.parseObject(new String(body, StandardCharsets.UTF_8));
+            WeChatResponse weChatResponse = jsonObject.toJavaObject(WeChatResponse.class);
+            throw new WeChatException(weChatResponse);
+        }catch (JSONException e){
+            // 忽略
         }
         return body;
     }

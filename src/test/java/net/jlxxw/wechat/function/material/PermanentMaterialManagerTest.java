@@ -6,6 +6,7 @@ import java.io.InputStream;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
+import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.material.PermanentMaterialResponse;
 import net.jlxxw.wechat.response.material.TempMaterialResponse;
 import org.apache.commons.io.FileUtils;
@@ -66,6 +67,21 @@ public class PermanentMaterialManagerTest extends BaseTest {
             throw new RuntimeException(e);
         }
         return upload.getMediaId();
+    }
+
+
+    @Test
+    public void downloadTest(){
+        String mediaId = upload();
+        byte[] download = permanentMaterialManager.download(mediaId);
+        Assert.assertNotNull("下载数据不应为空",download);
+    }
+
+    @Test
+    public void deleteTest(){
+        String mediaId = upload();
+        WeChatResponse weChatResponse = permanentMaterialManager.deleteMaterial(mediaId);
+        Assert.assertTrue("删除应该成功",weChatResponse.isSuccessful());
     }
 
 }
