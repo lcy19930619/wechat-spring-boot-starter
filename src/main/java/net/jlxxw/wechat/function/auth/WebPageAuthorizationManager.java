@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.function.auth;
 
 import com.alibaba.fastjson.JSONObject;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
@@ -66,12 +67,13 @@ public class WebPageAuthorizationManager {
      * @param state       重定向后会带上 state 参数，开发者可以填写a-zA-Z0-9的参数值，最多128字节
      * @return 引导用户授权的链接地址，可以重定向到此地址，引导用户授权
      * @throws ParamCheckException 方法执行前，参数检查未通过
+     * @throws UnsupportedEncodingException URL编码失败
      */
     public String getAuthorizeUrl(@NotBlank(message = "重定向地址不能为空")
     @Pattern(regexp = "/(http:\\/\\/|https:\\/\\/)((\\w|=|\\?|\\.|\\/|&|-)+)/g", message = "重定向地址必须是一个链接地址") String redirectUri,
         @NotNull(message = "授权作用域不能为空") AuthScope scope,
-        @Size(max = 128,message = "最大长度128字节") String state) throws ParamCheckException{
-        String encode = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8);
+        @Size(max = 128,message = "最大长度128字节") String state) throws ParamCheckException, UnsupportedEncodingException {
+        String encode = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8.toString());
         return MessageFormat.format(UrlConstant.WEB_PAGE_AUTH_URL, weChatProperties.getAppId(), encode, scope.getCode(), state);
     }
 
