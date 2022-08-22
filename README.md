@@ -1,8 +1,8 @@
 
 微信相关组件，还在不断完善中
 感谢 JetBrains 的对这个项目的认可
-项目地址：https://github.com/lcy19930619/weixin-spring-boot-starter
-wiki地址: https://github.com/lcy19930619/weixin-spring-boot-starter/wiki
+项目地址：https://github.com/lcy19930619/wechat-spring-boot-starter
+wiki地址: https://github.com/lcy19930619/wechat-spring-boot-starter/wiki
 
 # 为什么会有这个组件的出现？
 微信文档写的一些东西，感觉比较乱，而且很多东西需要找来找去，百度、csdn等等  
@@ -482,7 +482,7 @@ http {
         }
          # 启用nginx 代理，指向netty端口，
          # 注意，校验token时，请指向服务器的verifyToken接口
-         location /weixin {
+         location /wechat {
             # proxy_pass   http://127.0.0.1:8080/verifyToken;
             proxy_pass   http://127.0.0.1:19191;
             proxy_read_timeout              5000;
