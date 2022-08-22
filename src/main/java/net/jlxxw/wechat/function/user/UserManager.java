@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -112,7 +113,7 @@ public class UserManager {
         if (CollectionUtils.isEmpty(openIdList)) {
             return result;
         }
-
+        CountDownLatch countDownLatch = new CountDownLatch(openIdList.size());
         batchExecutor.execute(true, openIdList, (tempList -> {
 
             JSONObject requestParam = new JSONObject();
@@ -122,6 +123,7 @@ public class UserManager {
                 param.put("openid", openId);
                 param.put("lang", languageEnum.getCode());
                 jsonArray.add(param);
+                countDownLatch.countDown();
             }
             requestParam.put("user_list", jsonArray);
 
@@ -144,12 +146,10 @@ public class UserManager {
 
         }), 100L);
 
-        while (result.size() != openIdList.size()){
-            try{
-                Thread.sleep(1000);
-            }catch (InterruptedException e) {
-               return result;
-            }
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
 
         return result;
