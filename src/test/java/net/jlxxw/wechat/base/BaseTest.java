@@ -40,7 +40,7 @@ public class BaseTest {
     /**
      * 测试用的openId
      */
-    protected String openId = "oI90b1UUVlIJ0NixMWZPWdDleYgY";
+    protected String openId = "oFNc6s4hmaVobZhVQ0H4NUysNEmw";
     /**
      * 测试用的模版Id
      */

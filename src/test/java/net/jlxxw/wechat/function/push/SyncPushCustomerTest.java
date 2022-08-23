@@ -49,4 +49,15 @@ public class SyncPushCustomerTest extends BaseTest {
         List<WeChatResponse> weChatResponse = syncPushCustomer.pushCustomer(dtoList);
         Assert.assertFalse("测试结果不应为空", CollectionUtils.isEmpty(weChatResponse));
     }
+
+
+    @Test
+    public void pushCustomerTextTest() {
+        String text = "这是一条测试用的信息\n" +
+            "<a href='https://www.jlxxw.net'>点我查看主页</a>";
+        CustomerMessageDTO dto = CustomerMessageDTO.buildText(openId, text);
+        WeChatResponse weChatResponse = syncPushCustomer.pushCustomer(dto);
+        Assert.assertTrue("微信返回结果应该为成功",weChatResponse.isSuccessful());
+
+    }
 }
