@@ -6,7 +6,23 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import javax.annotation.PostConstruct;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import net.jlxxw.wechat.TestApplication;
+import net.jlxxw.wechat.component.WeChatMsgCodec;
+import net.jlxxw.wechat.enums.AesExceptionEnum;
+import net.jlxxw.wechat.exception.AesException;
+import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.util.SHA1;
+import net.jlxxw.wechat.util.WechatMessageCrypt;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Assert;
@@ -22,9 +38,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 /**
  * @author chunyang.leng
@@ -56,6 +72,22 @@ public class BaseTest {
     @Value("${we-chat.netty.server.netty-port}")
     private int nettyPort;
 
+    @Autowired
+    private WeChatProperties weChatProperties;
+
+    private WechatMessageCrypt wechatMessageCrypt = null;
+    /**
+     * 有可能未启用微信加解密功能
+     */
+    @Autowired(required = false)
+    private WeChatMsgCodec weChatMsgCodec;
+
+    @PostConstruct
+    private void init() {
+        if (weChatProperties.isEnableMessageEnc()){
+            wechatMessageCrypt = new WechatMessageCrypt(weChatProperties.getEncodingAesKey(), weChatProperties.getAppId());
+        }
+    }
     static {
         // 初始化xmlMapper相关配置
         xmlMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -102,17 +134,77 @@ public class BaseTest {
 
 
     protected <T> T nettyMessageSend(String xmlData,Class<T> clazz) throws IOException {
+        String encParameters = "";
+        if (weChatProperties.isEnableMessageEnc()){
+            try {
+                String randomStr = wechatMessageCrypt.getRandomStr();
+                String encrypt = wechatMessageCrypt.encrypt(randomStr, xmlData);
+                long timeMillis = System.currentTimeMillis();
+                String signature = SHA1.getSHA1(weChatProperties.getVerifyToken(), String.valueOf(timeMillis) , randomStr,encrypt);
+                encParameters = "nonce="+randomStr + "&timestamp="+timeMillis + "&msg_signature=" +signature;
+                xmlData = "<xml><Encrypt>" + encrypt + "</Encrypt><ToUserName>" + openId +"</ToUserName></xml>";
+            }catch (AesException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_XML);
         HttpEntity<String> formEntity = new HttpEntity<>(xmlData, headers);
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://127.0.0.1:" + nettyPort, formEntity, String.class);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://127.0.0.1:" + nettyPort + "?"+encParameters, formEntity, String.class);
         Assert.assertEquals(responseEntity.getStatusCode().value(), 200);
         String xml = responseEntity.getBody();
         Assert.assertNotNull("返回值不应为null",xml);
 
-        byte[] bytes = xml.getBytes(StandardCharsets.UTF_8);
+        byte[] data = xml.getBytes(StandardCharsets.UTF_8);
+        if (weChatProperties.isEnableMessageEnc()) {
+            try {
+                String uri = "?" +encParameters;
+
+                // 收到返回的xml
+                String inputXML = new String(data, StandardCharsets.UTF_8);
+
+                // 获取签名
+                String msgSignature = null;
+                // 获取时间戳
+                String timestamp =null;
+                // 获取随机串
+                String nonce = null;
+                try {
+                    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder db = dbf.newDocumentBuilder();
+                    StringReader sr = new StringReader(inputXML);
+                    InputSource is = new InputSource(sr);
+                    Document document = db.parse(is);
+
+                    Element root = document.getDocumentElement();
+                    inputXML = root.getElementsByTagName("Encrypt").item(0).getTextContent();
+                    timestamp = root.getElementsByTagName("TimeStamp").item(0).getTextContent();
+                    nonce = root.getElementsByTagName("Nonce").item(0).getTextContent();
+                    msgSignature = root.getElementsByTagName("MsgSignature").item(0).getTextContent();
+
+                } catch (Exception e) {
+                    throw new AesException(AesExceptionEnum.PARSE_XML_ERROR, e);
+                }
+
+                // 验证安全签名
+                String signature = SHA1.getSHA1(weChatProperties.getVerifyToken(), timestamp, nonce, inputXML);
+
+                // 和URL中的签名比较是否相等
+                if (!signature.equals(msgSignature)) {
+                    throw new AesException(AesExceptionEnum.VALIDATE_SIGNATURE_ERROR);
+                }
+                // 将解密后的数据，转换为byte数组，用于协议的具体处理
+                data = weChatMsgCodec.decrypt(inputXML).getBytes(StandardCharsets.UTF_8);
+            } catch (AesException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
         // jackson会自动关闭流，不需要手动关闭
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
         Reader reader = new InputStreamReader(inputStream);
         return xmlMapper.readValue(reader, clazz);
     }

@@ -23,7 +23,7 @@ public class UserManagerTest extends BaseTest {
     public UserManager userManager;
 
 
-    @Test
+   // @Test
     public void findAllTest() {
         Set<String> all = userManager.findAll();
         Assert.assertFalse("查询到的用户不应为空", CollectionUtils.isEmpty(all));

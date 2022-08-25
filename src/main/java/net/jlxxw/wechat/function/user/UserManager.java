@@ -123,7 +123,6 @@ public class UserManager {
                 param.put("openid", openId);
                 param.put("lang", languageEnum.getCode());
                 jsonArray.add(param);
-                countDownLatch.countDown();
             }
             requestParam.put("user_list", jsonArray);
 
@@ -138,12 +137,13 @@ public class UserManager {
 
             WeChatResponse response = resultData.toJavaObject(WeChatResponse.class);
             if (!response.isSuccessful()) {
+                tempList.forEach(x->countDownLatch.countDown());
                 throw new WeChatException(response);
             }
             JSONArray infoList = resultData.getJSONArray("user_info_list");
             List<SubscriptionResponse> subscriptionUsers = JSONArray.parseArray(JSON.toJSONString(infoList), SubscriptionResponse.class);
             result.addAll(subscriptionUsers);
-
+            tempList.forEach(x->countDownLatch.countDown());
         }), 100L);
 
         try {

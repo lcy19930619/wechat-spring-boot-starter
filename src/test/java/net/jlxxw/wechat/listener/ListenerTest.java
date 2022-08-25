@@ -8,7 +8,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.exception.AesException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.util.SHA1;
 import net.jlxxw.wechat.util.WechatMessageCrypt;
@@ -37,9 +36,6 @@ public class ListenerTest extends BaseTest {
     private RestTemplate restTemplate;
     @Value("${we-chat.netty.server.netty-port}")
     private int nettyPort;
-
-    @Autowired
-    private WeChatTokenManager weChatTokenManager;
 
     @Autowired
     private WeChatProperties weChatProperties;
