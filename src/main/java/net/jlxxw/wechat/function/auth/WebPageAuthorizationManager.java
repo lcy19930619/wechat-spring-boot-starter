@@ -70,7 +70,7 @@ public class WebPageAuthorizationManager {
      * @throws UnsupportedEncodingException URL编码失败
      */
     public String getAuthorizeUrl(@NotBlank(message = "重定向地址不能为空")
-    @Pattern(regexp = "/(http:\\/\\/|https:\\/\\/)((\\w|=|\\?|\\.|\\/|&|-)+)/g", message = "重定向地址必须是一个链接地址") String redirectUri,
+    @Pattern(regexp = "^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\\\/])+$", message = "重定向地址必须是一个链接地址") String redirectUri,
         @NotNull(message = "授权作用域不能为空") AuthScope scope,
         @Size(max = 128,message = "最大长度128字节") String state) throws ParamCheckException, UnsupportedEncodingException {
         String encode = URLEncoder.encode(redirectUri, StandardCharsets.UTF_8.toString());

@@ -19,7 +19,7 @@ public class WebPageAuthorizationManagerTest extends BaseTest {
     @Test
     public void getAuthorizeUrlTest(){
         try {
-            String url = webPageAuthorizationManager.getAuthorizeUrl("http://localhost:8080", AuthScope.BASE, null);
+            String url = webPageAuthorizationManager.getAuthorizeUrl("http://www.jlxxw.net", AuthScope.BASE, null);
             Assert.assertNotNull(url);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
