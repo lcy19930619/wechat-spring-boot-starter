@@ -7,6 +7,8 @@ import net.jlxxw.wechat.TestApplication;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -23,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestApplication.class)
 public class MockBaseTest {
+    private static final Logger logger = LoggerFactory.getLogger(MockBaseTest.class);
     @Autowired
     private WebApplicationContext applicationContext;
 
@@ -31,6 +34,7 @@ public class MockBaseTest {
     @Before
     public void init() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(applicationContext).build();
+        logger.info("init mockMvc");
     }
 
     protected String getJson(String classPathName) {
