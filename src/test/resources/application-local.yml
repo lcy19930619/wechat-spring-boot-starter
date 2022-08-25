@@ -19,7 +19,7 @@ we-chat:
       max-thread-size: 200
       netty-port: 19191
       queue-size: 200
-  enable-message-enc: false
+  enable-message-enc: true
   enable-default-token-manager: false
   enable-we-chat-call-back-server-security-check: false
   # 需要替换为真实数据
