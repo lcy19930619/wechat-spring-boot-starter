@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.function.api;
 
 import net.jlxxw.wechat.base.BaseTest;
-import net.jlxxw.wechat.response.api.ApiRequestRecord;
+import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.response.api.ApiResponse;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,12 +21,16 @@ public class OpenApiManagerTest extends BaseTest {
         Assert.assertNotNull("查询结果不应该为空",response);
     }
 
-    @Test
-    public void selectRidTest(){
-        ApiRequestRecord record = openApiManager.selectRid("62fb314d-734c58e8-057baab9");
-        System.out.println();
+    @Test(expected = ParamCheckException.class)
+    public void selectQuotaExceptionTest(){
+        openApiManager.selectQuota(null);
     }
 
 
+
+    @Test(expected = ParamCheckException.class)
+    public void selectRidExceptionTest(){
+        openApiManager.selectRid(null);
+    }
 
 }
