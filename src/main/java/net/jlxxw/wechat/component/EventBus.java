@@ -186,9 +186,15 @@ public class EventBus {
     public String dispatcher(HttpServletRequest request) {
         final Future<String> future = eventBusThreadPool.submit(() -> {
             // 从request中取得输入流
-            InputStream inputStream = request.getInputStream();
-            Reader reader = new InputStreamReader(inputStream);
-            return handlerWeiXinMessage(reader);
+            try (InputStream inputStream = request.getInputStream()){
+                int available = inputStream.available();
+                byte[] bytes = new byte[available];
+                inputStream.read(bytes, 0, available);
+                String uri = request.getRequestURI();
+                return dispatcher(bytes,uri);
+            }
+//            Reader reader = new InputStreamReader(inputStream);
+//            return handlerWeiXinMessage(reader);
         });
         try {
             return future.get(5, TimeUnit.SECONDS);
