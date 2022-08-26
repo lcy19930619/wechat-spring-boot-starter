@@ -1,7 +1,7 @@
 
 微信相关组件，还在不断完善中
 感谢 JetBrains 的对这个项目的认可
-项目地址：https://github.com/lcy19930619/wechat-spring-boot-starter
+项目地址：https://github.com/lcy19930619/wechat-spring-boot-starter  
 wiki地址: https://github.com/lcy19930619/wechat-spring-boot-starter/wiki
 
 # 为什么会有这个组件的出现？
