@@ -2,6 +2,8 @@ package net.jlxxw.wechat.dto.menu;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
+import net.jlxxw.wechat.aop.check.group.Inster;
 import net.jlxxw.wechat.enums.MenuTypeEnum;
 
 import java.util.List;
@@ -21,12 +23,14 @@ public class MenuDTO {
      *
      * @see MenuTypeEnum
      */
+    @NotNull(groups = Inster.class,message = "菜单的响应动作类型不能为空")
     private MenuTypeEnum type;
 
     /**
      * 必填
      * 菜单标题，不超过16个字节，子菜单不超过60个字节
      */
+    @NotNull(groups = Inster.class,message = "菜单标题不能为空")
     private String name;
 
     /**

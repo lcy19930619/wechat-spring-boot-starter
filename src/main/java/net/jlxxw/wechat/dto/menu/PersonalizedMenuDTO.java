@@ -2,10 +2,11 @@ package net.jlxxw.wechat.dto.menu;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import net.jlxxw.wechat.aop.check.group.Delete;
-import net.jlxxw.wechat.aop.check.group.Select;
-
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import net.jlxxw.wechat.aop.check.group.Delete;
+import net.jlxxw.wechat.aop.check.group.Inster;
+import net.jlxxw.wechat.aop.check.group.Select;
 
 /**
  * 个性化菜单
@@ -18,6 +19,7 @@ public class PersonalizedMenuDTO extends MenuDTO{
     /**
      * 菜单匹配规则
      */
+    @NotNull(groups = Inster.class,message = "菜单匹配规则不能为空")
     @JSONField(name = "matchrule")
     @JsonProperty("matchrule")
     private MatchRule matchRule;

@@ -2,18 +2,26 @@ package net.jlxxw.wechat.function.menu;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import java.text.MessageFormat;
+import javax.validation.constraints.NotBlank;
+import net.jlxxw.wechat.aop.check.group.Inster;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.PersonalizedMenuDTO;
+import net.jlxxw.wechat.exception.ParamCheckException;
+import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.MatchPersonalizedMenuResponse;
 import net.jlxxw.wechat.response.menu.PersonalizedMenuResponse;
-import net.jlxxw.wechat.util.WebClientUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
-import java.text.MessageFormat;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * <pre>
@@ -57,44 +65,67 @@ import java.text.MessageFormat;
  * 根据上述匹配规则，为了避免菜单生效时间的混淆，决定不予提供个性化菜单编辑API，开发者需要更新菜单时，需将完整配置重新发布一轮。
  * </pre>
  *
- * @deprecated 准备移除 async 入口，改成 feign 调用
  * @author chunyang.leng
  * @date 2021-12-20 3:35 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
  */
-@Deprecated
+@DependsOn("weChatTokenManager")
 @Component
-public class AsyncPersonalizedMenuManager {
-    @Autowired
-    private WebClientUtils webClientUtils;
+public class PersonalizedMenuManager {
     @Autowired
     private WeChatTokenManager weChatTokenManager;
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     /**
      * 创建个性化菜单
      *
      * @param personalizedMenuDTO 个性化菜单数据
      * @return 正确时的返回JSON数据包{"menuid":"208379533"}
-     * 错误时的返回码请见接口返回码说明。
+     * @throws ParamCheckException 参数检查不通过
+     * @throws WeChatException 微信服务端验证失败
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html#0">文档地址</a>
      */
-    public Mono<PersonalizedMenuResponse> createMenu(PersonalizedMenuDTO personalizedMenuDTO) {
+    public PersonalizedMenuResponse createMenu(@Validated(value = Inster.class) PersonalizedMenuDTO personalizedMenuDTO) throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.CREATE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
-        return webClientUtils.sendPostJSON(url, JSON.toJSONString(personalizedMenuDTO), PersonalizedMenuResponse.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(JSON.toJSONString(personalizedMenuDTO), headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+        String body = responseEntity.getBody();
+        PersonalizedMenuResponse response = JSONObject.parseObject(body, PersonalizedMenuResponse.class);
+        if (!response.isSuccessful()){
+            throw new WeChatException(response);
+        }
+        return response;
     }
 
     /**
      * 删除菜单数据
      *
      * @param menuId 要删除的个性化菜单条件id
-     * @return 正确时的返回JSON数据包 {"errcode":0,"errmsg":"ok"}，错误时的返回码请见接口返回码说明。
+     * @return 正确时的返回JSON数据包 {"errcode":0,"errmsg":"ok"}，
+     * @throws ParamCheckException 参数检查不通过
+     * @throws WeChatException 微信服务端验证失败
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
      */
-    public Mono<WeChatResponse> deleteMenu(String menuId) {
+    public WeChatResponse deleteMenu(@NotBlank(message = "菜单id不能为空") String menuId)throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.DELETE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("menuid", menuId);
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), WeChatResponse.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(jsonObject.toJSONString(), headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+        String body = responseEntity.getBody();
+        WeChatResponse response = JSONObject.parseObject(body, WeChatResponse.class);
+        if (!response.isSuccessful()){
+            throw new WeChatException(response);
+        }
+        return response;
     }
 
 
@@ -102,12 +133,24 @@ public class AsyncPersonalizedMenuManager {
      * 尝试匹配用户信息
      *
      * @param uid 可以是粉丝的OpenID，也可以是粉丝的微信号。
+     * @throws ParamCheckException 参数检查不通过
+     * @throws WeChatException 微信服务端验证失败
      * @return 菜单信息列表
      */
-    public Mono<MatchPersonalizedMenuResponse> tryMatch(String uid) {
+    public MatchPersonalizedMenuResponse tryMatch(@NotBlank(message = "uid不能为空") String uid)throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.TRY_MATCH_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("user_id", uid);
-        return webClientUtils.sendPostJSON(url, jsonObject.toJSONString(), MatchPersonalizedMenuResponse.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request = new HttpEntity<>(jsonObject.toJSONString(), headers);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
+        String body = responseEntity.getBody();
+        MatchPersonalizedMenuResponse response = JSONObject.parseObject(body, MatchPersonalizedMenuResponse.class);
+        if (!response.isSuccessful()){
+            throw new WeChatException(response);
+        }
+        return response;
     }
 }
