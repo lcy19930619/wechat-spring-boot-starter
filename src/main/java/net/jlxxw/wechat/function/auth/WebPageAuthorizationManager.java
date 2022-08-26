@@ -14,11 +14,13 @@ import net.jlxxw.wechat.dto.auth.AuthScope;
 import net.jlxxw.wechat.enums.LanguageEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.auth.AuthAccessTokenResponse;
 import net.jlxxw.wechat.response.auth.AuthUserInfoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -40,6 +42,7 @@ import org.springframework.web.client.RestTemplate;
  * @date 2022-08-18 2:42 PM
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html">接口文档</a>
  */
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class WebPageAuthorizationManager {
 

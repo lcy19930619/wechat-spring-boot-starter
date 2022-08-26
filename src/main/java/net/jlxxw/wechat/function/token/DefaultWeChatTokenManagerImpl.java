@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @DependsOn({"tokenMapper", "weChatProperties"})
 @ConditionalOnProperty(prefix = "we-chat", value = "enable-default-token-manager", havingValue = "true")
-@Component("weChatTokenManager")
+@Component(WeChatTokenManager.BEAN_NAME)
 public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
     private static final Logger logger = LoggerFactory.getLogger(DefaultWeChatTokenManagerImpl.class);
     @Autowired

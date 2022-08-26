@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,8 +29,7 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021-11-23 2:22 下午
  */
-@Lazy
-@DependsOn({"weChatProperties", "weChatTokenManager"})
+@DependsOn({ WeChatTokenManager.BEAN_NAME})
 @Component
 public class OpenApiManager {
     private static final Logger logger = LoggerFactory.getLogger(OpenApiManager.class);

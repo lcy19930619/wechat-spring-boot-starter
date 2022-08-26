@@ -5,7 +5,7 @@
 
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>1.0.2.20220822</version>
+    <version>1.0.2.20220826</version>
     <name>wechat-spring-boot-starter</name>
     <description>微信公众号快速开发组件</description>
     <url>https://github.com/lcy19930619/weixin-spring-boot-starter</url>
@@ -20,12 +20,12 @@
     <developers>
         <developer>
             <email>lcy19930619@163.com</email>
-            <name>chunyang.leng</name>
+            <name>冷春阳</name>
             <url>https://github.com/lcy19930619</url>
         </developer>
         <developer>
             <email>1127537753@qq.com</email>
-            <name>xiumei.zhan</name>
+            <name>战秀梅</name>
             <url>https://github.com/zhanxiumei</url>
         </developer>
     </developers>
@@ -47,6 +47,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-boot.version>2.6.2</spring-boot.version>
         <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <fastjson.version>1.2.83</fastjson.version>
+        <mybatis-spring-boot-starter.version>2.2.2</mybatis-spring-boot-starter.version>
+        <mysql-connector-java.version>8.0.28</mysql-connector-java.version>
+        <xercesImpl.version>2.11.0</xercesImpl.version>
+        <druid-spring-boot-starter.version>1.2.11</druid-spring-boot-starter.version>
+        <commons-io.version>2.7</commons-io.version>
+        <commons-lang.version>2.6</commons-lang.version>
+        <mockito-all.version>1.9.0</mockito-all.version>
     </properties>
 
     <dependencies>
@@ -75,13 +83,13 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
+            <version>${fastjson.version}</version>
         </dependency>
         <!--数据库连接池-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.2.11</version>
+            <version>${druid-spring-boot-starter.version}</version>
         </dependency>
         <!--数据库连接池-->
         <dependency>
@@ -97,14 +105,14 @@
         <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>2.2.2</version>
+            <version>${mybatis-spring-boot-starter.version}</version>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
-            <version>8.0.28</version>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -133,7 +141,7 @@
         <dependency>
             <groupId>xerces</groupId>
             <artifactId>xercesImpl</artifactId>
-            <version>2.11.0</version>
+            <version>${xercesImpl.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
@@ -174,12 +182,12 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.7</version>
+            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
+            <version>${commons-lang.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -194,7 +202,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
+            <version>${mockito-all.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

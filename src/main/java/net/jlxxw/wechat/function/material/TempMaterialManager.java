@@ -41,7 +41,7 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2022-08-12 3:33 PM
  */
-@DependsOn( "weChatTokenManager")
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class TempMaterialManager {
     private static final Logger logger = LoggerFactory.getLogger(TempMaterialManager.class);

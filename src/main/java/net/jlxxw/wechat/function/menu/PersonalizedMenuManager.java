@@ -69,7 +69,7 @@ import org.springframework.web.client.RestTemplate;
  * @date 2021-12-20 3:35 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
  */
-@DependsOn("weChatTokenManager")
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class PersonalizedMenuManager {
     @Autowired

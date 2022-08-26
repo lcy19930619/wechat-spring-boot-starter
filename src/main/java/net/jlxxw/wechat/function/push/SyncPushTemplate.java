@@ -17,7 +17,6 @@ import net.jlxxw.wechat.response.WeChatResponse;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,8 +30,7 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021/1/18 10:14 下午
  */
-@Lazy
-@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class SyncPushTemplate {
     @Autowired

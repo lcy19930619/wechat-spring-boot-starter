@@ -2,11 +2,14 @@ package net.jlxxw.wechat.function.pay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import java.util.List;
+import java.util.Objects;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.context.SpringContextHolder;
 import net.jlxxw.wechat.dto.pay.jsapi.v3.OrderInfoDTO;
 import net.jlxxw.wechat.event.CreatePrePayEvent;
 import net.jlxxw.wechat.exception.WeChatPayException;
+import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.properties.WeChatPayProperties;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.util.RSAUtils;
@@ -15,20 +18,19 @@ import net.jlxxw.wechat.vo.jsapi.v3.PayResultVO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @author chunyang.leng
  * @date 2021-04-10 8:01 下午
  */
-@Lazy
-@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class SyncWeiXinPay {
     private static final int SUCCESS_CODE = 200;

@@ -40,7 +40,7 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021/1/25 6:44 下午
  */
-@DependsOn({"weChatTokenManager"})
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class UserManager {
 

@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,8 +30,7 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021-03-05 5:52 下午
  */
-@Lazy
-@DependsOn({ "weChatTokenManager"})
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class QrcodeManager {
 

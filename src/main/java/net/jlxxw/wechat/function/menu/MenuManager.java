@@ -31,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021-12-13 2:04 下午
  */
-@DependsOn({"weChatTokenManager"})
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class MenuManager {
 

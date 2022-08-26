@@ -21,7 +21,7 @@ import java.text.MessageFormat;
  * @author chunyang.leng
  * @date 2022-08-12 5:25 PM
  */
-@DependsOn( "weChatTokenManager")
+@DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
 public class MaterialManager {
     @Autowired

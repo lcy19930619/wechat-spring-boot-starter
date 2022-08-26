@@ -7,7 +7,10 @@ import net.jlxxw.wechat.exception.WeChatException;
  * @date 2021/1/19 5:28 下午
  */
 public interface WeChatTokenManager {
-
+    /**
+     * bean 名称
+     */
+    String BEAN_NAME = "weChatTokenManager";
     /**
      * 保存token
      *
