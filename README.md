@@ -16,7 +16,7 @@ wiki地址: https://github.com/lcy19930619/wechat-spring-boot-starter/wiki
 <dependency>
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>1.0.2.20220822</version>
+    <version>${最新版本请查看仓库}</version>
 </dependency>
 ```
 
