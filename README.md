@@ -1,6 +1,6 @@
 
 微信相关组件，还在不断完善中
-感谢 JetBrains 的对这个项目的认可
+感谢 JetBrains 的对这个项目的认可  
 项目地址：https://github.com/lcy19930619/wechat-spring-boot-starter  
 wiki地址: https://github.com/lcy19930619/wechat-spring-boot-starter/wiki
 
@@ -199,7 +199,7 @@ public class MyStore implements WeChatSecurityIpStore {
   ```
 
 #### 微信模版推送
- ```java
+```java
   // 使用 net.jlxxw.component.function.push.PushCustomer进行推送
   
     @Autowired
@@ -589,9 +589,9 @@ server:
     
 ```
 #### 使用方法
-1、新建class
-2、继承 AbstractWeChatMessageListener
-3、添加 @Component注解  
+1、新建class  
+2、继承 AbstractWeChatMessageListener  
+3、添加 @Component注解    
 例如，接收用户传输的文字内容
 ```java
 
@@ -635,10 +635,10 @@ public class TextMessageListener extends AbstractWeChatMessageListener {
 
 
 ### 注册微信回调事件处理器（同消息处理器）
-1、新建class
-2、继承 AbstractWeChatEventListener
-3、添加 @Component注解
-例如：用户关注事件
+1、新建class  
+2、继承 AbstractWeChatEventListener  
+3、添加 @Component注解  
+例如：用户关注事件  
 ```java
 import net.jlxxw.wechat.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
