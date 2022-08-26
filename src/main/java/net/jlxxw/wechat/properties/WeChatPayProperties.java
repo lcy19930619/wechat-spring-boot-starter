@@ -22,6 +22,11 @@ public class WeChatPayProperties {
      */
     private String privateKey;
 
+    /**
+     * 商户号
+     */
+    private String mchId;
+
     public String getPublicKey() {
         return publicKey;
     }
@@ -36,5 +41,13 @@ public class WeChatPayProperties {
 
     public void setPrivateKey(String privateKey) {
         this.privateKey = privateKey;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
     }
 }

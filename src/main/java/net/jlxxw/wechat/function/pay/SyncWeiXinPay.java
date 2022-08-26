@@ -28,7 +28,7 @@ import java.util.Objects;
  * @date 2021-04-10 8:01 下午
  */
 @Lazy
-@DependsOn({"weChatProperties", "weiXinTokenManager", "webClientUtils"})
+@DependsOn({"weChatProperties", "weChatTokenManager", "webClientUtils"})
 @Component
 public class SyncWeiXinPay {
     private static final int SUCCESS_CODE = 200;
