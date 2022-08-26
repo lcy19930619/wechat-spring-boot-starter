@@ -34,4 +34,28 @@ public class WebPageAuthorizationManagerTest extends BaseTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test(expected = ParamCheckException.class)
+    public void getAuthorizeAccessTokenExceptionTest(){
+        webPageAuthorizationManager.getAuthorizeAccessToken(null);
+    }
+
+
+    @Test(expected = ParamCheckException.class)
+    public void refreshTokenExceptionTest(){
+        webPageAuthorizationManager.refreshToken(null);
+    }
+
+
+    @Test(expected = ParamCheckException.class)
+    public void getUserInfoExceptionTest(){
+        webPageAuthorizationManager.getUserInfo(null, null, null);
+    }
+
+
+
+    @Test(expected = ParamCheckException.class)
+    public void checkAccessTokenExceptionTest(){
+        webPageAuthorizationManager.checkAccessToken(null, null);
+    }
 }
