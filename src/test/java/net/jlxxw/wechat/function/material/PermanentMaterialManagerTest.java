@@ -25,10 +25,6 @@ public class PermanentMaterialManagerTest extends BaseTest {
     @Autowired
     private PermanentMaterialManager permanentMaterialManager;
 
-    @Test(expected = ParamCheckException.class)
-    public void uploadExceptionTest() {
-        permanentMaterialManager.upload(MaterialEnum.IMAGE, null,null,null);
-    }
 
     @Test
     public void uploadFileTest() {
@@ -57,6 +53,18 @@ public class PermanentMaterialManagerTest extends BaseTest {
         Assert.assertTrue("上传素材mediaId不应该为null", StringUtils.isNotBlank(mediaId));
     }
 
+
+    @Test(expected = ParamCheckException.class)
+    public void uploadExceptionTest1() {
+        permanentMaterialManager.upload(MaterialEnum.IMAGE, null,null,null);
+    }
+
+    @Test(expected = ParamCheckException.class)
+    public void uploadExceptionTest2() {
+        permanentMaterialManager.upload(null, null, null, null,null);
+    }
+
+
     private String upload() {
         ClassPathResource classPathResource = new ClassPathResource("./mock/data/png/img.png");
         PermanentMaterialResponse upload = null;
@@ -77,11 +85,22 @@ public class PermanentMaterialManagerTest extends BaseTest {
         Assert.assertNotNull("下载数据不应为空",download);
     }
 
+
+    @Test(expected = ParamCheckException.class)
+    public void downloadExceptionTest() {
+        permanentMaterialManager.download(null);
+    }
+
     @Test
     public void deleteTest(){
         String mediaId = upload();
         WeChatResponse weChatResponse = permanentMaterialManager.deleteMaterial(mediaId);
         Assert.assertTrue("删除应该成功",weChatResponse.isSuccessful());
+    }
+
+    @Test(expected = ParamCheckException.class)
+    public void deleteMaterialExceptionTest() {
+        permanentMaterialManager.deleteMaterial(null);
     }
 
 }
