@@ -170,7 +170,7 @@ public interface UrlConstant {
     /**
      * 获取公众号标签
      */
-    String GET_TAGS_URL = " https://api.weixin.qq.com/cgi-bin/tags/get?access_token={0}";
+    String GET_TAGS_URL = "https://api.weixin.qq.com/cgi-bin/tags/get?access_token={0}";
 
     /**
      * 更新标签
@@ -185,7 +185,7 @@ public interface UrlConstant {
     /**
      * 根据标签id，获取用户信息列表
      */
-    String GET_TAG_USERS_URL = " https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token={0}";
+    String GET_TAG_USERS_URL = "https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token={0}";
 
     /**
      * 用户批量打标
