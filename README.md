@@ -99,7 +99,6 @@ we-chat:
   encoding-aes-key: xxxx
   # 微信服务器认证时配置的token,https://developers.weixin.qq.com/doc/offiaccount/Basic_Information/Access_Overview.html
   verify-token: xxxxxxxxxxx
- 
   # 是否启用回调接口安全检查，如果启用，每3小时更新一次微信回调接口ip白名单
   enable-we-chat-call-back-server-security-check: true
   # 是否启用默认的token管理策略，如果使用自定义策略，需要实现 WeChatTokenManager 接口
@@ -114,6 +113,11 @@ we-chat:
       netty-port: 19191
       # netty 队列大小
       queue-size: 200
+  pay:
+    # 支付公钥
+    public-key: xxxxxxx
+    # 商户号
+    mch-id: xxxxx
 ```
 
 ### 微信回调安全认证
@@ -144,16 +148,16 @@ import org.springframework.stereotype.Component;
 public class MyStore implements WeChatSecurityIpStore {
         
     // todo 可以更换为redis / MySQL等非内存数据库，用于解决集群共享问题
-    private Set<String> ipStore = new HashSet<>();
+    private Set<String> ipRangeStore = new HashSet<>();
 
     /**
-     * 新增一个微信的服务器ip
+     * 新增一个微信的服务器ip段
      *
-     * @param ip 微信服务器ip
+     * @param ipRange 微信服务器ip段
      */
     @Override
-    public void addSecurityIp(String ip) {
-        ipStore.add(ip);
+    public void addSecurityIp(String ipRange) {
+        ipRangeStore.add(ip);
     }
 
     /**
@@ -164,17 +168,46 @@ public class MyStore implements WeChatSecurityIpStore {
      */
     @Override
     public boolean isSecurityIp(String ip) {
-        return ipStore.contains(ip);
+        boolean security = false;
+        for (String ipRange : ipRangeStore) {
+            if ( inRange(ip,ipRange) ){
+                return true;
+            }
+        }
+        return security;
     }
 
     /**
-     * 新增一组微信的服务器ip
+     * 新增一组微信的服务器ip段
      *
-     * @param ipList 微信服务器ip
+     * @param ipRangeList 微信服务器ip段
      */
     @Override
-    public void addSecurityIp(List<String> ipList) {
-        ipStore.addAll(ipList);
+    public void addSecurityIp(List<String> ipRangeList) {
+        ipRangeStore.addAll(ipList);
+    }
+
+    /**
+     * 判断ip是否在范围内
+     * @param ip 要检测的ip
+     * @param ipRange 要检测段ip段
+     * @return
+     */
+    public static boolean inRange(String ip, String ipRange) {
+        String[] ips = ip.split("\\.");
+        int ipAddr = (Integer.parseInt(ips[0]) << 24)
+            | (Integer.parseInt(ips[1]) << 16)
+            | (Integer.parseInt(ips[2]) << 8) | Integer.parseInt(ips[3]);
+        int type = Integer.parseInt(ipRange.replaceAll(".*/", ""));
+        int mask = 0xFFFFFFFF << (32 - type);
+        String cidrIp = ipRange.replaceAll("/.*", "");
+        String[] cidrIps = cidrIp.split("\\.");
+        int cidrIpAddr = (Integer.parseInt(cidrIps[0]) << 24)
+            | (Integer.parseInt(cidrIps[1]) << 16)
+            | (Integer.parseInt(cidrIps[2]) << 8)
+            | Integer.parseInt(cidrIps[3]);
+
+        return (ipAddr & mask) == (cidrIpAddr & mask);
     }
 }
 ```
