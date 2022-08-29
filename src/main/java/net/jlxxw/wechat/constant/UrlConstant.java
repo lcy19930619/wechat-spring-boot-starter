@@ -161,4 +161,44 @@ public interface UrlConstant {
      * 检查token是否有效
      */
     String CHECK_OAUTH2_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/auth?access_token={0}&openid={1}";
+
+    /**
+     * 创建公众号标签
+     */
+    String CREATE_TAGS_URL = "https://api.weixin.qq.com/cgi-bin/tags/create?access_token={0}";
+
+    /**
+     * 获取公众号标签
+     */
+    String GET_TAGS_URL = " https://api.weixin.qq.com/cgi-bin/tags/get?access_token={0}";
+
+    /**
+     * 更新标签
+     */
+    String UPDATE_TAGS_URL = "https://api.weixin.qq.com/cgi-bin/tags/update?access_token={0}";
+
+    /**
+     * 删除标签
+     */
+    String DELETE_TAGS_URL = "https://api.weixin.qq.com/cgi-bin/tags/delete?access_token={0}";
+
+    /**
+     * 根据标签id，获取用户信息列表
+     */
+    String GET_TAG_USERS_URL = " https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token={0}";
+
+    /**
+     * 用户批量打标
+     */
+    String USERS_BATCH_TAGGING_URL = "https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token={0}";
+
+    /**
+     * 用户批量取消打标
+     */
+    String USERS_BATCH_UNTAGGING_URL = "https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token={0}";
+
+    /**
+     * 获取用户身上的标签列表
+     */
+    String GET_USER_TAG_URL = "https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token={0}";
 }
