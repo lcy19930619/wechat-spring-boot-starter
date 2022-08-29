@@ -93,16 +93,20 @@ public class ParamCheckAOP {
                     validResult.addAll (valid(param, classList));
                     validatedSet = Arrays.asList(classList);
                 }else {
+                    // 支持 JSR 303 原生注解检查
                     try {
                         Class<? extends Annotation> annotationType = annotation.annotationType();
                         if (!enabledBuiltinConstraints.containsKey(annotationType)){
+                            // 不在 JSR 303 监测范围内的，跳出
                             continue;
                         }
                         Field groups = ReflectionUtils.findField(annotationType, "groups");
                         if (Objects.nonNull(groups)){
+                            // 支持分组检查
                             groups.setAccessible(true);
                             Class<?>[] groupArray = (Class<?>[])groups.get(annotation);
                             if (groupArray != null &&  !CollectionUtils.containsAny(validatedSet,Arrays.asList(groupArray))){
+                                // 不在组内的，跳出
                                 continue;
                             }
                         }
