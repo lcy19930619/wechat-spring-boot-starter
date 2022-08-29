@@ -41,7 +41,7 @@ public enum WeChatEventTypeEnum {
 
     /**
      * 事件类型：LOCATION(上报地理位置)
-     *
+     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Gets_a_users_location.html">文档地址</a>
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Receiving_event_pushes.html#%E4%B8%8A%E6%8A%A5%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E4%BA%8B%E4%BB%B6">文档地址</a>
      */
     LOCATION("LOCATION", "上报地理位置", LocationEventMessage.class),
