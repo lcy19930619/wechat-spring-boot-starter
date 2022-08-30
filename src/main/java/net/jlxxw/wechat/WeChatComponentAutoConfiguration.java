@@ -1,10 +1,6 @@
 package net.jlxxw.wechat;
 
-import io.netty.channel.ChannelOption;
-import io.netty.handler.timeout.ReadTimeoutHandler;
-import io.netty.handler.timeout.WriteTimeoutHandler;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import net.jlxxw.wechat.controller.WeChatMessageController;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.mapper.TokenMapper;
@@ -31,14 +27,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.ExchangeStrategies;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.TcpClient;
 
 /**
  * @author chunyang.leng
@@ -159,27 +150,5 @@ public class WeChatComponentAutoConfiguration {
     public WeChatServerSecurityCheck weChatServerSecurityCheck() {
         LoggerUtils.info(logger, "启用微信回调ip白名单管理器");
         return new WeChatServerSecurityCheck();
-    }
-
-
-    @Bean
-    @ConditionalOnMissingBean(WebClient.class)
-    public WebClient webClient() {
-        LoggerUtils.info(logger, "初始化WebClient");
-        TcpClient tcpClient = TcpClient
-                .create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
-                .doOnConnected(connection -> {
-                    connection.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS));
-                    connection.addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS));
-                });
-        return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
-                .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(configurer -> configurer.defaultCodecs()
-                                .maxInMemorySize(16 * 1024 * 1024)
-                        )
-                        .build())
-                .build();
     }
 }
