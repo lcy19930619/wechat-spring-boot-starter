@@ -1,6 +1,9 @@
 package net.jlxxw.wechat.security;
 
-import net.jlxxw.wechat.context.SpringContextHolder;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.annotation.PostConstruct;
 import net.jlxxw.wechat.schedul.ScheduledUpdateWeChatServerIp;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
@@ -8,11 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import javax.annotation.PostConstruct;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import org.springframework.context.ApplicationContext;
 
 /**
  * 微信服务器安全检查，（ip白名单的过滤）
@@ -29,12 +28,12 @@ public class WeChatServerSecurityCheck {
     private WeChatSecurityIpStore weChatSecurityIpStore = null;
 
     @Autowired
-    private SpringContextHolder springContextHolder;
+    private ApplicationContext applicationContext;
 
     @PostConstruct
     private void init() {
         try {
-            weChatSecurityIpStore = springContextHolder.getBean(WeChatSecurityIpStore.class);
+            weChatSecurityIpStore = applicationContext.getBean(WeChatSecurityIpStore.class);
             Class clazz = weChatSecurityIpStore.getClass();
             if (AopUtils.isAopProxy(weChatSecurityIpStore)) {
                 clazz = AopUtils.getTargetClass(weChatSecurityIpStore);

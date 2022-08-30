@@ -65,7 +65,7 @@ public class OpenApiManager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);
         String url = MessageFormat.format(UrlConstant.OPEN_API_CLEAN, token);
-
+        LoggerUtils.debug(logger, "清空每日调用接口次数url:{}", url);
         String json = jsonObject.toJSONString();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -105,6 +105,8 @@ public class OpenApiManager {
         jsonObject.put("cgi_path", cgiPath);
 
         String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_QUOTA, token);
+        LoggerUtils.debug(logger, "查询每日调用接口次数url:{}", url);
+
         String json = jsonObject.toJSONString();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -141,8 +143,9 @@ public class OpenApiManager {
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("rid", rid);
-
         String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_RID, token);
+        LoggerUtils.debug(logger, "查询rid:{},url:{}", rid,url);
+
         String json = jsonObject.toJSONString();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

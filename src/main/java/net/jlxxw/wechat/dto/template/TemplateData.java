@@ -5,9 +5,9 @@ import net.jlxxw.wechat.enums.Color;
 import java.util.Objects;
 
 /**
- * @author DJL
- * @ClassName: TemplateData
- * @Description: 模板数据
+ * 模板数据
+ * @author chunyang.leng
+ * @date 2021/1/18 9:45 下午
  */
 public class TemplateData {
 

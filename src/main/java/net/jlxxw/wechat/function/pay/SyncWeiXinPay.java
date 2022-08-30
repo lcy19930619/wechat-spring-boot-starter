@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.List;
 import java.util.Objects;
 import net.jlxxw.wechat.constant.UrlConstant;
-import net.jlxxw.wechat.context.SpringContextHolder;
 import net.jlxxw.wechat.dto.pay.jsapi.v3.OrderInfoDTO;
 import net.jlxxw.wechat.event.CreatePrePayEvent;
 import net.jlxxw.wechat.exception.WeChatPayException;
@@ -17,6 +16,7 @@ import net.jlxxw.wechat.vo.jsapi.v3.ExecutePayVO;
 import net.jlxxw.wechat.vo.jsapi.v3.PayResultVO;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -43,7 +43,7 @@ public class SyncWeiXinPay {
     @Autowired
     private WeChatPayProperties weChatPayProperties;
     @Autowired
-    private SpringContextHolder springContextHolder;
+    private ApplicationContext applicationContext;
 
     /**
      * 创建预支付订单
@@ -81,7 +81,7 @@ public class SyncWeiXinPay {
         vo.setRequestId(strings.get(0));
 
         // 发布一个预支付事件
-        springContextHolder.publishEvent(new CreatePrePayEvent(vo));
+        applicationContext.publishEvent(new CreatePrePayEvent(vo));
         return vo;
     }
 

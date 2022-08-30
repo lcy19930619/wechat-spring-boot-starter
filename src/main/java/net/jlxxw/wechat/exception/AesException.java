@@ -9,7 +9,6 @@ import java.util.Objects;
  *
  * @author lcy
  */
-@SuppressWarnings("serial")
 public class AesException extends Exception {
 
     /**

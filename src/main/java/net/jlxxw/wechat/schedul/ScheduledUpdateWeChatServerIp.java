@@ -45,7 +45,7 @@ public class ScheduledUpdateWeChatServerIp {
             return;
         }
         if (weChatTokenManager == null) {
-            throw new BeanCreationException("检查微信白名单时，必须配置WeiXinTokenManager的实现类，或配置weixin.enable-default-token-manager: true");
+            throw new BeanCreationException("检查微信白名单时，必须配置WeiXinTokenManager的实现类，或配置we-chat.enable-default-token-manager: true");
         }
         String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
         String forObject = restTemplate.getForObject(UrlConstant.WECHAT_CALL_BACK_SERVER_IP_PREFIX + tokenFromLocal, String.class);
