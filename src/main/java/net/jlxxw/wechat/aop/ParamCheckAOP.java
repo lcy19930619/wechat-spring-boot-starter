@@ -62,7 +62,7 @@ public class ParamCheckAOP {
     }
 
 
-    @Pointcut("@within(org.springframework.cloud.openfeign.FeignClient) || execution(public * net.jlxxw.wechat.function.*.*.*(..))")
+    @Pointcut("execution(public * net.jlxxw.wechat.function.*.*.*(..))")
     public void pointcut() {
     }
 

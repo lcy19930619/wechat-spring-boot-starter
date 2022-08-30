@@ -1,8 +1,10 @@
 package net.jlxxw.wechat.function.token;
 
+import com.alibaba.fastjson.JSONObject;
+import java.text.MessageFormat;
 import javax.annotation.PostConstruct;
+import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.feign.WechatFeignClient;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.token.WeChatTokenResponse;
@@ -12,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * @author chunyang.leng
@@ -28,7 +32,7 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
     @Autowired
     private TokenMapper tokenMapper;
     @Autowired
-    private WechatFeignClient wechatFeignClient;
+    private RestTemplate restTemplate;
 
     @PostConstruct
     public void postConstruct() {
@@ -57,11 +61,17 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
      */
     @Override
     public String getTokenFromWeiXin() throws WeChatException {
-        WeChatTokenResponse tokenResponse = wechatFeignClient.getToken(weChatProperties.getAppId(), weChatProperties.getSecret());
-        if (tokenResponse.isSuccessful()) {
-            return tokenResponse.getAccessToken();
+
+        String url = MessageFormat.format(UrlConstant.TOKEN_URL,weChatProperties.getAppId(),weChatProperties.getSecret());
+        String response = restTemplate.getForObject(url, String.class);
+
+        WeChatTokenResponse weChatTokenResponse = JSONObject.parseObject(response, WeChatTokenResponse.class);
+
+        if(!weChatTokenResponse.isSuccessful()){
+            throw new WeChatException(weChatTokenResponse);
         }
-        throw new WeChatException(tokenResponse.getErrcode(), tokenResponse.getErrmsg());
+        return weChatTokenResponse.getAccessToken();
+
     }
 
     /**
@@ -93,11 +103,15 @@ public class DefaultWeChatTokenManagerImpl implements WeChatTokenManager {
      */
     @Override
     public String getJsApiTicketFromWeiXin() throws WeChatException {
-        WeChatTokenResponse tokenResponse = wechatFeignClient.getTicket(getTokenFromLocal());
-        if (tokenResponse.isSuccessful()) {
-            return tokenResponse.getTicket();
+
+        String url = MessageFormat.format(UrlConstant.GET_JS_API_TICKET_URL, getTokenFromLocal());
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        String body = response.getBody();
+        WeChatTokenResponse weChatTokenResponse = JSONObject.parseObject(body, WeChatTokenResponse.class);
+        if (!weChatTokenResponse.isSuccessful()) {
+            throw new WeChatException(weChatTokenResponse);
         }
-        throw new WeChatException(tokenResponse.getErrcode(), tokenResponse.getErrmsg());
+        return weChatTokenResponse.getTicket();
     }
 
     /**
