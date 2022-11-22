@@ -53,9 +53,9 @@ public class QrcodeManager {
                                                       @Max(value = 2592000,message = "最大有效值不能超过2592000秒(30天)，超过会自动转换为2592000")
                                                       @Min(value = 60,message = "最小有效值为60，小于60会自动转换为60") Long expireSecond) throws WeChatException,ParamCheckException{
         String token = weChatTokenManager.getTokenFromLocal();
-        String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
+        String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
-        object.put("action_name", "QR_SCENE");
+        object.put("action_name", "QR_STR_SCENE");
         object.put("expire_seconds", expireSecond);
 
         JSONObject scene = new JSONObject();
@@ -92,7 +92,7 @@ public class QrcodeManager {
                                                  @Max(value = 2592000,message = "最大有效值不能超过2592000秒(30天)，超过会自动转换为2592000")
                                                  @Min(value = 60,message = "最小有效值为60，小于60会自动转换为60") Long expireSecond) throws WeChatException,ParamCheckException {
         String token = weChatTokenManager.getTokenFromLocal();
-        String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
+        String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_SCENE");
         object.put("expire_seconds", expireSecond);
@@ -128,9 +128,9 @@ public class QrcodeManager {
      */
     public QrCodeResponse createStringQrcode(@NotBlank(message = "自定义的eventKey，不应该为空") String eventKey) throws WeChatException,ParamCheckException{
         String token = weChatTokenManager.getTokenFromLocal();
-        String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
+        String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
-        object.put("action_name", "QR_SCENE");
+        object.put("action_name", "QR_LIMIT_STR_SCENE");
         JSONObject scene = new JSONObject();
         scene.put("scene_str", eventKey);
         JSONObject actionInfo = new JSONObject();
@@ -163,9 +163,9 @@ public class QrcodeManager {
      */
     public QrCodeResponse createIdQrcode(@NotNull(message = "二维码id不能为空") Long id) throws WeChatException, ParamCheckException {
         String token = weChatTokenManager.getTokenFromLocal();
-        String url = MessageFormat.format(UrlConstant.CREATE_TEMP_QRCODE_URL, token);
+        String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
-        object.put("action_name", "QR_SCENE");
+        object.put("action_name", "QR_LIMIT_SCENE");
         JSONObject scene = new JSONObject();
         scene.put("scene_id", id);
         JSONObject actionInfo = new JSONObject();
