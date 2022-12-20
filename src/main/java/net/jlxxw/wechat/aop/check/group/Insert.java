@@ -5,5 +5,5 @@ package net.jlxxw.wechat.aop.check.group;
  * @author chunyang.leng
  * @date 2022-04-15 2:06 PM
  */
-public interface Inster {
+public interface Insert {
 }

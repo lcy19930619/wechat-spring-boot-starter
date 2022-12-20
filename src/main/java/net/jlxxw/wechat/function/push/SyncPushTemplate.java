@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import net.jlxxw.wechat.aop.check.group.Inster;
+import net.jlxxw.wechat.aop.check.group.Insert;
 import net.jlxxw.wechat.component.BatchExecutor;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.template.WeChatTemplateDTO;
@@ -14,7 +14,6 @@ import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.WeChatResponse;
-import org.apache.ibatis.annotations.Insert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
@@ -49,7 +48,7 @@ public class SyncPushTemplate {
      * @throws WeChatException 微信服务端异常
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html">接口文档</a>
      */
-    public WeChatResponse pushTemplate(@Validated(Inster.class) WeChatTemplateDTO template) throws ParamCheckException,WeChatException {
+    public WeChatResponse pushTemplate(@Validated(Insert.class) WeChatTemplateDTO template) throws ParamCheckException,WeChatException {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String json = JSON.toJSONString(template);
@@ -72,7 +71,7 @@ public class SyncPushTemplate {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html">接口文档</a>
      * @throws ParamCheckException 参数检查不通过
      */
-    public List<WeChatResponse> pushTemplate(@Validated(Insert.class) List<WeChatTemplateDTO> templateList) throws ParamCheckException {
+    public List<WeChatResponse> pushTemplate(@Validated(org.apache.ibatis.annotations.Insert.class) List<WeChatTemplateDTO> templateList) throws ParamCheckException {
         if (CollectionUtils.isEmpty(templateList)) {
             return new ArrayList<>();
         }

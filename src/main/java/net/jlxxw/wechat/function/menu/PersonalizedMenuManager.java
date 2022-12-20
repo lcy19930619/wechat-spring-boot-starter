@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import java.text.MessageFormat;
 import javax.validation.constraints.NotBlank;
-import net.jlxxw.wechat.aop.check.group.Inster;
+import net.jlxxw.wechat.aop.check.group.Insert;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.PersonalizedMenuDTO;
 import net.jlxxw.wechat.exception.ParamCheckException;
@@ -87,7 +87,7 @@ public class PersonalizedMenuManager {
      * @throws WeChatException 微信服务端验证失败
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html#0">文档地址</a>
      */
-    public PersonalizedMenuResponse createMenu(@Validated(value = Inster.class) PersonalizedMenuDTO personalizedMenuDTO) throws WeChatException, ParamCheckException {
+    public PersonalizedMenuResponse createMenu(@Validated(value = Insert.class) PersonalizedMenuDTO personalizedMenuDTO) throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.CREATE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
 
         HttpHeaders headers = new HttpHeaders();
