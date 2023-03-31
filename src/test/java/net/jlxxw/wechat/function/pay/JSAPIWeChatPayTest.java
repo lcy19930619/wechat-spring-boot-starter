@@ -19,7 +19,7 @@ import org.springframework.util.StringUtils;
 /**
  * @author zhanxiumei
  */
-public class SyncWeiXinPayTest extends BaseTest {
+public class JSAPIWeChatPayTest extends BaseTest {
 
     @Autowired
     private WeChatProperties weChatProperties;
@@ -27,7 +27,7 @@ public class SyncWeiXinPayTest extends BaseTest {
     @Autowired
     private WeChatPayProperties weChatPayProperties;
     @Autowired
-    private SyncWeiXinPay syncWeiXinPay;
+    private JSAPIWeChatPay JSAPIWeChatPay;
 
     private static final String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.77 Safari/537.36";
 
@@ -58,7 +58,7 @@ public class SyncWeiXinPayTest extends BaseTest {
         orderInfoDTO.setSubAppId("");
         orderInfoDTO.setTimeExpire(LocalDate.now().plusDays(1).format(DateTimeFormatter.BASIC_ISO_DATE));
         orderInfoDTO.setSubMchId("");
-        syncWeiXinPay.createPrePay(orderInfoDTO, userAgent);
+        JSAPIWeChatPay.createPrePay(orderInfoDTO, userAgent);
 
         Assert.assertFalse(ObjectUtils.isEmpty(orderInfoDTO));
 
@@ -68,7 +68,7 @@ public class SyncWeiXinPayTest extends BaseTest {
     @Test
     public void getExecutePayVOTest() throws Exception {
         String prePayId = "";
-        syncWeiXinPay.getExecutePayVO(prePayId);
+        JSAPIWeChatPay.getExecutePayVO(prePayId);
         Assert.assertFalse(StringUtils.isEmpty(prePayId));
     }
 }

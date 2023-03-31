@@ -4,11 +4,24 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 /**
  * 订单信息
- *
+ * @see <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_1.shtml">实体类信息</a>
  * @author chunyang.leng
  * @date 2021-04-08 3:35 下午
  */
 public class OrderInfoDTO {
+    /**
+     * 由微信生成的应用ID，全局唯一。请求基础下单接口时请注意APPID的应用属性，例如公众号场景下，需使用应用属性为公众号的服务号APPID
+     * 示例值：wxd678efh567hg6787
+     *
+     */
+    @JSONField(name = "appid")
+    private String appId;
+    /**
+     * 直连商户的商户号，由微信支付生成并下发。
+     * 示例值：1230000109
+     */
+    @JSONField(name = "mchid")
+    private String mchId;
     /**
      * 服务商应用ID
      * 服务商申请的公众号appid。
@@ -243,5 +256,21 @@ public class OrderInfoDTO {
 
     public void setPayerDTO(PayerDTO payerDTO) {
         this.payerDTO = payerDTO;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getMchId() {
+        return mchId;
+    }
+
+    public void setMchId(String mchId) {
+        this.mchId = mchId;
     }
 }

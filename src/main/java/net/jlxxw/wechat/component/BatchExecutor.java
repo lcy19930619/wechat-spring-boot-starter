@@ -25,7 +25,7 @@ public class BatchExecutor {
     private static final long DEFAULT_LIMIT = 500;
     @Autowired
     @Qualifier("batchExecuteThreadPool")
-    private ThreadPoolTaskExecutor batchExecuteThreadPool;
+    public ThreadPoolTaskExecutor batchExecuteThreadPool;
 
     /**
      * 批量执行，每次执行512条数据，不使用线程池

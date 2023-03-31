@@ -2,8 +2,10 @@ package net.jlxxw.wechat.function.pay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.constraints.NotBlank;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.pay.jsapi.v3.OrderInfoDTO;
 import net.jlxxw.wechat.event.CreatePrePayEvent;
@@ -11,6 +13,7 @@ import net.jlxxw.wechat.exception.WeChatPayException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.properties.WeChatPayProperties;
 import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.response.pay.jsapi.v3.OrderResponse;
 import net.jlxxw.wechat.util.RSAUtils;
 import net.jlxxw.wechat.vo.jsapi.v3.ExecutePayVO;
 import net.jlxxw.wechat.vo.jsapi.v3.PayResultVO;
@@ -32,7 +35,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @DependsOn(WeChatTokenManager.BEAN_NAME)
 @Component
-public class SyncWeiXinPay {
+public class JSAPIWeChatPay {
     private static final int SUCCESS_CODE = 200;
     private static final String STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -47,6 +50,7 @@ public class SyncWeiXinPay {
 
     /**
      * 创建预支付订单
+     * @see <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_1.shtml">文档地址</a>
      *
      * @param orderInfoDTO 订单信息
      * @param userAgent    微信要求发起请求的客户端在每一次请求中都使用HTTP头  User-Agent来标示自己，微信支付API v3很可能会拒绝处理无User-Agent 的请求。
@@ -86,12 +90,13 @@ public class SyncWeiXinPay {
     }
 
     /**
-     * 调起支付
+     * 调起支付，后台给前端计算签名
+     * @see <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_4.shtml">文档地址</a>
      *
      * @param prePayId 预支付交易会话标识
      * @return 返回给前端，用于调起支付的对象
      * @throws Exception 签名异常
-     * @see SyncWeiXinPay#createPrePay(OrderInfoDTO, java.lang.String)
+     * @see JSAPIWeChatPay#createPrePay(OrderInfoDTO, java.lang.String)
      */
     public ExecutePayVO getExecutePayVO(String prePayId) throws Exception {
         String appId = weChatProperties.getAppId();
@@ -113,4 +118,33 @@ public class SyncWeiXinPay {
         vo.setPrepayId(prePayId);
         return vo;
     }
+
+    /**
+     * 根据交易订单号，查询一笔订单的详细信息
+     *
+     * @param transactionId 交易订单号
+     * @return 订单详细信息
+     * @see <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_2.shtml">接口文档</a>
+     */
+    public OrderResponse selectByTransactionId(@NotBlank(message = "交易订单id不应为空") String transactionId) {
+        String mchId = weChatPayProperties.getMchId();
+        String url = MessageFormat.format(UrlConstant.JSAPI_V3_SELECT_BY_TRANSACTION_ID, transactionId, mchId);
+        ResponseEntity<OrderResponse> entity = restTemplate.getForEntity(url, OrderResponse.class);
+        return entity.getBody();
+    }
+
+    /**
+     * 根据商户订单号，查询一笔订单的详细信息
+     *
+     * @param outTradeNo 商户订单号
+     * @return 订单详细信息
+     * @see <a href="https://pay.weixin.qq.com/wiki/doc/apiv3/apis/chapter3_1_2.shtml">接口文档</a>
+     */
+    public OrderResponse selectByOutTradeNo(@NotBlank(message = "商户订单号不应为空") String outTradeNo) {
+        String mchId = weChatPayProperties.getMchId();
+        String url = MessageFormat.format(UrlConstant.JSAPI_V3_SELECT_BY_OUT_TRADE_NO, outTradeNo);
+        ResponseEntity<OrderResponse> entity = restTemplate.getForEntity(url, OrderResponse.class);
+        return entity.getBody();
+    }
+
 }

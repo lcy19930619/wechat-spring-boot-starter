@@ -83,6 +83,17 @@ public interface UrlConstant {
     String JSAPI_V3_PRE_PAY_URL = "https://api.mch.weixin.qq.com/v3/pay/transactions/jsapi";
 
     /**
+     * 微信支付订单号查询
+     */
+    String JSAPI_V3_SELECT_BY_TRANSACTION_ID = "https://api.mch.weixin.qq.com/v3/pay/transactions/id/{0}?mchid={1}";
+
+    /**
+     * 商户订单号查询
+     */
+    String JSAPI_V3_SELECT_BY_OUT_TRADE_NO = "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{0}";
+
+
+    /**
      * 创建临时二维码url
      */
     String CREATE_QRCODE_URL = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token={0}";

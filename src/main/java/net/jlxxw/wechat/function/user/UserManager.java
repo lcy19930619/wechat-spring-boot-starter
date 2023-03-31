@@ -46,11 +46,11 @@ public class UserManager {
 
     private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
     @Autowired
-    private RestTemplate restTemplate;
+    public RestTemplate restTemplate;
     @Autowired
-    private WeChatTokenManager weChatTokenManager;
+    public WeChatTokenManager weChatTokenManager;
     @Autowired
-    private BatchExecutor batchExecutor;
+    public BatchExecutor batchExecutor;
 
     /**
      * 获取全部用户的openId
