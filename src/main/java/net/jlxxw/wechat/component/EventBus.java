@@ -22,6 +22,7 @@ import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
@@ -187,9 +188,7 @@ public class EventBus {
         final Future<String> future = eventBusThreadPool.submit(() -> {
             // 从request中取得输入流
             try (InputStream inputStream = request.getInputStream()){
-                int available = inputStream.available();
-                byte[] bytes = new byte[available];
-                inputStream.read(bytes, 0, available);
+                byte[] bytes = IOUtils.toByteArray(inputStream);
                 String uri = request.getRequestURI();
                 return dispatcher(bytes,uri);
             }
