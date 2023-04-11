@@ -24,3 +24,7 @@ we-chat:
   enable-we-chat-call-back-server-security-check: false
   # 需要替换为真实数据
   encoding-aes-key: 9hFP1tCoPIRB8rFk4ukaYn6bw1Gbxs53yIGVplNsxxx
+  aibot:
+    appid: QRDLyEcKEJn45RH
+    token: M5lHrkl5MA9V1NmM5MGtniUwYiaXkD
+    encoding-aes-key: UVI7Yp4vMlIEgo6KXtEsIg4d4lieNzKQgclUKqGJucH

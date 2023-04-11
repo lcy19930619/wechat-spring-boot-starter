@@ -113,11 +113,6 @@ we-chat:
       netty-port: 19191
       # netty 队列大小
       queue-size: 200
-  pay:
-    # 支付公钥
-    public-key: xxxxxxx
-    # 商户号
-    mch-id: xxxxx
 ```
 
 ### 微信回调安全认证
