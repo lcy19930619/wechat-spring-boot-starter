@@ -2,6 +2,7 @@ package net.jlxxw.wechat.function.ai;
 
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.enums.AiBotEnvEnum;
+import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.response.ai.ChatResponse;
 import net.jlxxw.wechat.response.ai.WeChatAiBotSignatureResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -29,4 +30,22 @@ public class AiBotFunctionTest extends BaseTest {
         String answer = chatResponse.getAnswer();
         Assert.assertTrue("ai 应答结果数据不应该为空", StringUtils.isNotBlank(answer));
     }
+
+
+    @Test(expected = ParamCheckException.class)
+    public void signatureExceptionTest1(){
+        aiBotFunction.signature(null);
+    }
+
+
+    @Test(expected = ParamCheckException.class)
+    public void signatureExceptionTest2(){
+        aiBotFunction.chat(null,"11",null,null,null);
+    }
+
+    @Test(expected = ParamCheckException.class)
+    public void signatureExceptionTest3(){
+        aiBotFunction.chat("11",null,null,null,null);
+    }
+
 }
