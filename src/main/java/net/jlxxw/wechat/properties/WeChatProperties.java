@@ -52,6 +52,17 @@ public class WeChatProperties {
      */
     private boolean enableWeChatCallBackServerSecurityCheck = true;
 
+    /**
+     * 验证微信 token 的URL
+     */
+    private String verifyTokenUrl="verifyToken";
+
+    /**
+     * 未使用 netty 的情况下
+     * web 控制器的url
+     */
+    private String coreControllerUrl="weChat";
+
     public String getAppId() {
         return appId;
     }
@@ -114,5 +125,21 @@ public class WeChatProperties {
 
     public void setEnableMessageEnc(boolean enableMessageEnc) {
         this.enableMessageEnc = enableMessageEnc;
+    }
+
+    public String getVerifyTokenUrl() {
+        return verifyTokenUrl;
+    }
+
+    public void setVerifyTokenUrl(String verifyTokenUrl) {
+        this.verifyTokenUrl = verifyTokenUrl;
+    }
+
+    public String getCoreControllerUrl() {
+        return coreControllerUrl;
+    }
+
+    public void setCoreControllerUrl(String coreControllerUrl) {
+        this.coreControllerUrl = coreControllerUrl;
     }
 }

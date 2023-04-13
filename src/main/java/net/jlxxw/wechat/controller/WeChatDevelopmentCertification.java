@@ -22,7 +22,7 @@ import java.util.Arrays;
  * @date 2021/1/26 12:56 下午
  */
 @RestController
-@RequestMapping("/")
+@RequestMapping
 public class WeChatDevelopmentCertification {
     private static final Logger logger = LoggerFactory.getLogger(WeChatDevelopmentCertification.class);
 
@@ -36,7 +36,7 @@ public class WeChatDevelopmentCertification {
      * @return 返回给微信的信息
      * @throws NoSuchAlgorithmException 编解码失败
      */
-    @GetMapping("verifyToken")
+    @GetMapping("${we-chat.verify-token-url:verifyToken}")
     public String verifyToken(HttpServletRequest request) throws NoSuchAlgorithmException {
         String msgSignature = request.getParameter("signature");
         String msgTimestamp = request.getParameter("timestamp");

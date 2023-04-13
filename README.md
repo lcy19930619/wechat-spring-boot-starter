@@ -113,6 +113,18 @@ we-chat:
       netty-port: 19191
       # netty 队列大小
       queue-size: 200
+  # 腾讯的 ai 聊天机器人
+  aibot:
+    # 机器人id
+    appid: QRDLyEcKEJn45RH
+    # 机器人token 
+    token: M5lHrkl5MA9V1NmM5MGtniUwYiaXkD
+    # 机器人的加解密密钥，todo 暂未发现在哪里需要使用
+    encoding-aes-key: UVI7Yp4vMlIEgo6KXtEsIg4d4lieNzKQgclUKqGJucH
+  # 在 we-chat.netty.server.enable-netty = false 的情况下，可以使用此参数控制微信回调的http url地址,默认值 weChat
+  core-controller-url: sss
+  # 在 we-chat.netty.server.enable-netty = false 的情况下，可以使用此参数控制微信回调的http url地址,默认值 verifyToken
+  verify-token-url: aaa
 ```
 
 ### 微信回调安全认证

@@ -44,7 +44,7 @@ public class WeChatMessageController {
      * @param response 用于向微信写入应答数据信息
      * @throws Exception
      */
-    @RequestMapping("weChat")
+    @RequestMapping("${we-chat.core-controller-url:weChat}")
     public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (weChatProperties.isEnableWeChatCallBackServerSecurityCheck() && weChatServerSecurityCheck != null) {
             // 开启微信回调ip安全检查时执行

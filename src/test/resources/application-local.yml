@@ -15,7 +15,7 @@ we-chat:
   verify-token: mytoken123456
   netty:
     server:
-      enable-netty: true
+      enable-netty: false
       max-thread-size: 200
       netty-port: 19191
       queue-size: 200
@@ -28,3 +28,5 @@ we-chat:
     appid: QRDLyEcKEJn45RH
     token: M5lHrkl5MA9V1NmM5MGtniUwYiaXkD
     encoding-aes-key: UVI7Yp4vMlIEgo6KXtEsIg4d4lieNzKQgclUKqGJucH
+  core-controller-url: sss
+  verify-token-url: aaa
