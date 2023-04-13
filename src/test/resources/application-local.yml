@@ -15,7 +15,7 @@ we-chat:
   verify-token: mytoken123456
   netty:
     server:
-      enable-netty: false
+      enable-netty: true
       max-thread-size: 200
       netty-port: 19191
       queue-size: 200
