@@ -190,7 +190,8 @@ public class EventBus {
             try (InputStream inputStream = request.getInputStream()){
                 byte[] bytes = IOUtils.toByteArray(inputStream);
                 String uri = request.getRequestURI();
-                return dispatcher(bytes,uri);
+                String string = request.getQueryString();
+                return dispatcher(bytes,uri+"?"+string);
             }
 //            Reader reader = new InputStreamReader(inputStream);
 //            return handlerWeiXinMessage(reader);
