@@ -3,7 +3,6 @@ package net.jlxxw.wechat.schedul;
 import java.time.LocalDateTime;
 import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
-import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +19,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 @ConditionalOnProperty(prefix = "we-chat", name = "enable-default-token-manager", havingValue = "true")
 public class ScheduledUpdateToken {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateToken.class);
-    private TokenMapper tokenMapper;
-    private WeChatTokenManager weChatTokenManager;
+    private final WeChatTokenManager weChatTokenManager;
 
-    public ScheduledUpdateToken(TokenMapper tokenMapper, WeChatTokenManager weChatTokenManager) {
-        this.tokenMapper = tokenMapper;
+    public ScheduledUpdateToken( WeChatTokenManager weChatTokenManager) {
         this.weChatTokenManager = weChatTokenManager;
     }
 

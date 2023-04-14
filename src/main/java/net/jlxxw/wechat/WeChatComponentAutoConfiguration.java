@@ -128,10 +128,9 @@ public class WeChatComponentAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = "we-chat", name = "enable-default-token-manager", havingValue = "true")
-    public ScheduledUpdateToken weiXinTokenManager(TokenMapper tokenMapper,
-                                                   WeChatTokenManager weChatTokenManager) {
+    public ScheduledUpdateToken weiXinTokenManager(WeChatTokenManager weChatTokenManager) {
         LoggerUtils.info(logger, "初始化默认token管理器");
-        return new ScheduledUpdateToken(tokenMapper, weChatTokenManager);
+        return new ScheduledUpdateToken( weChatTokenManager);
     }
 
     @Bean
