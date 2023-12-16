@@ -2,10 +2,10 @@ package net.jlxxw.wechat.dto.template;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.aop.check.group.Insert;
 import net.jlxxw.wechat.enums.Color;
 
-import javax.validation.constraints.NotBlank;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

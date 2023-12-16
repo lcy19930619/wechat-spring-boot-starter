@@ -5,7 +5,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.component.BatchExecutor;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;

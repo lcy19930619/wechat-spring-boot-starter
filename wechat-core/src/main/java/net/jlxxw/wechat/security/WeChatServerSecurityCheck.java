@@ -3,7 +3,8 @@ package net.jlxxw.wechat.security;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.annotation.PostConstruct;
+
+import jakarta.annotation.PostConstruct;
 import net.jlxxw.wechat.schedul.ScheduledUpdateWeChatServerIp;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;

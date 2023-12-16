@@ -11,13 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import javax.annotation.PostConstruct;
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorFactory;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.validation.*;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;

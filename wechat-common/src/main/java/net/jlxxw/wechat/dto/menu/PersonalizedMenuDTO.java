@@ -2,12 +2,12 @@ package net.jlxxw.wechat.dto.menu;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.aop.check.group.Delete;
 import net.jlxxw.wechat.aop.check.group.Insert;
 import net.jlxxw.wechat.aop.check.group.Select;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 /**
  * 个性化菜单

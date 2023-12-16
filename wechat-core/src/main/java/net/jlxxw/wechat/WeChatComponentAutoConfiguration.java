@@ -9,15 +9,16 @@ import net.jlxxw.wechat.schedul.ScheduledUpdateToken;
 import net.jlxxw.wechat.schedul.ScheduledUpdateWeChatServerIp;
 import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
 import net.jlxxw.wechat.util.LoggerUtils;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,12 +57,6 @@ public class WeChatComponentAutoConfiguration {
         //路由是对maxTotal的细分
         connectionManager.setDefaultMaxPerRoute(defaultMaxPerRoute);
         RequestConfig requestConfig = RequestConfig.custom()
-                //服务器返回数据(response)的时间，超过该时间抛出read timeout
-                .setSocketTimeout(10000)
-                //连接上服务器(握手成功)的时间，超出该时间抛出connect timeout
-                .setConnectTimeout(5000)
-                //从连接池中获取连接的超时时间，超过该时间未拿到可用连接，会抛出org.apache.http.conn.ConnectionPoolTimeoutException: Timeout waiting for connection from pool
-                .setConnectionRequestTimeout(1000)
                 .build();
         CloseableHttpClient build = HttpClientBuilder.create()
                 .setDefaultRequestConfig(requestConfig)

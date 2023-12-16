@@ -3,7 +3,7 @@ package net.jlxxw.wechat.function.menu;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import java.text.MessageFormat;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.aop.check.group.Insert;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.PersonalizedMenuDTO;

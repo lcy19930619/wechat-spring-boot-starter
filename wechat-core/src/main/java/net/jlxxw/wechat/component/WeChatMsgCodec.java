@@ -21,6 +21,7 @@
  */
 package net.jlxxw.wechat.component;
 
+import jakarta.annotation.PostConstruct;
 import net.jlxxw.wechat.enums.AesExceptionEnum;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
@@ -34,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import java.text.MessageFormat;
 import java.util.List;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.MenuDTO;
 import net.jlxxw.wechat.exception.ParamCheckException;

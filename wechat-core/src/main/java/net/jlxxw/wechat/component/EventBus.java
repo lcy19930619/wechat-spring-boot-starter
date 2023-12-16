@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import net.jlxxw.wechat.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.component.listener.UnKnowWeChatEventListener;
@@ -31,8 +33,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;

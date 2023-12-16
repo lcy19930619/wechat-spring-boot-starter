@@ -2,10 +2,10 @@ package net.jlxxw.wechat.dto.menu;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.aop.check.group.Insert;
 import net.jlxxw.wechat.enums.MenuTypeEnum;
 
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**

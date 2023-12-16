@@ -2,7 +2,7 @@ package net.jlxxw.wechat.function.api;
 
 import com.alibaba.fastjson.JSONObject;
 import java.text.MessageFormat;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;

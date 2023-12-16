@@ -15,6 +15,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
+import jakarta.annotation.PostConstruct;
 import net.jlxxw.wechat.properties.WeChatNettyServerProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
@@ -22,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 
 /**
  * 通过netty接口提升微信核心接口性能

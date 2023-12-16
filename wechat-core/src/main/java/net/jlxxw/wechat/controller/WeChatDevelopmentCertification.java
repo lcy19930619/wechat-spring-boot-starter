@@ -1,5 +1,6 @@
 package net.jlxxw.wechat.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;

@@ -3,7 +3,8 @@ package net.jlxxw.wechat.function.ai;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import java.util.List;
-import javax.validation.constraints.NotBlank;
+
+import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.enums.AiBotEnvEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
