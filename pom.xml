@@ -59,11 +59,14 @@
 
     <modules>
         <module>wechat-common</module>
-        <module>wechat-core</module>
+        <module>wechat-properties</module>
+        <module>wechat-event</module>
+        <module>wechat-function</module>
         <module>wechat-default</module>
         <module>wechat-netty-spring-boot-starter</module>
         <module>wechat-web-spring-boot-starter</module>
         <module>wechat-test</module>
+        <module>wechat-schedule</module>
     </modules>
 
 
@@ -78,10 +81,26 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>net.jlxxw.wechat</groupId>
+                <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-common</artifactId>
                 <version>1.0.0.20231216</version>
             </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-event</artifactId>
+                <version>1.0.0.20231216</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-function</artifactId>
+                <version>1.0.0.20231216</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-properties</artifactId>
+                <version>1.0.0.20231216</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>javax.annotation</groupId>

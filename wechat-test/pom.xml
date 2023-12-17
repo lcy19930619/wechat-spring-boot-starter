@@ -8,11 +8,11 @@
         <version>1.0.2.20231216</version>
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>net.jlxxw.wechat</groupId>
+    <groupId>net.jlxxw</groupId>
     <artifactId>wechat-test</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>weixin-spring-boot-starter-test</name>
-    <description>weixin-spring-boot-starter-test</description>
+    <version>1.0.0.20231216</version>
+    <name>wechat-spring-boot-starter-test</name>
+    <description>wechat-spring-boot-starter-test</description>
     <properties>
         <java.version>17</java.version>
     </properties>
