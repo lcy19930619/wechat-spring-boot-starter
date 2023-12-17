@@ -10,7 +10,6 @@
     </parent>
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-common</artifactId>
-    <version>1.0.0.20231216</version>
     <name>wechat-spring-boot-starter-common</name>
     <description>wechat-spring-boot-starter-common</description>
     <properties>

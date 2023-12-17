@@ -38,61 +38,11 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 @ComponentScan("net.jlxxw.wechat")
 @EnableScheduling
-@MapperScan("net.jlxxw.wechat.mapper")
+
 public class WeChatComponentAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(WeChatComponentAutoConfiguration.class);
 
-    @Bean
-    @ConditionalOnMissingBean(RestTemplate.class)
-    public RestTemplate restTemplate(){
-        int defaultMaxPerRoute = 200;
-        Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-                .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                .register("https", SSLConnectionSocketFactory.getSocketFactory())
-                .build();
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(registry);
-        //设置整个连接池最大连接数
-        connectionManager.setMaxTotal(2 * defaultMaxPerRoute);
-        //路由是对maxTotal的细分
-        connectionManager.setDefaultMaxPerRoute(defaultMaxPerRoute);
-        RequestConfig requestConfig = RequestConfig.custom()
-                .build();
-        CloseableHttpClient build = HttpClientBuilder.create()
-                .setDefaultRequestConfig(requestConfig)
-                // 如果不配置connectionManager，则默认使用System.getProperty获取配置参数
-                .setConnectionManager(connectionManager)
-                .build();
-        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(build));
-        LoggerUtils.info(logger,"初始化 RestTemplate");
-        return restTemplate;
-    }
 
-
-
-    /**
-     * 批量执行线程池
-     *
-     * @return
-     */
-    @Bean("batchExecuteThreadPool")
-    public ThreadPoolTaskExecutor batchExecuteThreadPool() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        //获取到服务器的cpu内核
-        int i = Runtime.getRuntime().availableProcessors();
-        //核心池大小
-        executor.setCorePoolSize(i);
-        //最大线程数
-        executor.setMaxPoolSize(i * 2);
-        //队列长度
-        executor.setQueueCapacity(100000);
-        //线程空闲时间
-        executor.setKeepAliveSeconds(1000);
-        //线程前缀名称
-        executor.setThreadNamePrefix("batch-execute-pool-");
-        //配置拒绝策略
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        return executor;
-    }
 
     /**
      * 事件总线线程池,用于处理微信回调

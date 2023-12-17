@@ -6,33 +6,31 @@
         <groupId>net.jlxxw</groupId>
         <artifactId>wechat-spring-boot-starter</artifactId>
         <version>1.0.2.20231216</version>
-        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
+        <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-
     <groupId>net.jlxxw</groupId>
-    <artifactId>wechat-event</artifactId>
-    <name>wechat-event</name>
-    <description>wechat-event</description>
-
+    <artifactId>wechat-event-web-spring-boot-starter</artifactId>
+    <name>wechat-web-spring-boot-starter</name>
+    <description>wechat-web-spring-boot-starter</description>
     <properties>
         <java.version>17</java.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>net.jlxxw</groupId>
-            <artifactId>wechat-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.jlxxw</groupId>
-            <artifactId>wechat-properties</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>log4j-api</artifactId>
+                    <groupId>org.apache.logging.log4j</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-event</artifactId>
         </dependency>
 
     </dependencies>

@@ -7,6 +7,5 @@
         <version>1.0.2.20231216</version>
     </parent>
     <artifactId>wechat-schedule</artifactId>
-    <name>Archetype - wechat-schedule</name>
-    <url>http://maven.apache.org</url>
+    <name>wechat-schedule</name>
 </project>

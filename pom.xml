@@ -62,11 +62,13 @@
         <module>wechat-properties</module>
         <module>wechat-event</module>
         <module>wechat-function</module>
-        <module>wechat-default</module>
-        <module>wechat-netty-spring-boot-starter</module>
-        <module>wechat-web-spring-boot-starter</module>
+        <module>wechat-default-mysql</module>
+        <module>wechat-event-netty-spring-boot-starter</module>
+        <module>wechat-event-web-spring-boot-starter</module>
         <module>wechat-test</module>
         <module>wechat-schedule</module>
+        <module>wechat-function-spring-boot-starter</module>
+        <module>wechat-default-spring-boot-starter</module>
     </modules>
 
 
@@ -83,23 +85,41 @@
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-common</artifactId>
-                <version>1.0.0.20231216</version>
+                <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-event</artifactId>
-                <version>1.0.0.20231216</version>
+                <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-function</artifactId>
-                <version>1.0.0.20231216</version>
+                <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-properties</artifactId>
-                <version>1.0.0.20231216</version>
+                <version>${version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-default-mysql</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-default-mysql-spring-boot-starter</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-function-spring-boot-starter</artifactId>
+                <version>${version}</version>
+            </dependency>
+
+
+
 
 
             <dependency>

@@ -8,6 +8,7 @@ import net.jlxxw.wechat.response.token.WeChatTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,5 +44,19 @@ public class TokenManager {
         }
         return weChatTokenResponse;
 
+    }
+
+
+
+    public WeChatTokenResponse getJsTicketFromWeiXin() throws WeChatException {
+
+        String url = MessageFormat.format(UrlConstant.GET_JS_API_TICKET_URL, getTokenFromLocal());
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        String body = response.getBody();
+        WeChatTokenResponse weChatTokenResponse = JSONObject.parseObject(body, WeChatTokenResponse.class);
+        if (!weChatTokenResponse.isSuccessful()) {
+            throw new WeChatException(weChatTokenResponse);
+        }
+        return weChatTokenResponse;
     }
 }
