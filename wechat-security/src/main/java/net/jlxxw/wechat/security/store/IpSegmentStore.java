@@ -1,12 +1,13 @@
-package net.jlxxw.wechat.security;
+package net.jlxxw.wechat.security.store;
 
 import java.util.List;
 
 /**
+ *
  * @author chunyang.leng
  * @date 2021-11-23 3:22 下午
  */
-public interface WeChatSecurityIpStore {
+public interface IpSegmentStore {
 
     /**
      * 新增一个微信的服务器ip段
@@ -21,7 +22,7 @@ public interface WeChatSecurityIpStore {
      * @param ip
      * @return
      */
-    boolean isSecurityIp(String ip);
+    boolean security(String ip);
 
     /**
      * 新增一组微信的服务器ip段

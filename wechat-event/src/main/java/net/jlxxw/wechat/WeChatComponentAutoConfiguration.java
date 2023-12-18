@@ -1,6 +1,5 @@
 package net.jlxxw.wechat;
 
-import net.jlxxw.wechat.event.security.WeChatServerSecurityCheck;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,10 +67,5 @@ public class WeChatComponentAutoConfiguration {
 //        return new ScheduledUpdateWeChatServerIp(weChatTokenManager, restTemplate, weChatServerSecurityCheck, weChatProperties);
 //    }
 
-    @Bean
-    @ConditionalOnProperty(prefix = "we-chat", name = "enable-we-chat-call-back-server-security-check", havingValue = "true")
-    public WeChatServerSecurityCheck weChatServerSecurityCheck() {
-        LoggerUtils.info(logger, "启用微信回调ip白名单管理器");
-        return new WeChatServerSecurityCheck();
-    }
+
 }

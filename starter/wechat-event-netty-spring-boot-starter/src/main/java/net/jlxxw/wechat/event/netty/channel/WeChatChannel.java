@@ -11,7 +11,7 @@ import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.event.component.EventBus;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.event.security.WeChatServerSecurityCheck;
+import net.jlxxw.wechat.security.store.IpSegmentStore;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +34,14 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
     @Autowired
     private EventBus eventBus;
     @Autowired(required = false)
-    private WeChatServerSecurityCheck weChatServerSecurityCheck;
+    private IpSegmentStore ipSegmentStore;
     @Autowired
     private WeChatProperties weChatProperties;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
         LoggerUtils.debug(logger, "netty 开始处理");
-        if (weChatProperties.isEnableWeChatCallBackServerSecurityCheck() && weChatServerSecurityCheck != null) {
+        if (weChatProperties.isEnableWeChatCallBackServerSecurityCheck() && ipSegmentStore != null) {
             // 开启微信回调ip安全检查时执行
 
             // 获取远程socket信息
@@ -49,7 +49,7 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
             // 获取远程ip地址信息
             String ipAddress = socketAddress.getAddress().getHostAddress();
             LoggerUtils.debug(logger, "微信回调ip安全检查执行,远程ip:{}", ipAddress);
-            if (Objects.nonNull(weChatServerSecurityCheck) && !weChatServerSecurityCheck.isSecurity(ipAddress)) {
+            if (Objects.nonNull(ipSegmentStore) && !ipSegmentStore.security(ipAddress)) {
                 LoggerUtils.warn(logger, "非法ip，不予处理:{}", ipAddress);
                 // 非法ip，不予处理
                 channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN, Unpooled.copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);

@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.jlxxw.wechat.event.component.EventBus;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.event.security.WeChatServerSecurityCheck;
+import net.jlxxw.wechat.security.store.IpSegmentStore;
 import net.jlxxw.wechat.util.LoggerUtils;
 import net.jlxxw.wechat.web.util.NetworkUtil;
 import org.apache.commons.io.IOUtils;
@@ -32,7 +32,7 @@ public class WeChatMessageController {
     @Autowired
     private EventBus eventBus;
     @Autowired(required = false)
-    private WeChatServerSecurityCheck weChatServerSecurityCheck;
+    private IpSegmentStore ipSegmentStore;
     @Autowired
     private WeChatProperties weChatProperties;
 
@@ -48,10 +48,10 @@ public class WeChatMessageController {
      */
     @RequestMapping("${we-chat.core-controller-url:weChat}")
     public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (weChatProperties.isEnableWeChatCallBackServerSecurityCheck() && weChatServerSecurityCheck != null) {
+        if (weChatProperties.isEnableWeChatCallBackServerSecurityCheck() && ipSegmentStore != null) {
             // 开启微信回调ip安全检查时执行
             final String ipAddress = NetworkUtil.getIpAddress(request);
-            if (!weChatServerSecurityCheck.isSecurity(ipAddress)) {
+            if (!ipSegmentStore.security(ipAddress)) {
                 // 非法ip，不予处理
                 LoggerUtils.warn(logger,"发现非法ip访问:{}",ipAddress);
                 return;

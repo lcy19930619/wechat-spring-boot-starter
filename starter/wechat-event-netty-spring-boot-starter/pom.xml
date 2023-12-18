@@ -25,6 +25,10 @@
             <artifactId>wechat-event</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-security</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
