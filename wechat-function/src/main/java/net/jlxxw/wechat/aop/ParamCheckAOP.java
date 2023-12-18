@@ -1,17 +1,5 @@
 package net.jlxxw.wechat.aop;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.*;
 import net.jlxxw.wechat.exception.ParamCheckException;
@@ -25,11 +13,14 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorDescriptor;
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorFactoryImpl;
 import org.hibernate.validator.internal.metadata.core.ConstraintHelper;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.annotation.Validated;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 /**
  * 调用微信接口参数检查
@@ -37,8 +28,6 @@ import org.springframework.validation.annotation.Validated;
  * @date 2022-04-15 1:14 PM
  */
 @Aspect
-@Component
-@Order(-1)
 public class ParamCheckAOP {
 
     private static final ConstraintHelper constraintHelper = ConstraintHelper.forAllBuiltinConstraints();

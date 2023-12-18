@@ -12,12 +12,10 @@ import net.jlxxw.wechat.response.ai.WeChatAiBotSignatureResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -30,15 +28,17 @@ import java.util.List;
  * @see <a href="https://developers.weixin.qq.com/doc/aispeech/confapi/mp/getbindlink.html">开发文档</a>
  * @see <a href="https://chatbot.weixin.qq.com/">ai平台</a>
  */
-@Component
 public class AiBotFunction {
 
     private static final Logger logger = LoggerFactory.getLogger(AiBotFunction.class);
 
-    @Autowired
     private WeChatAiBotProperties weChatAiBotProperties;
-    @Autowired
     private RestTemplate restTemplate;
+
+    public AiBotFunction(WeChatAiBotProperties weChatAiBotProperties, RestTemplate restTemplate) {
+        this.weChatAiBotProperties = weChatAiBotProperties;
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * 步骤一

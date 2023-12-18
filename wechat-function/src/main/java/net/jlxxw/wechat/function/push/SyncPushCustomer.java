@@ -1,10 +1,6 @@
 package net.jlxxw.wechat.function.push;
 
 import com.alibaba.fastjson.JSON;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.component.BatchExecutor;
 import net.jlxxw.wechat.constant.UrlConstant;
@@ -13,29 +9,32 @@ import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.WeChatResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author chunyang.leng
  * @date 2021/1/18 10:14 下午
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class SyncPushCustomer {
-    @Autowired
     private RestTemplate restTemplate;
-    @Autowired
     private BatchExecutor batchExecutor;
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
+
+    public SyncPushCustomer(RestTemplate restTemplate, BatchExecutor batchExecutor, WeChatTokenManager weChatTokenManager) {
+        this.restTemplate = restTemplate;
+        this.batchExecutor = batchExecutor;
+        this.weChatTokenManager = weChatTokenManager;
+    }
 
     /**
      * 推送一个客服信息

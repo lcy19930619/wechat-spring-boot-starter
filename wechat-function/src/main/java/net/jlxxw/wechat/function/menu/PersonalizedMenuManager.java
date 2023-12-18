@@ -2,7 +2,6 @@ package net.jlxxw.wechat.function.menu;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import java.text.MessageFormat;
 import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.aop.check.group.Insert;
 import net.jlxxw.wechat.constant.UrlConstant;
@@ -13,15 +12,14 @@ import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.MatchPersonalizedMenuResponse;
 import net.jlxxw.wechat.response.menu.PersonalizedMenuResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
 
 /**
  * <pre>
@@ -69,14 +67,15 @@ import org.springframework.web.client.RestTemplate;
  * @date 2021-12-20 3:35 下午
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class PersonalizedMenuManager {
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
 
-    @Autowired
     private RestTemplate restTemplate;
+
+    public PersonalizedMenuManager(WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
+        this.weChatTokenManager = weChatTokenManager;
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * 创建个性化菜单

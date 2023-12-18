@@ -1,7 +1,6 @@
 package net.jlxxw.wechat.function.qrcode;
 
 import com.alibaba.fastjson.JSONObject;
-import java.text.MessageFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -15,14 +14,13 @@ import net.jlxxw.wechat.response.qrcode.TempQrCodeResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
 
 /**
  * 二维码管理
@@ -30,15 +28,16 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021-03-05 5:52 下午
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class QrcodeManager {
 
     private static final Logger logger = LoggerFactory.getLogger(QrcodeManager.class);
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
-    @Autowired
     private RestTemplate restTemplate;
+
+    public QrcodeManager(WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
+        this.weChatTokenManager = weChatTokenManager;
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * 创建一个临时二维码,参数为自定义的字符串

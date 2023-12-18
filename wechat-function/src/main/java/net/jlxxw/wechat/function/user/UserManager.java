@@ -3,13 +3,6 @@ package net.jlxxw.wechat.function.user;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -24,15 +17,16 @@ import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
+import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * 用户信息管理
@@ -40,17 +34,18 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021/1/25 6:44 下午
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class UserManager {
 
     private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
-    @Autowired
     public RestTemplate restTemplate;
-    @Autowired
     public WeChatTokenManager weChatTokenManager;
-    @Autowired
     public BatchExecutor batchExecutor;
+
+    public UserManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager, BatchExecutor batchExecutor) {
+        this.restTemplate = restTemplate;
+        this.weChatTokenManager = weChatTokenManager;
+        this.batchExecutor = batchExecutor;
+    }
 
     /**
      * 获取全部用户的openId

@@ -1,7 +1,6 @@
 package net.jlxxw.wechat.function.api;
 
 import com.alibaba.fastjson.JSONObject;
-import java.text.MessageFormat;
 import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.ParamCheckException;
@@ -14,14 +13,13 @@ import net.jlxxw.wechat.response.api.ApiResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
 
 /**
  * 微信 openApi 管理
@@ -29,16 +27,17 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021-11-23 2:22 下午
  */
-@DependsOn({ WeChatTokenManager.BEAN_NAME})
-@Component
 public class OpenApiManager {
     private static final Logger logger = LoggerFactory.getLogger(OpenApiManager.class);
-    @Autowired
     private WeChatProperties weChatProperties;
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
-    @Autowired
     private RestTemplate restTemplate;
+
+    public OpenApiManager(WeChatProperties weChatProperties, WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
+        this.weChatProperties = weChatProperties;
+        this.weChatTokenManager = weChatTokenManager;
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * @return <br/>

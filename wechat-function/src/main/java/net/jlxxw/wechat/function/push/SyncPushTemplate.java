@@ -30,15 +30,16 @@ import java.util.concurrent.CountDownLatch;
  * @author chunyang.leng
  * @date 2021/1/18 10:14 下午
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class SyncPushTemplate {
-    @Autowired
     private RestTemplate restTemplate;
-    @Autowired
     private BatchExecutor batchExecutor;
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
+
+    public SyncPushTemplate(RestTemplate restTemplate, BatchExecutor batchExecutor, WeChatTokenManager weChatTokenManager) {
+        this.restTemplate = restTemplate;
+        this.batchExecutor = batchExecutor;
+        this.weChatTokenManager = weChatTokenManager;
+    }
 
     /**
      * 推送一个模版信息
@@ -72,7 +73,7 @@ public class SyncPushTemplate {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Message_Management/Template_Message_Interface.html">接口文档</a>
      * @throws ParamCheckException 参数检查不通过
      */
-    public List<WeChatResponse> pushTemplate(@Validated(org.apache.ibatis.annotations.Insert.class) List<WeChatTemplateDTO> templateList) throws ParamCheckException {
+    public List<WeChatResponse> pushTemplate(@Validated(Insert.class) List<WeChatTemplateDTO> templateList) throws ParamCheckException {
         if (CollectionUtils.isEmpty(templateList)) {
             return new ArrayList<>();
         }

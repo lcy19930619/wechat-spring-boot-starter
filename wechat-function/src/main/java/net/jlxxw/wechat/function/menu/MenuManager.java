@@ -2,8 +2,6 @@ package net.jlxxw.wechat.function.menu;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import java.text.MessageFormat;
-import java.util.List;
 import jakarta.validation.constraints.NotEmpty;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.MenuDTO;
@@ -16,14 +14,14 @@ import net.jlxxw.wechat.util.LoggerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * 公众号菜单管理
@@ -31,15 +29,16 @@ import org.springframework.web.client.RestTemplate;
  * @author chunyang.leng
  * @date 2021-12-13 2:04 下午
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class MenuManager {
 
     private static final Logger logger = LoggerFactory.getLogger(MenuManager.class);
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
-    @Autowired
     private RestTemplate restTemplate;
+
+    public MenuManager(WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
+        this.weChatTokenManager = weChatTokenManager;
+        this.restTemplate = restTemplate;
+    }
 
     /**
      * 创建菜单

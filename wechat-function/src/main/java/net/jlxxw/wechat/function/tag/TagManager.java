@@ -2,8 +2,6 @@ package net.jlxxw.wechat.function.tag;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import java.text.MessageFormat;
-import java.util.List;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -20,14 +18,14 @@ import net.jlxxw.wechat.response.tag.TagUserResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
+import java.text.MessageFormat;
+import java.util.List;
 
 /**
  * 标签管理
@@ -37,14 +35,15 @@ import org.springframework.web.client.RestTemplate;
  * @date 2022-08-29 10:53 AM
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/User_Tag_Management.html">文档地址</a>
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class TagManager {
     private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
-    @Autowired
     private RestTemplate restTemplate;
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
+
+    public TagManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager) {
+        this.restTemplate = restTemplate;
+        this.weChatTokenManager = weChatTokenManager;
+    }
 
     /**
      * 创建公众号标签

@@ -7,9 +7,7 @@ import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.token.WeChatTokenResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.MessageFormat;
@@ -18,13 +16,15 @@ import java.text.MessageFormat;
  * @author chunyang.leng
  * @date 2023-12-17 12:03
  */
-@Component
 public class TokenManager {
     private static final Logger logger = LoggerFactory.getLogger(TokenManager.class);
-    @Autowired
     private RestTemplate restTemplate;
-    @Autowired
     private WeChatProperties weChatProperties;
+
+    public TokenManager(RestTemplate restTemplate, WeChatProperties weChatProperties) {
+        this.restTemplate = restTemplate;
+        this.weChatProperties = weChatProperties;
+    }
 
     /**
      * 从微信获取 token
@@ -46,11 +46,16 @@ public class TokenManager {
 
     }
 
+    /**
+     * todo
+     * @param token access token
+     * @return
+     * @throws WeChatException
+     */
 
+    public WeChatTokenResponse getJsTicketFromWeiXin(String token) throws WeChatException {
 
-    public WeChatTokenResponse getJsTicketFromWeiXin() throws WeChatException {
-
-        String url = MessageFormat.format(UrlConstant.GET_JS_API_TICKET_URL, getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.GET_JS_API_TICKET_URL, token);
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
         String body = response.getBody();
         WeChatTokenResponse weChatTokenResponse = JSONObject.parseObject(body, WeChatTokenResponse.class);

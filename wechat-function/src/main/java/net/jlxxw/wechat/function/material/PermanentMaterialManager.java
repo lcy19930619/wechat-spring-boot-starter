@@ -3,12 +3,6 @@ package net.jlxxw.wechat.function.material;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.constant.UrlConstant;
@@ -21,35 +15,36 @@ import net.jlxxw.wechat.response.material.PermanentMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.AbstractResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 
 /**
  * 永久素材管理工具
  * @author chunyang.leng
  * @date 2022-08-12 4:44 PM
  */
-@DependsOn(WeChatTokenManager.BEAN_NAME)
-@Component
 public class PermanentMaterialManager {
     private static final Logger logger = LoggerFactory.getLogger(TempMaterialManager.class);
 
-    @Autowired
     private RestTemplate restTemplate;
-    @Autowired
     private WeChatTokenManager weChatTokenManager;
+
+    public PermanentMaterialManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager) {
+        this.restTemplate = restTemplate;
+        this.weChatTokenManager = weChatTokenManager;
+    }
 
     /**
      * 上传永久素材
