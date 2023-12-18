@@ -5,7 +5,7 @@
 
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>1.0.2.20231216</version>
+    <version>2.0.1.20231216</version>
     <packaging>pom</packaging>
     <name>wechat-spring-boot-starter</name>
     <description>微信公众号快速开发组件</description>
@@ -63,12 +63,12 @@
         <module>wechat-event</module>
         <module>wechat-function</module>
         <module>wechat-default-mysql</module>
-        <module>wechat-event-netty-spring-boot-starter</module>
-        <module>wechat-event-web-spring-boot-starter</module>
         <module>wechat-test</module>
         <module>wechat-schedule</module>
-        <module>wechat-function-spring-boot-starter</module>
-        <module>wechat-default-spring-boot-starter</module>
+        <module>starter/wechat-event-netty-spring-boot-starter</module>
+        <module>starter/wechat-event-web-spring-boot-starter</module>
+        <module>starter/wechat-function-spring-boot-starter</module>
+        <module>starter/wechat-default-mysql-spring-boot-starter</module>
     </modules>
 
 

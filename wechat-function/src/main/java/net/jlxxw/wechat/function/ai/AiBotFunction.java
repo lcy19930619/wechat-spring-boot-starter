@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.enums.AiBotEnvEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.properties.WeChatAiBotProperties;
+import net.jlxxw.wechat.function.ai.properties.WeChatAiBotProperties;
 import net.jlxxw.wechat.response.ai.ChatResponse;
 import net.jlxxw.wechat.response.ai.WeChatAiBotSignatureResponse;
 import org.apache.commons.lang3.StringUtils;

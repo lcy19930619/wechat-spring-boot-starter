@@ -18,7 +18,7 @@ import io.netty.handler.timeout.ReadTimeoutHandler;
 import jakarta.annotation.PostConstruct;
 import net.jlxxw.wechat.event.netty.channel.WeChatChannel;
 import net.jlxxw.wechat.event.netty.handler.MetricsHandler;
-import net.jlxxw.wechat.properties.WeChatNettyServerProperties;
+import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,13 +37,13 @@ public class WeChatEventNettyServer {
     private static final ServerBootstrap BOOTSTRAP = new ServerBootstrap();
     private static final Logger logger = LoggerFactory.getLogger(WeChatEventNettyServer.class);
     @Autowired
-    private WeChatNettyServerProperties weChatNettyServerProperties;
+    private WeChatEventNettyServerProperties weChatEventNettyServerProperties;
     @Autowired
     private WeChatChannel weChatChannel;
 
     @PostConstruct
     public void postConstruct() {
-        if (!weChatNettyServerProperties.getEnableNetty()) {
+        if (!weChatEventNettyServerProperties.getEnableNetty()) {
             return;
         }
         Thread t = new Thread() {
@@ -53,14 +53,14 @@ public class WeChatEventNettyServer {
                 //new 一个主线程组
                 EventLoopGroup bossGroup = new NioEventLoopGroup(1);
                 //new 一个工作线程组
-                EventLoopGroup workGroup = new NioEventLoopGroup(weChatNettyServerProperties.getMaxThreadSize());
+                EventLoopGroup workGroup = new NioEventLoopGroup(weChatEventNettyServerProperties.getMaxThreadSize());
                 BOOTSTRAP
                         .group(bossGroup, workGroup)
                         .channel(NioServerSocketChannel.class)
                         .childHandler(new ChannelInitializer<SocketChannel>() {
                             @Override
                             protected void initChannel(SocketChannel socketChannel) throws Exception {
-                                if (weChatNettyServerProperties.isEnableMetrics()){
+                                if (weChatEventNettyServerProperties.isEnableMetrics()){
                                     // 指标采集监控
                                     socketChannel.pipeline().addLast(new MetricsHandler());
                                 }
@@ -70,7 +70,7 @@ public class WeChatEventNettyServer {
                                 LoggerUtils.debug(logger, "初始化 netty 请求解码器 成功");
 
                                 // 将HTTP消息的多个部分合成一条完整的HTTP消息
-                                socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(weChatNettyServerProperties.getHttpAggregatorMaxLength()));
+                                socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(weChatEventNettyServerProperties.getHttpAggregatorMaxLength()));
                                 LoggerUtils.debug(logger, "初始化 netty http聚合器 成功");
 
                                 // 响应转码器
@@ -82,9 +82,9 @@ public class WeChatEventNettyServer {
                                 LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
 
                                 // 读空闲检测，超时时间，默认 15 秒,作为微信客户端，只需要检测读超时即可
-                                socketChannel.pipeline().addLast(new ReadTimeoutHandler(weChatNettyServerProperties.getChannelTimeout()));
+                                socketChannel.pipeline().addLast(new ReadTimeoutHandler(weChatEventNettyServerProperties.getChannelTimeout()));
 
-                                if (weChatNettyServerProperties.isEnableLog()){
+                                if (weChatEventNettyServerProperties.isEnableLog()){
                                     // 日志调试，info 级别
                                     socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                                 }
@@ -95,15 +95,15 @@ public class WeChatEventNettyServer {
 
                             }
                         })
-                        .localAddress(weChatNettyServerProperties.getNettyPort())
+                        .localAddress(weChatEventNettyServerProperties.getNettyPort())
                         //设置队列大小
-                        .option(ChannelOption.SO_BACKLOG, weChatNettyServerProperties.getQueueSize())
+                        .option(ChannelOption.SO_BACKLOG, weChatEventNettyServerProperties.getQueueSize())
                         // 不保持长链接
                         .childOption(ChannelOption.SO_KEEPALIVE, false);
                 //绑定端口,开始接收进来的连接
                 try {
-                    ChannelFuture future = BOOTSTRAP.bind(weChatNettyServerProperties.getNettyPort()).sync();
-                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatNettyServerProperties.getNettyPort());
+                    ChannelFuture future = BOOTSTRAP.bind(weChatEventNettyServerProperties.getNettyPort()).sync();
+                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatEventNettyServerProperties.getNettyPort());
                     future.channel().closeFuture().sync();
                 } catch (InterruptedException e) {
                     LoggerUtils.error(logger, "微信netty服务启动失败！！！", e);
@@ -116,7 +116,7 @@ public class WeChatEventNettyServer {
                 }
             }
         };
-        t.setName(weChatNettyServerProperties.getMainThreadName());
+        t.setName(weChatEventNettyServerProperties.getMainThreadName());
         t.setDaemon(false);
         t.start();
     }
