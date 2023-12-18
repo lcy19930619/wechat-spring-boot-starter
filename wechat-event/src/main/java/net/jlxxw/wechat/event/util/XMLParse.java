@@ -6,7 +6,7 @@
 
 // ------------------------------------------------------------------------
 
-package net.jlxxw.wechat.util;
+package net.jlxxw.wechat.event.util;
 
 import net.jlxxw.wechat.enums.AesExceptionEnum;
 import net.jlxxw.wechat.exception.AesException;

@@ -19,16 +19,16 @@
  * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
  * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
  */
-package net.jlxxw.wechat.component;
+package net.jlxxw.wechat.event.component;
 
 import jakarta.annotation.PostConstruct;
 import net.jlxxw.wechat.enums.AesExceptionEnum;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.util.ByteGroup;
-import net.jlxxw.wechat.util.PKCS7Encoder;
-import net.jlxxw.wechat.util.SHA1;
-import net.jlxxw.wechat.util.XMLParse;
+import net.jlxxw.wechat.event.util.ByteGroup;
+import net.jlxxw.wechat.event.util.PKCS7Encoder;
+import net.jlxxw.wechat.event.util.SHA1;
+import net.jlxxw.wechat.event.util.XMLParse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

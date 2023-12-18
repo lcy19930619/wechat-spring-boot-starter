@@ -1,14 +1,14 @@
-package net.jlxxw.wechat.component.listener;
+package net.jlxxw.wechat.event.component.listener;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
- * 未知的微信事件处理器
+ * 未知的微信消息处理器
  *
  * @author chunyang.leng
  * @date 2021-03-08 4:38 下午
  */
-public interface UnKnowWeChatEventListener {
+public interface UnKnowWeChatMessageListener {
     /**
      * 处理其他类型信息
      *

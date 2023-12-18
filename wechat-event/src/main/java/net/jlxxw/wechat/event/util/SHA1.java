@@ -6,10 +6,11 @@
 
 // ------------------------------------------------------------------------
 
-package net.jlxxw.wechat.util;
+package net.jlxxw.wechat.event.util;
 
 import net.jlxxw.wechat.enums.AesExceptionEnum;
 import net.jlxxw.wechat.exception.AesException;
+import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

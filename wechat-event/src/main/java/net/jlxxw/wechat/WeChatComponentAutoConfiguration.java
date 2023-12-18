@@ -6,7 +6,7 @@ import net.jlxxw.wechat.function.token.WeChatTokenManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.schedul.ScheduledUpdateToken;
 import net.jlxxw.wechat.schedul.ScheduledUpdateWeChatServerIp;
-import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
+import net.jlxxw.wechat.event.security.WeChatServerSecurityCheck;
 import net.jlxxw.wechat.util.LoggerUtils;
 
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -21,7 +21,6 @@ import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

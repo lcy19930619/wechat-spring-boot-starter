@@ -49,7 +49,7 @@ UnKnowWeChatMessageListener
 ## 基本功能
 ### 微信开发者服务器认证接口
 /verifyToken
-可以参考`net.jlxxw.wechat.controller.WeChatDevelopmentCertification#verifyToken`
+可以参考`net.jlxxw.wechat.web.controller.WeChatDevelopmentCertification#verifyToken`
 ### 接收微信用户与公众号交互的信息
 
 - 文本信息

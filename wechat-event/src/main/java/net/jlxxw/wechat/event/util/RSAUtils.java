@@ -1,7 +1,8 @@
-package net.jlxxw.wechat.util;
+package net.jlxxw.wechat.event.util;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Hex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import java.security.KeyFactory;
@@ -16,9 +17,8 @@ import java.util.Base64;
  * @create 2021-04-10 09:35
  **/
 
-@Slf4j
 public class RSAUtils {
-
+    private static final Logger logger = LoggerFactory.getLogger(RSAUtils.class);
     /**
      * 加密
      *

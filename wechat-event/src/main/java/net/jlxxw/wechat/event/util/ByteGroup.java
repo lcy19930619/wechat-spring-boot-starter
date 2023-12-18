@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.util;
+package net.jlxxw.wechat.event.util;
 
 import java.util.ArrayList;
 

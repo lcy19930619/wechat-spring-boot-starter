@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.controller;
+package net.jlxxw.wechat.web.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import net.jlxxw.wechat.properties.WeChatProperties;

@@ -1,13 +1,13 @@
-package net.jlxxw.wechat.controller;
+package net.jlxxw.wechat.web.controller;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import net.jlxxw.wechat.component.EventBus;
+import net.jlxxw.wechat.event.component.EventBus;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
+import net.jlxxw.wechat.event.security.WeChatServerSecurityCheck;
 import net.jlxxw.wechat.util.LoggerUtils;
-import net.jlxxw.wechat.util.NetworkUtil;
+import net.jlxxw.wechat.web.util.NetworkUtil;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

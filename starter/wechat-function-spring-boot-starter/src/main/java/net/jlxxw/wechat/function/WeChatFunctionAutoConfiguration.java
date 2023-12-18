@@ -47,6 +47,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 微信公众号函数模块自动装配
+ * @author lcy
  */
 @Configuration
 @ComponentScan("net.jlxxw.wechat.function")
@@ -75,7 +76,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
                 .setConnectionManager(connectionManager)
                 .build();
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(build));
-        LoggerUtils.info(logger, "初始化 RestTemplate");
+        logger.info( "初始化 RestTemplate");
         return restTemplate;
     }
 

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 数据库 mysql 层相关适配属性
+ * @author lcy
  */
 @Configuration
 @ConfigurationProperties("wechat.default.mysql")

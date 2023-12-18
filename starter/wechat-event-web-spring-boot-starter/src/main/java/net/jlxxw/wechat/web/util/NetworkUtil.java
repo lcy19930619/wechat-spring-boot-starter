@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.util;
+package net.jlxxw.wechat.web.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

@@ -6,7 +6,7 @@
 
 // ------------------------------------------------------------------------
 
-package net.jlxxw.wechat.util;
+package net.jlxxw.wechat.event.util;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
