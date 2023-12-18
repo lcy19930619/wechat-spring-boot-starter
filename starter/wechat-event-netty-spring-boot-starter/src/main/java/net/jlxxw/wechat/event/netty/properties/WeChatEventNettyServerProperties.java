@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/1/19 5:31 下午
  */
 @Configuration
-@ConfigurationProperties("we-chat.netty.server")
+@ConfigurationProperties("wechat.event.netty.server")
 public class WeChatEventNettyServerProperties {
     /**
      * 是否启用netty作为微信的核心接口处理器
      */
-    private Boolean enableNetty = true;
+    private Boolean enable = true;
 
     /**
      * netty的端口
      */
-    private Integer nettyPort = 19191;
+    private Integer port = 19191;
 
     /**
      * 队列大小
@@ -58,20 +58,20 @@ public class WeChatEventNettyServerProperties {
      */
     private String mainThreadName = "WeChat-netty-thread-listener";
 
-    public Boolean getEnableNetty() {
-        return enableNetty;
+    public Boolean getEnable() {
+        return enable;
     }
 
-    public void setEnableNetty(Boolean enableNetty) {
-        this.enableNetty = enableNetty;
+    public void setEnable(Boolean enable) {
+        this.enable = enable;
     }
 
-    public Integer getNettyPort() {
-        return nettyPort;
+    public Integer getPort() {
+        return port;
     }
 
-    public void setNettyPort(Integer nettyPort) {
-        this.nettyPort = nettyPort;
+    public void setPort(Integer port) {
+        this.port = port;
     }
 
     public Integer getQueueSize() {

@@ -43,7 +43,8 @@ public class WeChatEventNettyServer {
 
     @PostConstruct
     public void postConstruct() {
-        if (!weChatEventNettyServerProperties.getEnableNetty()) {
+        if (!weChatEventNettyServerProperties.getEnable()) {
+            logger.info("用户配置关闭 wechat event netty 服务器");
             return;
         }
         Thread t = new Thread() {
@@ -95,15 +96,15 @@ public class WeChatEventNettyServer {
 
                             }
                         })
-                        .localAddress(weChatEventNettyServerProperties.getNettyPort())
+                        .localAddress(weChatEventNettyServerProperties.getPort())
                         //设置队列大小
                         .option(ChannelOption.SO_BACKLOG, weChatEventNettyServerProperties.getQueueSize())
                         // 不保持长链接
                         .childOption(ChannelOption.SO_KEEPALIVE, false);
                 //绑定端口,开始接收进来的连接
                 try {
-                    ChannelFuture future = BOOTSTRAP.bind(weChatEventNettyServerProperties.getNettyPort()).sync();
-                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatEventNettyServerProperties.getNettyPort());
+                    ChannelFuture future = BOOTSTRAP.bind(weChatEventNettyServerProperties.getPort()).sync();
+                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatEventNettyServerProperties.getPort());
                     future.channel().closeFuture().sync();
                 } catch (InterruptedException e) {
                     LoggerUtils.error(logger, "微信netty服务启动失败！！！", e);
