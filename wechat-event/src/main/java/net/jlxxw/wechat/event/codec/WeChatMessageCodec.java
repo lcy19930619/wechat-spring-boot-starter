@@ -19,21 +19,17 @@
  * 需要导入架包commons-codec-1.9（或commons-codec-1.8等其他版本）
  * 官方下载地址：http://commons.apache.org/proper/commons-codec/download_codec.cgi
  */
-package net.jlxxw.wechat.event.component;
+package net.jlxxw.wechat.event.codec;
 
-import jakarta.annotation.PostConstruct;
 import net.jlxxw.wechat.enums.AesExceptionEnum;
-import net.jlxxw.wechat.exception.AesException;
-import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.event.util.ByteGroup;
 import net.jlxxw.wechat.event.util.PKCS7Encoder;
 import net.jlxxw.wechat.event.util.SHA1;
 import net.jlxxw.wechat.event.util.XMLParse;
+import net.jlxxw.wechat.exception.AesException;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -66,16 +62,19 @@ import java.util.Random;
  *
  * @author lcy
  */
-@Component
-@ConditionalOnProperty(value = "we-chat.enable-message-enc", havingValue = "true")
-public class WeChatMsgCodec {
+public class WeChatMessageCodec {
     private static final Charset CHARSET = StandardCharsets.UTF_8;
     private static final Base64 BASE64 = new Base64();
     private byte[] aesKey;
     private String token;
     private String appId;
-    @Autowired
-    private WeChatProperties weChatProperties;
+    private final WeChatProperties weChatProperties;
+
+    public WeChatMessageCodec(WeChatProperties weChatProperties) throws AesException {
+        this.weChatProperties = weChatProperties;
+
+        init();
+    }
 
     /**
      * 后置处理器
@@ -85,8 +84,7 @@ public class WeChatMsgCodec {
      *
      * @throws AesException 执行失败，请查看该异常的错误码和具体的错误信息
      */
-    @PostConstruct
-    public void postConstruct() throws AesException {
+    public void init() throws AesException {
         String encodingAesKey = weChatProperties.getEncodingAesKey();
         // 消息加密密钥由43位字符组成
         if (encodingAesKey.length() != 43) {

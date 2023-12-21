@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/1/19 5:31 下午
  */
 @Configuration
-@ConfigurationProperties("we-chat")
+@ConfigurationProperties("wechat")
 public class WeChatProperties {
 
     /**

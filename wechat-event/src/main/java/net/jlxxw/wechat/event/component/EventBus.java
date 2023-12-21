@@ -8,16 +8,16 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import jakarta.annotation.PostConstruct;
-import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
-import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
-import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
-import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.dto.message.event.SubscribeEventMessage;
 import net.jlxxw.wechat.dto.message.event.SubscribeQrsceneEventMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
 import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
+import net.jlxxw.wechat.event.codec.WeChatMessageCodec;
+import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
+import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
+import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
+import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
@@ -25,14 +25,18 @@ import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -44,45 +48,10 @@ import java.util.stream.Collectors;
  * @author chunyang.leng
  * @date 2021/1/20 11:35 上午
  */
-@Component
 public class EventBus {
     private static final Logger logger = LoggerFactory.getLogger(EventBus.class);
     private static final XmlMapper XML_MAPPER = new XmlMapper();
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    @Autowired
-    private WeChatProperties weChatProperties;
-    @Autowired
-    private ThreadPoolTaskExecutor eventBusThreadPool;
-    /**
-     * 有可能未注册任何消息处理器
-     */
-    @Autowired(required = false)
-    private List<AbstractWeChatMessageListener> abstractWeChatMessageListeners;
-
-    /**
-     * 有可能未注册任何事件处理器
-     */
-    @Autowired(required = false)
-    private List<AbstractWeChatEventListener> abstractWeChatEventListeners;
-
-    /**
-     * 有可能未启用微信加解密功能
-     */
-    @Autowired(required = false)
-    private WeChatMsgCodec weChatMsgCodec;
-
-
-    /**
-     * 有可能未注册兜底策略
-     */
-    @Autowired(required = false)
-    private UnKnowWeChatEventListener unKnowWeChatEventListener;
-    /**
-     * 有可能未注册兜底策略
-     */
-    @Autowired(required = false)
-    private UnKnowWeChatMessageListener unKnowWeChatMessageListener;
-
 
     /**
      * 消息处理监听器
@@ -121,8 +90,65 @@ public class EventBus {
         }
 
     }
-    @PostConstruct
-    public void postConstruct() {
+
+
+    private final WeChatProperties weChatProperties;
+    private final ThreadPoolTaskExecutor eventBusThreadPool;
+    /**
+     * 有可能未注册任何消息处理器
+     */
+    private final List<AbstractWeChatMessageListener> abstractWeChatMessageListeners;
+
+    /**
+     * 有可能未注册任何事件处理器
+     */
+    private final List<AbstractWeChatEventListener> abstractWeChatEventListeners;
+
+    /**
+     * 有可能未启用微信加解密功能
+     */
+    private final WeChatMessageCodec weChatMessageCodec;
+
+
+    /**
+     * 有可能未注册兜底策略
+     */
+    private final UnKnowWeChatEventListener unKnowWeChatEventListener;
+    /**
+     * 有可能未注册兜底策略
+     */
+    private final UnKnowWeChatMessageListener unKnowWeChatMessageListener;
+
+    /**
+     * 构建事件总线
+     * @param weChatProperties 微信核心配置
+     * @param eventBusThreadPool 事件总线线程池
+     * @param abstractWeChatMessageListeners 微信消息监听器集合
+     * @param abstractWeChatEventListeners 微信事件监听器集合
+     * @param weChatMessageCodec 微信加密消息编解码器
+     * @param unKnowWeChatEventListener 未知类型事件处理器
+     * @param unKnowWeChatMessageListener 未知类型消息处理器
+     */
+    public EventBus(WeChatProperties weChatProperties,
+                    ThreadPoolTaskExecutor eventBusThreadPool,
+                    List<AbstractWeChatMessageListener> abstractWeChatMessageListeners,
+                    List<AbstractWeChatEventListener> abstractWeChatEventListeners,
+                    WeChatMessageCodec weChatMessageCodec,
+                    UnKnowWeChatEventListener unKnowWeChatEventListener,
+                    UnKnowWeChatMessageListener unKnowWeChatMessageListener) {
+        this.weChatProperties = weChatProperties;
+        this.eventBusThreadPool = eventBusThreadPool;
+        this.abstractWeChatMessageListeners = abstractWeChatMessageListeners;
+        this.abstractWeChatEventListeners = abstractWeChatEventListeners;
+        this.weChatMessageCodec = weChatMessageCodec;
+        this.unKnowWeChatEventListener = unKnowWeChatEventListener;
+        this.unKnowWeChatMessageListener = unKnowWeChatMessageListener;
+        logger.info("初始化事件总线");
+        init();
+        logger.info("事件总线初始化完毕");
+    }
+
+    public void init() {
         // 初始化xmlMapper相关配置
         XML_MAPPER.enable(SerializationFeature.INDENT_OUTPUT);
         XML_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
@@ -207,7 +233,7 @@ public class EventBus {
                 // 获取随机串
                 String nonce = map.get("nonce");
                 // 消息解密
-                String decryptMsg = weChatMsgCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
+                String decryptMsg = weChatMessageCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
                 LoggerUtils.debug(logger, "微信消息解密成功，信息为:{}", decryptMsg);
                 // 将解密后的数据，转换为byte数组，用于协议的具体处理
                 data = decryptMsg.getBytes(StandardCharsets.UTF_8);
@@ -216,7 +242,7 @@ public class EventBus {
             String result = dispatcher(data);
             if (weChatProperties.isEnableMessageEnc()) {
                 // 如果启用了信息加解密功能，则对返回值进行加密处理
-                result = weChatMsgCodec.encrypt(result);
+                result = weChatMessageCodec.encrypt(result);
                 LoggerUtils.debug(logger, "微信消息加密成功，信息为:{}", result);
             }
             return result;

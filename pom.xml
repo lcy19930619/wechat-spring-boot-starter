@@ -118,6 +118,11 @@
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-schedule</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-default-mysql-spring-boot-starter</artifactId>
                 <version>${version}</version>
             </dependency>

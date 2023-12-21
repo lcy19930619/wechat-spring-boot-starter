@@ -47,76 +47,73 @@ public class WeChatEventNettyServer {
             logger.info("用户配置关闭 wechat event netty 服务器");
             return;
         }
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                LoggerUtils.info(logger, "初始化 netty 组件");
-                //new 一个主线程组
-                EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-                //new 一个工作线程组
-                EventLoopGroup workGroup = new NioEventLoopGroup(weChatEventNettyServerProperties.getMaxThreadSize());
-                BOOTSTRAP
-                        .group(bossGroup, workGroup)
-                        .channel(NioServerSocketChannel.class)
-                        .childHandler(new ChannelInitializer<SocketChannel>() {
-                            @Override
-                            protected void initChannel(SocketChannel socketChannel) throws Exception {
-                                if (weChatEventNettyServerProperties.isEnableMetrics()){
-                                    // 指标采集监控
-                                    socketChannel.pipeline().addLast(new MetricsHandler());
-                                }
-
-                                // 请求解码器
-                                socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
-                                LoggerUtils.debug(logger, "初始化 netty 请求解码器 成功");
-
-                                // 将HTTP消息的多个部分合成一条完整的HTTP消息
-                                socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(weChatEventNettyServerProperties.getHttpAggregatorMaxLength()));
-                                LoggerUtils.debug(logger, "初始化 netty http聚合器 成功");
-
-                                // 响应转码器
-                                socketChannel.pipeline().addLast("http-encoder", new HttpResponseEncoder());
-                                LoggerUtils.debug(logger, "初始化 netty 响应编码器 成功");
-
-                                // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
-                                socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
-                                LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
-
-                                // 读空闲检测，超时时间，默认 15 秒,作为微信客户端，只需要检测读超时即可
-                                socketChannel.pipeline().addLast(new ReadTimeoutHandler(weChatEventNettyServerProperties.getChannelTimeout()));
-
-                                if (weChatEventNettyServerProperties.isEnableLog()){
-                                    // 日志调试，info 级别
-                                    socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
-                                }
-
-                                // 自定义处理handler
-                                socketChannel.pipeline().addLast("http-server", weChatChannel);
-                                LoggerUtils.debug(logger, "初始化 netty 微信协议处理器 成功");
-
+        Thread t = new Thread(() -> {
+            LoggerUtils.info(logger, "初始化 netty 组件");
+            //new 一个主线程组
+            EventLoopGroup bossGroup = new NioEventLoopGroup(1);
+            //new 一个工作线程组
+            EventLoopGroup workGroup = new NioEventLoopGroup(weChatEventNettyServerProperties.getMaxThreadSize());
+            BOOTSTRAP
+                    .group(bossGroup, workGroup)
+                    .channel(NioServerSocketChannel.class)
+                    .childHandler(new ChannelInitializer<SocketChannel>() {
+                        @Override
+                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+                            if (weChatEventNettyServerProperties.isEnableMetrics()){
+                                // 指标采集监控
+                                socketChannel.pipeline().addLast(new MetricsHandler());
                             }
-                        })
-                        .localAddress(weChatEventNettyServerProperties.getPort())
-                        //设置队列大小
-                        .option(ChannelOption.SO_BACKLOG, weChatEventNettyServerProperties.getQueueSize())
-                        // 不保持长链接
-                        .childOption(ChannelOption.SO_KEEPALIVE, false);
-                //绑定端口,开始接收进来的连接
-                try {
-                    ChannelFuture future = BOOTSTRAP.bind(weChatEventNettyServerProperties.getPort()).sync();
-                    LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatEventNettyServerProperties.getPort());
-                    future.channel().closeFuture().sync();
-                } catch (InterruptedException e) {
-                    LoggerUtils.error(logger, "微信netty服务启动失败！！！", e);
-                    System.exit(0);
-                } finally {
-                    //关闭主线程组
-                    bossGroup.shutdownGracefully();
-                    //关闭工作线程组
-                    workGroup.shutdownGracefully();
-                }
+
+                            // 请求解码器
+                            socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
+                            LoggerUtils.debug(logger, "初始化 netty 请求解码器 成功");
+
+                            // 将HTTP消息的多个部分合成一条完整的HTTP消息
+                            socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(weChatEventNettyServerProperties.getHttpAggregatorMaxLength()));
+                            LoggerUtils.debug(logger, "初始化 netty http聚合器 成功");
+
+                            // 响应转码器
+                            socketChannel.pipeline().addLast("http-encoder", new HttpResponseEncoder());
+                            LoggerUtils.debug(logger, "初始化 netty 响应编码器 成功");
+
+                            // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
+                            socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
+                            LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
+
+                            // 读空闲检测，超时时间，默认 15 秒,作为微信客户端，只需要检测读超时即可
+                            socketChannel.pipeline().addLast(new ReadTimeoutHandler(weChatEventNettyServerProperties.getChannelTimeout()));
+
+                            if (weChatEventNettyServerProperties.isEnableLog()){
+                                // 日志调试，info 级别
+                                socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
+                            }
+
+                            // 自定义处理handler
+                            socketChannel.pipeline().addLast("http-server", weChatChannel);
+                            LoggerUtils.debug(logger, "初始化 netty 微信协议处理器 成功");
+
+                        }
+                    })
+                    .localAddress(weChatEventNettyServerProperties.getPort())
+                    //设置队列大小
+                    .option(ChannelOption.SO_BACKLOG, weChatEventNettyServerProperties.getQueueSize())
+                    // 不保持长链接
+                    .childOption(ChannelOption.SO_KEEPALIVE, false);
+            //绑定端口,开始接收进来的连接
+            try {
+                ChannelFuture future = BOOTSTRAP.bind(weChatEventNettyServerProperties.getPort()).sync();
+                LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatEventNettyServerProperties.getPort());
+                future.channel().closeFuture().sync();
+            } catch (InterruptedException e) {
+                LoggerUtils.error(logger, "微信netty服务启动失败！！！", e);
+                System.exit(0);
+            } finally {
+                //关闭主线程组
+                bossGroup.shutdownGracefully();
+                //关闭工作线程组
+                workGroup.shutdownGracefully();
             }
-        };
+        });
         t.setName(weChatEventNettyServerProperties.getMainThreadName());
         t.setDaemon(false);
         t.start();
