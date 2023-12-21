@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.event.netty.properties;
 
 import io.netty.util.NettyRuntime;
+import net.jlxxw.wechat.event.properties.WeChatEventServerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
  * @date 2021/1/19 5:31 下午
  */
 @Configuration
-@ConfigurationProperties("wechat.event.netty.server")
-public class WeChatEventNettyServerProperties {
+@ConfigurationProperties("wechat.event.server.netty")
+public class WeChatEventNettyServerProperties extends WeChatEventServerProperties {
     /**
      * 是否启用netty作为微信的核心接口处理器
      */

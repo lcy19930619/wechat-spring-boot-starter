@@ -21,8 +21,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class WeChatComponentAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(WeChatComponentAutoConfiguration.class);
 
-
-
     /**
      * 事件总线线程池,用于处理微信回调
      * @return

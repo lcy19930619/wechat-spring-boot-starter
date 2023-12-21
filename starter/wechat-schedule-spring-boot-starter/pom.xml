@@ -17,4 +17,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-schedule</artifactId>
+        </dependency>
+    </dependencies>
 </project>
