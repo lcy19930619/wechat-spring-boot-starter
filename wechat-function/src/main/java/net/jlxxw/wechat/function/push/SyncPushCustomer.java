@@ -7,7 +7,8 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,14 +27,14 @@ import java.util.concurrent.CountDownLatch;
  * @date 2021/1/18 10:14 下午
  */
 public class SyncPushCustomer {
-    private RestTemplate restTemplate;
-    private BatchExecutor batchExecutor;
-    private WeChatTokenManager weChatTokenManager;
+    private final RestTemplate restTemplate;
+    private final BatchExecutor batchExecutor;
+    private final WeChatTokenRepository weChatTokenRepository;
 
-    public SyncPushCustomer(RestTemplate restTemplate, BatchExecutor batchExecutor, WeChatTokenManager weChatTokenManager) {
+    public SyncPushCustomer(RestTemplate restTemplate, BatchExecutor batchExecutor, WeChatTokenRepository weChatTokenRepository) {
         this.restTemplate = restTemplate;
         this.batchExecutor = batchExecutor;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
     }
 
     /**
@@ -50,7 +51,7 @@ public class SyncPushCustomer {
         headers.setContentType(MediaType.APPLICATION_JSON);
         String json = JSON.toJSONString(messageDTO);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        String url = MessageFormat.format(UrlConstant.PUSH_CUSTOMER_PREFIX, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.PUSH_CUSTOMER_PREFIX, weChatTokenRepository.get());
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
         WeChatResponse weChatResponse = JSON.parseObject(body, WeChatResponse.class);
@@ -81,7 +82,7 @@ public class SyncPushCustomer {
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 String json = JSON.toJSONString(message);
                 HttpEntity<String> request = new HttpEntity<>(json, headers);
-                String url = MessageFormat.format(UrlConstant.PUSH_CUSTOMER_PREFIX, weChatTokenManager.getTokenFromLocal());
+                String url = MessageFormat.format(UrlConstant.PUSH_CUSTOMER_PREFIX, weChatTokenRepository.get());
                 ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
                 String body = responseEntity.getBody();
                 WeChatResponse weChatResponse = JSON.parseObject(body, WeChatResponse.class);

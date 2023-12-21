@@ -41,9 +41,9 @@ import java.text.MessageFormat;
  */
 public class WebPageAuthorizationManager {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    private WeChatProperties weChatProperties;
+    private final WeChatProperties weChatProperties;
 
     public WebPageAuthorizationManager(RestTemplate restTemplate, WeChatProperties weChatProperties) {
         this.restTemplate = restTemplate;

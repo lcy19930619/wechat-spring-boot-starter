@@ -14,6 +14,7 @@ import net.jlxxw.wechat.dto.message.event.SubscribeQrsceneEventMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
 import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.event.codec.WeChatMessageCodec;
+import net.jlxxw.wechat.event.codec.WeChatCiphertextWeChatMessageCodec;
 import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
@@ -44,7 +45,6 @@ import java.util.stream.Collectors;
 /**
  * 事件总线
  *
- *
  * @author chunyang.leng
  * @date 2021/1/20 11:35 上午
  */
@@ -71,28 +71,26 @@ public class EventBus {
      * key WeChatMessageTypeEnum.key
      * value WeChatMessageTypeEnum
      */
-    private static final Map<String,WeChatMessageTypeEnum> MESSAGE_TYPE_ENUM_MAP = new HashMap<>(16);
+    private static final Map<String, WeChatMessageTypeEnum> MESSAGE_TYPE_ENUM_MAP = new HashMap<>(16);
     /**
      * 事件枚举和type映射集合
      * key WeChatEventTypeEnum.eventCode
      * value WeChatEventTypeEnum
      */
-    private static final Map<String,WeChatEventTypeEnum> EVENT_TYPE_ENUM_MAP = new HashMap<>(16);
+    private static final Map<String, WeChatEventTypeEnum> EVENT_TYPE_ENUM_MAP = new HashMap<>(16);
 
     static {
         WeChatMessageTypeEnum[] messageTypeEnums = WeChatMessageTypeEnum.values();
         for (WeChatMessageTypeEnum messageTypeEnum : messageTypeEnums) {
-            MESSAGE_TYPE_ENUM_MAP.put(messageTypeEnum.getKey(),messageTypeEnum);
+            MESSAGE_TYPE_ENUM_MAP.put(messageTypeEnum.getKey(), messageTypeEnum);
         }
         WeChatEventTypeEnum[] eventTypeEnums = WeChatEventTypeEnum.values();
         for (WeChatEventTypeEnum eventTypeEnum : eventTypeEnums) {
-            EVENT_TYPE_ENUM_MAP.put(eventTypeEnum.getEventCode(),eventTypeEnum);
+            EVENT_TYPE_ENUM_MAP.put(eventTypeEnum.getEventCode(), eventTypeEnum);
         }
 
     }
 
-
-    private final WeChatProperties weChatProperties;
     private final ThreadPoolTaskExecutor eventBusThreadPool;
     /**
      * 有可能未注册任何消息处理器
@@ -103,11 +101,6 @@ public class EventBus {
      * 有可能未注册任何事件处理器
      */
     private final List<AbstractWeChatEventListener> abstractWeChatEventListeners;
-
-    /**
-     * 有可能未启用微信加解密功能
-     */
-    private final WeChatMessageCodec weChatMessageCodec;
 
 
     /**
@@ -120,29 +113,31 @@ public class EventBus {
     private final UnKnowWeChatMessageListener unKnowWeChatMessageListener;
 
     /**
-     * 构建事件总线
-     * @param weChatProperties 微信核心配置
-     * @param eventBusThreadPool 事件总线线程池
-     * @param abstractWeChatMessageListeners 微信消息监听器集合
-     * @param abstractWeChatEventListeners 微信事件监听器集合
-     * @param weChatMessageCodec 微信加密消息编解码器
-     * @param unKnowWeChatEventListener 未知类型事件处理器
-     * @param unKnowWeChatMessageListener 未知类型消息处理器
+     * 消息编解码器
      */
-    public EventBus(WeChatProperties weChatProperties,
-                    ThreadPoolTaskExecutor eventBusThreadPool,
+    private final WeChatMessageCodec weChatMessageCodec;
+
+    /**
+     * 构建事件总线
+     *
+     * @param eventBusThreadPool             事件总线线程池
+     * @param abstractWeChatMessageListeners 微信消息监听器集合
+     * @param abstractWeChatEventListeners   微信事件监听器集合
+     * @param unKnowWeChatEventListener      未知类型事件处理器
+     * @param unKnowWeChatMessageListener    未知类型消息处理器
+     */
+    public EventBus(ThreadPoolTaskExecutor eventBusThreadPool,
                     List<AbstractWeChatMessageListener> abstractWeChatMessageListeners,
                     List<AbstractWeChatEventListener> abstractWeChatEventListeners,
-                    WeChatMessageCodec weChatMessageCodec,
                     UnKnowWeChatEventListener unKnowWeChatEventListener,
-                    UnKnowWeChatMessageListener unKnowWeChatMessageListener) {
-        this.weChatProperties = weChatProperties;
+                    UnKnowWeChatMessageListener unKnowWeChatMessageListener,
+                    WeChatMessageCodec weChatMessageCodec) {
         this.eventBusThreadPool = eventBusThreadPool;
         this.abstractWeChatMessageListeners = abstractWeChatMessageListeners;
         this.abstractWeChatEventListeners = abstractWeChatEventListeners;
-        this.weChatMessageCodec = weChatMessageCodec;
         this.unKnowWeChatEventListener = unKnowWeChatEventListener;
         this.unKnowWeChatMessageListener = unKnowWeChatMessageListener;
+        this.weChatMessageCodec = weChatMessageCodec;
         logger.info("初始化事件总线");
         init();
         logger.info("事件总线初始化完毕");
@@ -166,7 +161,7 @@ public class EventBus {
             map.forEach((k, v) -> {
                 if (v.size() > 1) {
                     // 因为每个消息都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
-                    throw new BeanCreationException("微信 "+ k.getDescription() +" messageListener不能注册多次");
+                    throw new BeanCreationException("微信 " + k.getDescription() + " messageListener不能注册多次");
                 }
                 messageListenerMap.put(k, v.get(0));
             });
@@ -186,7 +181,7 @@ public class EventBus {
             eventMap.forEach((k, v) -> {
                 if (v.size() > 1) {
                     // 因为每个事件都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
-                    throw new BeanCreationException("微信 "+ k.getDescription() +" eventListener不能注册多次");
+                    throw new BeanCreationException("微信 " + k.getDescription() + " eventListener不能注册多次");
                 }
                 eventListenerMap.put(k, v.get(0));
             });
@@ -206,51 +201,27 @@ public class EventBus {
      *
      * @param bytes 微信请求的全部数据
      * @param uri   微信携带的uri，用于获取加解密参数内容
-     * @throws AesException 微信信息加解密异常
      */
-    public String dispatcher(byte[] bytes, String uri)  {
+    public String dispatcher(byte[] bytes, String uri) {
         final byte[] finalBytes = bytes;
         final Future<String> future = eventBusThreadPool.submit(() -> {
             byte[] data = finalBytes;
-            if (weChatProperties.isEnableMessageEnc()) {
-                // 微信发送进来的xml
-                String inputXML = new String(data, StandardCharsets.UTF_8);
-                /*
-                    处理微信uri参数，并封装到map中
-                 */
-                Map<String, String> map = new HashMap<>(16);
-                int index = uri.indexOf("?");
-                String str = uri.substring(index + 1);
-                String[] split = str.split("&");
-                for (String s : split) {
-                    String[] arr = s.split("=");
-                    map.put(arr[0], arr[1]);
-                }
-                // 获取签名
-                String msgSignature = map.get("msg_signature");
-                // 获取时间戳
-                String timestamp = map.get("timestamp");
-                // 获取随机串
-                String nonce = map.get("nonce");
-                // 消息解密
-                String decryptMsg = weChatMessageCodec.decryptMsg(msgSignature, timestamp, nonce, inputXML);
-                LoggerUtils.debug(logger, "微信消息解密成功，信息为:{}", decryptMsg);
-                // 将解密后的数据，转换为byte数组，用于协议的具体处理
-                data = decryptMsg.getBytes(StandardCharsets.UTF_8);
-            }
+            // 微信发送进来的xml
+            String inputXML = new String(data, StandardCharsets.UTF_8);
+            // 消息解密
+            String decryptMsg = weChatMessageCodec.decrypt(uri,  inputXML);
+            // 将解密后的数据，转换为byte数组，用于协议的具体处理
+            data = decryptMsg.getBytes(StandardCharsets.UTF_8);
             // 调用具体的分发器，实现数据的处理
             String result = dispatcher(data);
-            if (weChatProperties.isEnableMessageEnc()) {
-                // 如果启用了信息加解密功能，则对返回值进行加密处理
-                result = weChatMessageCodec.encrypt(result);
-                LoggerUtils.debug(logger, "微信消息加密成功，信息为:{}", result);
-            }
+            // 如果启用了信息加解密功能，则对返回值进行加密处理
+            result = weChatMessageCodec.encrypt(result);
             return result;
         });
         try {
             return future.get(5, TimeUnit.SECONDS);
         } catch (Exception e) {
-            logger.error("事件分发处理出现异常,微信参数:" + new String(bytes, StandardCharsets.UTF_8) + " ,uri参数:" + uri + ",异常信息:" ,e);
+            logger.error("事件分发处理出现异常,微信参数:" + new String(bytes, StandardCharsets.UTF_8) + " ,uri参数:" + uri + ",异常信息:", e);
             return "";
         }
     }
@@ -284,11 +255,11 @@ public class EventBus {
         final String msgType = objectNode.get("MsgType").textValue();
 
         AbstractWeChatMessage abstractWeChatMessage;
-        if("event".equals(msgType)){
+        if ("event".equals(msgType)) {
             // 如果是事件类型，则使用事件进行处理
             String event = objectNode.get("Event").textValue();
             WeChatEventTypeEnum weChatEventTypeEnum = EVENT_TYPE_ENUM_MAP.get(event);
-            if(Objects.isNull(weChatEventTypeEnum)){
+            if (Objects.isNull(weChatEventTypeEnum)) {
                 // 未注册的事件枚举，兜底处理
                 if (Objects.isNull(unKnowWeChatEventListener)) {
                     // 未能使用兜底事件处理器，则直接丢出异常
@@ -296,22 +267,22 @@ public class EventBus {
                 }
                 // 未注册的枚举类型，则使用兜底的事件处理器
                 return unKnowWeChatEventListener.handlerOtherType(objectNode);
-            }else{
-                if(event.equals(WeChatEventTypeEnum.SUBSCRIBE.getEventCode())){
+            } else {
+                if (event.equals(WeChatEventTypeEnum.SUBSCRIBE.getEventCode())) {
                     // 关注事件类型
                     // 将数据转换为事件支持的传输对象
-                    if(Objects.isNull(objectNode.get("EventKey"))){
+                    if (Objects.isNull(objectNode.get("EventKey"))) {
                         // 普通的关注事件
                         abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeEventMessage.class);
                         return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.SUBSCRIBE);
                     }
 
                     String eventKey = objectNode.get("EventKey").textValue();
-                    if (eventKey != null && eventKey.contains("qrscene_") && WeChatEventTypeEnum.SUBSCRIBE.equals(weChatEventTypeEnum) ) {
+                    if (eventKey != null && eventKey.contains("qrscene_") && WeChatEventTypeEnum.SUBSCRIBE.equals(weChatEventTypeEnum)) {
                         // 以qrscene_开头的关注事件，为扫码关注事件，扫码关注事件单独处理
                         abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), SubscribeQrsceneEventMessage.class);
                         return handlerEvent(abstractWeChatMessage, WeChatEventTypeEnum.QRSCENE_SUBSCRIBE);
-                    }else{
+                    } else {
                         // 普通关注事件，自动转换处理
                         abstractWeChatMessage = OBJECT_MAPPER.readValue(objectNode.toString(), weChatEventTypeEnum.getCoverEventClass());
                         return handlerEvent(abstractWeChatMessage, weChatEventTypeEnum);
@@ -326,7 +297,7 @@ public class EventBus {
 
         // 消息处理兜底
         WeChatMessageTypeEnum weChatMessageTypeEnum = MESSAGE_TYPE_ENUM_MAP.get(msgType);
-        if(Objects.isNull(weChatMessageTypeEnum)){
+        if (Objects.isNull(weChatMessageTypeEnum)) {
             // 未注册的枚举，要进行兜底处理
             if (Objects.isNull(unKnowWeChatMessageListener)) {
                 // 未能使用兜底事件处理器，则抛出异常
@@ -392,7 +363,7 @@ public class EventBus {
         final AbstractWeChatEventListener abstractWeChatEventListener = eventListenerMap.get(weChatEventTypeEnum);
 
         if (Objects.isNull(abstractWeChatEventListener)) {
-            throw new IllegalArgumentException(weChatEventTypeEnum.name() + "事件监听器未注册,当前微信请求参数:"+ JSON.toJSONString(abstractWeChatMessage));
+            throw new IllegalArgumentException(weChatEventTypeEnum.name() + "事件监听器未注册,当前微信请求参数:" + JSON.toJSONString(abstractWeChatMessage));
         }
         // 执行事件处理
         WeChatMessageResponse response = abstractWeChatEventListener.handler(abstractWeChatMessage);

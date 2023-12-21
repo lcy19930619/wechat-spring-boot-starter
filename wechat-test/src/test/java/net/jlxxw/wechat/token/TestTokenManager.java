@@ -2,7 +2,7 @@ package net.jlxxw.wechat.token;
 
 import net.jlxxw.wechat.base.BaseTest;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,9 +14,9 @@ import jakarta.annotation.PostConstruct;
  * @author chunyang.leng
  * @date 2022-08-12 3:58 PM
  */
-@Component("weChatTokenManager")
+@Component("weChatTokenRepository")
 @ConditionalOnProperty(prefix = "we-chat", name = "enable-default-token-manager", havingValue = "false")
-public class TestTokenManager extends BaseTest implements WeChatTokenManager {
+public class TestTokenManager extends BaseTest implements WeChatTokenRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(TestTokenManager.class);
     @PostConstruct

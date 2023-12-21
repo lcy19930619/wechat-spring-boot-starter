@@ -297,7 +297,7 @@ package net.jlxxw.wechat.job;
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.mapper.TokenMapper;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.token.WeChatTokenResponse;

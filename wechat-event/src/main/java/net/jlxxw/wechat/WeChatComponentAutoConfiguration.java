@@ -21,49 +21,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class WeChatComponentAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(WeChatComponentAutoConfiguration.class);
 
-    /**
-     * 事件总线线程池,用于处理微信回调
-     * @return
-     */
-    @Bean("eventBusThreadPool")
-    @ConditionalOnMissingBean(name = "eventBusThreadPool")
-    public ThreadPoolTaskExecutor eventBusThreadPool() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        //获取到服务器的cpu内核
-        int i = Runtime.getRuntime().availableProcessors();
-        //核心池大小
-        executor.setCorePoolSize(i * 2 - 1);
-        //最大线程数
-        executor.setMaxPoolSize(i * 4);
-        //队列长度
-        executor.setQueueCapacity(1000);
-        //线程空闲时间
-        executor.setKeepAliveSeconds(1000);
-        //线程前缀名称
-        executor.setThreadNamePrefix("eventBus-execute-pool-");
-        //配置拒绝策略
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        return executor;
-    }
 
-//
-//    @Bean
-//    @ConditionalOnProperty(prefix = "we-chat", name = "enable-default-token-manager", havingValue = "true")
-//    public ScheduledUpdateToken weiXinTokenManager(WeChatTokenManager weChatTokenManager) {
-//        LoggerUtils.info(logger, "初始化默认token管理器");
-//        return new ScheduledUpdateToken( weChatTokenManager);
-//    }
-//
-//    @Bean
-//    @ConditionalOnProperty(prefix = "we-chat", name = "enable-we-chat-call-back-server-security-check", havingValue = "true")
-//    public ScheduledUpdateWeChatServerIp scheduledUpdateWeChatServerIp(
-//            WeChatTokenManager weChatTokenManager,
-//            RestTemplate restTemplate,
-//            WeChatServerSecurityCheck weChatServerSecurityCheck,
-//            WeChatProperties weChatProperties) {
-//        LoggerUtils.info(logger, "初始化微信安全检查组件");
-//        return new ScheduledUpdateWeChatServerIp(weChatTokenManager, restTemplate, weChatServerSecurityCheck, weChatProperties);
-//    }
 
 
 }

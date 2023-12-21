@@ -7,7 +7,7 @@ import net.jlxxw.wechat.base.MockBaseTest;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.PersonalizedMenuDTO;
 import net.jlxxw.wechat.function.menu.PersonalizedMenuManager;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.PersonalizedMenuResponse;
 import org.junit.Assert;
@@ -32,7 +32,7 @@ public class PersonalizedMenuManagerMockTest extends MockBaseTest {
     @Mock
     private RestTemplate restTemplate;
     @Spy
-    private WeChatTokenManager weChatTokenManager;
+    private WeChatTokenRepository weChatTokenRepository;
 
     @Test
     public void createMenuMockTest() {
@@ -40,7 +40,7 @@ public class PersonalizedMenuManagerMockTest extends MockBaseTest {
         String inPutJson = getJson("./mock/data/json/menu/PersonalizedMenuDTO.json");
         PersonalizedMenuDTO inputParam = JSONObject.parseObject(inPutJson, PersonalizedMenuDTO.class);
 
-        String url = MessageFormat.format(UrlConstant.CREATE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.CREATE_PERSONALIZED_MENU, weChatTokenRepository.get());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(JSON.toJSONString(inputParam), headers);
@@ -54,7 +54,7 @@ public class PersonalizedMenuManagerMockTest extends MockBaseTest {
     @Test
     public void deleteMenuMockTest() {
         String menuId = "xxxxxx";
-        String url = MessageFormat.format(UrlConstant.DELETE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.DELETE_PERSONALIZED_MENU, weChatTokenRepository.get());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("menuid", menuId);
 
@@ -70,7 +70,7 @@ public class PersonalizedMenuManagerMockTest extends MockBaseTest {
     @Test
     public void tryMatchMockTest() {
         String uid = "xxxxx";
-        String url = MessageFormat.format(UrlConstant.TRY_MATCH_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.TRY_MATCH_PERSONALIZED_MENU, weChatTokenRepository.get());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("user_id", uid);
 

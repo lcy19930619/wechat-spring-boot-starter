@@ -18,8 +18,8 @@ import java.text.MessageFormat;
  */
 public class TokenManager {
     private static final Logger logger = LoggerFactory.getLogger(TokenManager.class);
-    private RestTemplate restTemplate;
-    private WeChatProperties weChatProperties;
+    private final RestTemplate restTemplate;
+    private final WeChatProperties weChatProperties;
 
     public TokenManager(RestTemplate restTemplate, WeChatProperties weChatProperties) {
         this.restTemplate = restTemplate;

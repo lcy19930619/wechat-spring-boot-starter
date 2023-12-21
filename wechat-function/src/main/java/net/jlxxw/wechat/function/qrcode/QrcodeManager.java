@@ -8,7 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.qrcode.QrCodeResponse;
 import net.jlxxw.wechat.response.qrcode.TempQrCodeResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
@@ -31,11 +32,11 @@ import java.text.MessageFormat;
 public class QrcodeManager {
 
     private static final Logger logger = LoggerFactory.getLogger(QrcodeManager.class);
-    private WeChatTokenManager weChatTokenManager;
-    private RestTemplate restTemplate;
+    private final WeChatTokenRepository weChatTokenRepository;
+    private final RestTemplate restTemplate;
 
-    public QrcodeManager(WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
-        this.weChatTokenManager = weChatTokenManager;
+    public QrcodeManager(WeChatTokenRepository weChatTokenRepository, RestTemplate restTemplate) {
+        this.weChatTokenRepository = weChatTokenRepository;
         this.restTemplate = restTemplate;
     }
 
@@ -51,7 +52,7 @@ public class QrcodeManager {
                                                       @NotNull(message = "自定义的过期时间不能为空")
                                                       @Max(value = 2592000,message = "最大有效值不能超过2592000秒(30天)，超过会自动转换为2592000")
                                                       @Min(value = 60,message = "最小有效值为60，小于60会自动转换为60") Long expireSecond) throws WeChatException,ParamCheckException{
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_STR_SCENE");
@@ -90,7 +91,7 @@ public class QrcodeManager {
                                                  @NotNull(message = "自定义的过期时间不能为空")
                                                  @Max(value = 2592000,message = "最大有效值不能超过2592000秒(30天)，超过会自动转换为2592000")
                                                  @Min(value = 60,message = "最小有效值为60，小于60会自动转换为60") Long expireSecond) throws WeChatException,ParamCheckException {
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_SCENE");
@@ -126,7 +127,7 @@ public class QrcodeManager {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Account_Management/Generating_a_Parametric_QR_Code.html">接口文档</a>
      */
     public QrCodeResponse createStringQrcode(@NotBlank(message = "自定义的eventKey，不应该为空") String eventKey) throws WeChatException,ParamCheckException{
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_LIMIT_STR_SCENE");
@@ -161,7 +162,7 @@ public class QrcodeManager {
      * @throws ParamCheckException 调用接口前，参数检查异常
      */
     public QrCodeResponse createIdQrcode(@NotNull(message = "二维码id不能为空") Long id) throws WeChatException, ParamCheckException {
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.CREATE_QRCODE_URL, token);
         JSONObject object = new JSONObject();
         object.put("action_name", "QR_LIMIT_SCENE");

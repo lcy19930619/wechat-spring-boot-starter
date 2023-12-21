@@ -9,7 +9,8 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.material.PermanentMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
@@ -38,12 +39,12 @@ import java.text.MessageFormat;
 public class PermanentMaterialManager {
     private static final Logger logger = LoggerFactory.getLogger(TempMaterialManager.class);
 
-    private RestTemplate restTemplate;
-    private WeChatTokenManager weChatTokenManager;
+    private final RestTemplate restTemplate;
+    private final WeChatTokenRepository weChatTokenRepository;
 
-    public PermanentMaterialManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager) {
+    public PermanentMaterialManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository) {
         this.restTemplate = restTemplate;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
     }
 
     /**
@@ -73,7 +74,7 @@ public class PermanentMaterialManager {
             param.add("description",JSON.toJSONString(jsonObject));
         }
 
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增永久素材url:{}", url);
 
@@ -134,7 +135,7 @@ public class PermanentMaterialManager {
             jsonObject.put("introduction",videoIntroduction);
             param.add("description",JSON.toJSONString(jsonObject));
         }
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增永久素材url:{}", url);
 
@@ -160,7 +161,7 @@ public class PermanentMaterialManager {
      * @throws ParamCheckException 方法调用前，参数检查异常
      */
     public byte[] download(@NotBlank(message = "下载素材id不能为空") String mediaId) throws WeChatException, ParamCheckException{
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DOWNLOAD_PERMANENT_MATERIAL, tokenFromLocal);
         LoggerUtils.debug(logger, "下载永久素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();
@@ -205,7 +206,7 @@ public class PermanentMaterialManager {
      * @return
      */
     public WeChatResponse deleteMaterial(@NotBlank(message = "删除素材id不能为空") String mediaId) throws WeChatException, ParamCheckException{
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DELETE_PERMANENT_MATERIAL, tokenFromLocal);
         LoggerUtils.debug(logger, "删除永久素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();

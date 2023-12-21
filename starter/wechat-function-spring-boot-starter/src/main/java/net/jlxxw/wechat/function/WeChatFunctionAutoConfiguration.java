@@ -16,10 +16,10 @@ import net.jlxxw.wechat.function.push.SyncPushTemplate;
 import net.jlxxw.wechat.function.qrcode.QrcodeManager;
 import net.jlxxw.wechat.function.tag.TagManager;
 import net.jlxxw.wechat.function.token.TokenManager;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
 import net.jlxxw.wechat.function.user.UserManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -132,11 +132,11 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
 
 
     @Bean
-    @ConditionalOnBean(value = {WeChatProperties.class, WeChatTokenManager.class})
+    @ConditionalOnBean(value = {WeChatProperties.class, WeChatTokenRepository.class})
     public OpenApiManager openApiManager(RestTemplate restTemplate,
                                          WeChatProperties weChatProperties,
-                                         WeChatTokenManager weChatTokenManager) {
-        return new OpenApiManager(weChatProperties, weChatTokenManager, restTemplate);
+                                         WeChatTokenRepository weChatTokenRepository) {
+        return new OpenApiManager(weChatProperties, weChatTokenRepository, restTemplate);
     }
 
 
@@ -149,72 +149,72 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
 
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public MaterialManager materialManager(RestTemplate restTemplate,
-                                           WeChatTokenManager weChatTokenManager) {
-        return new MaterialManager(restTemplate, weChatTokenManager);
+                                           WeChatTokenRepository weChatTokenRepository) {
+        return new MaterialManager(restTemplate, weChatTokenRepository);
     }
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public PermanentMaterialManager permanentMaterialManager(RestTemplate restTemplate,
-                                                             WeChatTokenManager weChatTokenManager) {
-        return new PermanentMaterialManager(restTemplate, weChatTokenManager);
+                                                             WeChatTokenRepository weChatTokenRepository) {
+        return new PermanentMaterialManager(restTemplate, weChatTokenRepository);
     }
 
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public TempMaterialManager tempMaterialManager(RestTemplate restTemplate,
-                                                   WeChatTokenManager weChatTokenManager) {
-        return new TempMaterialManager(restTemplate, weChatTokenManager);
+                                                   WeChatTokenRepository weChatTokenRepository) {
+        return new TempMaterialManager(restTemplate, weChatTokenRepository);
     }
 
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public MenuManager menuManager(RestTemplate restTemplate,
-                                   WeChatTokenManager weChatTokenManager) {
-        return new MenuManager(weChatTokenManager, restTemplate);
+                                   WeChatTokenRepository weChatTokenRepository) {
+        return new MenuManager(weChatTokenRepository, restTemplate);
     }
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public PersonalizedMenuManager personalizedMenuManager(RestTemplate restTemplate,
-                                                           WeChatTokenManager weChatTokenManager) {
-        return new PersonalizedMenuManager(weChatTokenManager, restTemplate);
+                                                           WeChatTokenRepository weChatTokenRepository) {
+        return new PersonalizedMenuManager(weChatTokenRepository, restTemplate);
     }
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public SyncPushCustomer syncPushCustomer(RestTemplate restTemplate,
                                              BatchExecutor batchExecutor,
-                                             WeChatTokenManager weChatTokenManager) {
-        return new SyncPushCustomer(restTemplate, batchExecutor, weChatTokenManager);
+                                             WeChatTokenRepository weChatTokenRepository) {
+        return new SyncPushCustomer(restTemplate, batchExecutor, weChatTokenRepository);
     }
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public SyncPushTemplate syncPushTemplate(RestTemplate restTemplate,
                                              BatchExecutor batchExecutor,
-                                             WeChatTokenManager weChatTokenManager) {
-        return new SyncPushTemplate(restTemplate, batchExecutor, weChatTokenManager);
+                                             WeChatTokenRepository weChatTokenRepository) {
+        return new SyncPushTemplate(restTemplate, batchExecutor, weChatTokenRepository);
     }
 
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public QrcodeManager qrcodeManager(RestTemplate restTemplate,
-                                       WeChatTokenManager weChatTokenManager) {
-        return new QrcodeManager(weChatTokenManager, restTemplate);
+                                       WeChatTokenRepository weChatTokenRepository) {
+        return new QrcodeManager(weChatTokenRepository, restTemplate);
     }
 
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public TagManager tagManager(RestTemplate restTemplate,
-                                 WeChatTokenManager weChatTokenManager) {
-        return new TagManager(restTemplate, weChatTokenManager);
+                                 WeChatTokenRepository weChatTokenRepository) {
+        return new TagManager(restTemplate, weChatTokenRepository);
     }
 
     @Bean
@@ -226,10 +226,10 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
 
 
     @Bean
-    @ConditionalOnBean(WeChatTokenManager.class)
+    @ConditionalOnBean(WeChatTokenRepository.class)
     public UserManager userManager(RestTemplate restTemplate,
-                                   WeChatTokenManager weChatTokenManager,
+                                   WeChatTokenRepository weChatTokenRepository,
                                    BatchExecutor batchExecutor) {
-        return new UserManager(restTemplate, weChatTokenManager, batchExecutor);
+        return new UserManager(restTemplate, weChatTokenRepository, batchExecutor);
     }
 }

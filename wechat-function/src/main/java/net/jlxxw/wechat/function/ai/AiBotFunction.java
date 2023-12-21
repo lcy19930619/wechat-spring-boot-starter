@@ -32,8 +32,8 @@ public class AiBotFunction {
 
     private static final Logger logger = LoggerFactory.getLogger(AiBotFunction.class);
 
-    private WeChatAiBotProperties weChatAiBotProperties;
-    private RestTemplate restTemplate;
+    private final WeChatAiBotProperties weChatAiBotProperties;
+    private final RestTemplate restTemplate;
 
     public AiBotFunction(WeChatAiBotProperties weChatAiBotProperties, RestTemplate restTemplate) {
         this.weChatAiBotProperties = weChatAiBotProperties;

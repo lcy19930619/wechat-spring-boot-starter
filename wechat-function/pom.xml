@@ -49,6 +49,10 @@
             <groupId>net.jlxxw</groupId>
             <artifactId>wechat-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-repository</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

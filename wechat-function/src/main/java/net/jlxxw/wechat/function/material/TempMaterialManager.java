@@ -8,7 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.material.TempMaterialResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
@@ -39,11 +40,11 @@ public class TempMaterialManager {
     private static final Logger logger = LoggerFactory.getLogger(TempMaterialManager.class);
 
     private RestTemplate restTemplate;
-    private WeChatTokenManager weChatTokenManager;
+    private WeChatTokenRepository weChatTokenRepository;
 
-    public TempMaterialManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager) {
+    public TempMaterialManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository) {
         this.restTemplate = restTemplate;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
     }
 
     /**
@@ -60,7 +61,7 @@ public class TempMaterialManager {
         //参数
         param.add("media", resource);
         param.add("type", materialEnum.name().toLowerCase());
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_TEMP_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增临时素材url:{}", url);
 
@@ -109,7 +110,7 @@ public class TempMaterialManager {
         //参数
         param.add("media", resource);
         param.add("type", materialEnum.name().toLowerCase());
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_TEMP_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
         LoggerUtils.debug(logger, "新增临时素材url:{}", url);
 
@@ -133,7 +134,7 @@ public class TempMaterialManager {
      * @return 下载文件的二进制数据
      */
     public byte[] downloadMaterial(@NotBlank(message = "素材id不能为空") String mediaId) throws WeChatException{
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DOWN_TEMP_MATERIAL, tokenFromLocal, mediaId);
         LoggerUtils.debug(logger, "下载临时素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();
@@ -180,7 +181,7 @@ public class TempMaterialManager {
      * @return 下载文件的二进制数据
      */
     public byte[] downloadHDVoice(String mediaId) throws WeChatException{
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DOWN_HD_VOICE, tokenFromLocal, mediaId);
         LoggerUtils.debug(logger, "下载高清语音素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();

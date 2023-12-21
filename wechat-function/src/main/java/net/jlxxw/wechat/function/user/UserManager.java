@@ -11,7 +11,8 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.LanguageEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -38,12 +39,12 @@ public class UserManager {
 
     private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
     public RestTemplate restTemplate;
-    public WeChatTokenManager weChatTokenManager;
+    public WeChatTokenRepository weChatTokenRepository;
     public BatchExecutor batchExecutor;
 
-    public UserManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager, BatchExecutor batchExecutor) {
+    public UserManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository, BatchExecutor batchExecutor) {
         this.restTemplate = restTemplate;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
         this.batchExecutor = batchExecutor;
     }
 
@@ -61,7 +62,7 @@ public class UserManager {
         int totle = 1;
         String nextOpenId = "";
         while (current < totle) {
-            String token = weChatTokenManager.getTokenFromLocal();
+            String token = weChatTokenRepository.get();
 
             String url = MessageFormat.format(UrlConstant.FIND_ALL_USER_OPENID, token, nextOpenId);
 
@@ -121,7 +122,7 @@ public class UserManager {
             }
             requestParam.put("user_list", jsonArray);
 
-            String token = weChatTokenManager.getTokenFromLocal();
+            String token = weChatTokenRepository.get();
             String url = UrlConstant.BATCH_USER_INFO_URL + token;
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -165,7 +166,7 @@ public class UserManager {
         if (StringUtils.isBlank(openId)) {
             return null;
         }
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.ONE_USER_INFO_URL, token, openId, languageEnum.getCode());
         ResponseEntity<JSONObject> forEntity = restTemplate.getForEntity(url, JSONObject.class);
         JSONObject body = forEntity.getBody();

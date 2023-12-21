@@ -8,7 +8,8 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.PersonalizedMenuDTO;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.MatchPersonalizedMenuResponse;
 import net.jlxxw.wechat.response.menu.PersonalizedMenuResponse;
@@ -68,12 +69,12 @@ import java.text.MessageFormat;
  * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
  */
 public class PersonalizedMenuManager {
-    private WeChatTokenManager weChatTokenManager;
+    private final WeChatTokenRepository weChatTokenRepository;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    public PersonalizedMenuManager(WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
-        this.weChatTokenManager = weChatTokenManager;
+    public PersonalizedMenuManager(WeChatTokenRepository weChatTokenRepository, RestTemplate restTemplate) {
+        this.weChatTokenRepository = weChatTokenRepository;
         this.restTemplate = restTemplate;
     }
 
@@ -87,7 +88,7 @@ public class PersonalizedMenuManager {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html#0">文档地址</a>
      */
     public PersonalizedMenuResponse createMenu(@Validated(value = Insert.class) PersonalizedMenuDTO personalizedMenuDTO) throws WeChatException, ParamCheckException {
-        String url = MessageFormat.format(UrlConstant.CREATE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.CREATE_PERSONALIZED_MENU, weChatTokenRepository.get());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -111,7 +112,7 @@ public class PersonalizedMenuManager {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Personalized_menu_interface.html">文档地址</a>
      */
     public WeChatResponse deleteMenu(@NotBlank(message = "菜单id不能为空") String menuId)throws WeChatException, ParamCheckException {
-        String url = MessageFormat.format(UrlConstant.DELETE_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.DELETE_PERSONALIZED_MENU, weChatTokenRepository.get());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("menuid", menuId);
 
@@ -137,7 +138,7 @@ public class PersonalizedMenuManager {
      * @return 菜单信息列表
      */
     public MatchPersonalizedMenuResponse tryMatch(@NotBlank(message = "uid不能为空") String uid)throws WeChatException, ParamCheckException {
-        String url = MessageFormat.format(UrlConstant.TRY_MATCH_PERSONALIZED_MENU, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.TRY_MATCH_PERSONALIZED_MENU, weChatTokenRepository.get());
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("user_id", uid);
 

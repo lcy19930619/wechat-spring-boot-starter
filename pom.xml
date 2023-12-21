@@ -62,15 +62,16 @@
         <module>wechat-properties</module>
         <module>wechat-event</module>
         <module>wechat-function</module>
-        <module>wechat-default-mysql</module>
+        <module>wechat-repository-mysql</module>
         <module>wechat-test</module>
-        <module>wechat-schedule</module>
+        <module>wechat-simple-schedule</module>
         <module>wechat-security</module>
+        <module>wechat-repository</module>
 
         <module>starter/wechat-event-netty-spring-boot-starter</module>
         <module>starter/wechat-event-web-spring-boot-starter</module>
         <module>starter/wechat-function-spring-boot-starter</module>
-        <module>starter/wechat-default-mysql-spring-boot-starter</module>
+        <module>starter/wechat-repository-mysql-spring-boot-starter</module>
         <module>starter/wechat-security-spring-boot-starter</module>
         <module>starter/wechat-schedule-spring-boot-starter</module>
     </modules>
@@ -108,22 +109,27 @@
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-repository</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-properties</artifactId>
                 <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
-                <artifactId>wechat-default-mysql</artifactId>
+                <artifactId>wechat-repository-mysql</artifactId>
                 <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
-                <artifactId>wechat-schedule</artifactId>
+                <artifactId>wechat-simple-schedule</artifactId>
                 <version>${version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
-                <artifactId>wechat-default-mysql-spring-boot-starter</artifactId>
+                <artifactId>wechat-repository-mysql-spring-boot-starter</artifactId>
                 <version>${version}</version>
             </dependency>
             <dependency>

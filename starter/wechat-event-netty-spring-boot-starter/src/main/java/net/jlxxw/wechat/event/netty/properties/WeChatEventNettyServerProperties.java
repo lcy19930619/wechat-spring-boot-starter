@@ -35,6 +35,16 @@ public class WeChatEventNettyServerProperties extends WeChatEventServerPropertie
     private Integer maxThreadSize = NettyRuntime.availableProcessors() * 2;
 
     /**
+     * 事件处理线程池配置
+     */
+    private EventThreadPoolProperties eventThreadPool;
+
+
+
+
+
+
+    /**
      * 是否开启日志监控
      */
     private boolean enableLog = false;
@@ -129,5 +139,13 @@ public class WeChatEventNettyServerProperties extends WeChatEventServerPropertie
 
     public void setMainThreadName(String mainThreadName) {
         this.mainThreadName = mainThreadName;
+    }
+
+    public EventThreadPoolProperties getEventThreadPool() {
+        return eventThreadPool;
+    }
+
+    public void setEventThreadPool(EventThreadPoolProperties eventThreadPool) {
+        this.eventThreadPool = eventThreadPool;
     }
 }

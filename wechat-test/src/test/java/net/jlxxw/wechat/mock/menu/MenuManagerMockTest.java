@@ -8,7 +8,7 @@ import net.jlxxw.wechat.base.MockBaseTest;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.MenuDTO;
 import net.jlxxw.wechat.function.menu.MenuManager;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
 import net.jlxxw.wechat.response.WeChatResponse;
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,12 +34,12 @@ public class MenuManagerMockTest extends MockBaseTest {
     @Mock
     private RestTemplate restTemplate;
     @Spy
-    private WeChatTokenManager weChatTokenManager;
+    private WeChatTokenRepository weChatTokenRepository;
 
     @Test
     public void deleteMenuMockTest() {
 
-        String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL, weChatTokenRepository.get());
         String webPageAuthTokenJson = JSON.toJSONString(new WeChatResponse()).replaceAll("\\s", "");
         ResponseEntity<String> responseEntity = new ResponseEntity<>(webPageAuthTokenJson, HttpStatus.OK);
         when(restTemplate.getForEntity(url, String.class)).thenReturn(responseEntity);
@@ -57,7 +57,7 @@ public class MenuManagerMockTest extends MockBaseTest {
         JSONObject data = new JSONObject();
         data.put("button", button);
         String json = JSON.toJSONString(data);
-        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenRepository.get());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
@@ -79,7 +79,7 @@ public class MenuManagerMockTest extends MockBaseTest {
         JSONObject data = new JSONObject();
         data.put("button", button);
         String json = JSON.toJSONString(data);
-        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenRepository.get());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(json, headers);

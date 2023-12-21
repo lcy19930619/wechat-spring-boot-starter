@@ -3,7 +3,8 @@ package net.jlxxw.wechat.function.material;
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.material.MaterialCountResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -19,12 +20,12 @@ import java.text.MessageFormat;
  * @date 2022-08-12 5:25 PM
  */
 public class MaterialManager {
-    private RestTemplate restTemplate;
-    private WeChatTokenManager weChatTokenManager;
+    private final RestTemplate restTemplate;
+    private final WeChatTokenRepository weChatTokenRepository;
 
-    public MaterialManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager) {
+    public MaterialManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository) {
         this.restTemplate = restTemplate;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
     }
 
     /**
@@ -32,7 +33,7 @@ public class MaterialManager {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Asset_Management/Get_the_total_of_all_materials.html">接口文档地址</a>
      */
     public MaterialCountResponse materialCount() throws WeChatException{
-        String tokenFromLocal = weChatTokenManager.getTokenFromLocal();
+        String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.MATERIAL_COUNT, tokenFromLocal);
 
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);

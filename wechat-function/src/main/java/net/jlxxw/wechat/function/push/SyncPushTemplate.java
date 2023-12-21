@@ -7,15 +7,13 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.template.WeChatTemplateDTO;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
@@ -31,14 +29,14 @@ import java.util.concurrent.CountDownLatch;
  * @date 2021/1/18 10:14 下午
  */
 public class SyncPushTemplate {
-    private RestTemplate restTemplate;
-    private BatchExecutor batchExecutor;
-    private WeChatTokenManager weChatTokenManager;
+    private final RestTemplate restTemplate;
+    private final BatchExecutor batchExecutor;
+    private final WeChatTokenRepository weChatTokenRepository;
 
-    public SyncPushTemplate(RestTemplate restTemplate, BatchExecutor batchExecutor, WeChatTokenManager weChatTokenManager) {
+    public SyncPushTemplate(RestTemplate restTemplate, BatchExecutor batchExecutor, WeChatTokenRepository weChatTokenRepository) {
         this.restTemplate = restTemplate;
         this.batchExecutor = batchExecutor;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
     }
 
     /**
@@ -55,7 +53,7 @@ public class SyncPushTemplate {
         headers.setContentType(MediaType.APPLICATION_JSON);
         String json = JSON.toJSONString(template);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
-        String url = MessageFormat.format(UrlConstant.PUSH_TEMPLATE_PREFIX, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.PUSH_TEMPLATE_PREFIX, weChatTokenRepository.get());
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
         WeChatResponse weChatResponse = JSON.parseObject(body, WeChatResponse.class);
@@ -86,7 +84,7 @@ public class SyncPushTemplate {
                 headers.setContentType(MediaType.APPLICATION_JSON);
                 String json = JSON.toJSONString(weChatTemplate);
                 HttpEntity<String> request = new HttpEntity<>(json, headers);
-                String url = MessageFormat.format(UrlConstant.PUSH_TEMPLATE_PREFIX, weChatTokenManager.getTokenFromLocal());
+                String url = MessageFormat.format(UrlConstant.PUSH_TEMPLATE_PREFIX, weChatTokenRepository.get());
                 ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
                 String body = responseEntity.getBody();
                 WeChatResponse weChatResponse = JSON.parseObject(body, WeChatResponse.class);

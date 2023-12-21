@@ -7,7 +7,8 @@ import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.dto.menu.MenuDTO;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.MenuResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
@@ -32,11 +33,11 @@ import java.util.List;
 public class MenuManager {
 
     private static final Logger logger = LoggerFactory.getLogger(MenuManager.class);
-    private WeChatTokenManager weChatTokenManager;
-    private RestTemplate restTemplate;
+    private final WeChatTokenRepository weChatTokenRepository;
+    private final RestTemplate restTemplate;
 
-    public MenuManager(WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
-        this.weChatTokenManager = weChatTokenManager;
+    public MenuManager(WeChatTokenRepository weChatTokenRepository, RestTemplate restTemplate) {
+        this.weChatTokenRepository = weChatTokenRepository;
         this.restTemplate = restTemplate;
     }
 
@@ -52,7 +53,7 @@ public class MenuManager {
         jsonObject.put("button", list);
         String json = JSON.toJSONString(jsonObject);
         LoggerUtils.debug(logger, "创建公众号菜单，请求参数:{}", json);
-        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenRepository.get());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
@@ -73,7 +74,7 @@ public class MenuManager {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Deleting_Custom-Defined_Menu.html">文档地址</a>
      */
     public WeChatResponse deleteMenu() throws WeChatException {
-        String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL, weChatTokenRepository.get());
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String body = entity.getBody();
         LoggerUtils.debug(logger, "删除公众号菜单，应答结果:{}", body);
@@ -91,7 +92,7 @@ public class MenuManager {
      * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/Custom_Menus/Querying_Custom_Menus.html">文档地址</a>
      */
     public MenuResponse getMenu() throws WeChatException {
-        String url = MessageFormat.format(UrlConstant.GET_MENU_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.GET_MENU_URL, weChatTokenRepository.get());
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String body = entity.getBody();
         LoggerUtils.debug(logger, "获取公众号菜单，应答结果:{}", body);

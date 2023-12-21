@@ -5,8 +5,9 @@ import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
 import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.api.ApiRequestRecord;
 import net.jlxxw.wechat.response.api.ApiResponse;
@@ -29,13 +30,13 @@ import java.text.MessageFormat;
  */
 public class OpenApiManager {
     private static final Logger logger = LoggerFactory.getLogger(OpenApiManager.class);
-    private WeChatProperties weChatProperties;
-    private WeChatTokenManager weChatTokenManager;
-    private RestTemplate restTemplate;
+    private final WeChatProperties weChatProperties;
+    private WeChatTokenRepository weChatTokenRepository;
+    private final RestTemplate restTemplate;
 
-    public OpenApiManager(WeChatProperties weChatProperties, WeChatTokenManager weChatTokenManager, RestTemplate restTemplate) {
+    public OpenApiManager(WeChatProperties weChatProperties, WeChatTokenRepository weChatTokenRepository, RestTemplate restTemplate) {
         this.weChatProperties = weChatProperties;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
         this.restTemplate = restTemplate;
     }
 
@@ -59,7 +60,7 @@ public class OpenApiManager {
      */
     public WeChatResponse clean() throws WeChatException {
         String appId = weChatProperties.getAppId();
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);
@@ -98,7 +99,7 @@ public class OpenApiManager {
      * @throws ParamCheckException 请求参数检查失败
      */
     public ApiResponse selectQuota(@NotBlank(message = "cgiPath不能为空") String cgiPath) throws WeChatException, ParamCheckException {
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("cgi_path", cgiPath);
@@ -138,7 +139,7 @@ public class OpenApiManager {
      */
     public ApiRequestRecord selectRid(@NotBlank(message = "rid不可以为空") String rid) throws WeChatException,ParamCheckException {
 
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("rid", rid);

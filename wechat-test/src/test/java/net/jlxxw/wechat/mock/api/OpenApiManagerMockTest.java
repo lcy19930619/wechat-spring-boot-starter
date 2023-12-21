@@ -6,7 +6,7 @@ import java.text.MessageFormat;
 import net.jlxxw.wechat.base.MockBaseTest;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.function.api.OpenApiManager;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.api.ApiRequestRecord;
@@ -33,14 +33,14 @@ public class OpenApiManagerMockTest extends MockBaseTest {
     @Spy
     private WeChatProperties weChatProperties;
     @Spy
-    private WeChatTokenManager weChatTokenManager;
+    private WeChatTokenRepository weChatTokenRepository;
     @Mock
     private RestTemplate restTemplate;
 
     @Test
     public void cleanMockTest(){
         String appId = weChatProperties.getAppId();
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
 
         String url = MessageFormat.format(UrlConstant.OPEN_API_CLEAN, token);
 
@@ -62,7 +62,7 @@ public class OpenApiManagerMockTest extends MockBaseTest {
     @Test
     public void selectRidTest(){
         String rid = "61725984-6126f6f9-040f19c4";
-        String token = weChatTokenManager.getTokenFromLocal();
+        String token = weChatTokenRepository.get();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("rid", rid);

@@ -9,8 +9,9 @@ import jakarta.validation.constraints.Size;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.token.WeChatTokenManager;
+
 import net.jlxxw.wechat.function.user.UserManager;
+import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.tag.Tag;
 import net.jlxxw.wechat.response.tag.TagResponse;
@@ -37,12 +38,12 @@ import java.util.List;
  */
 public class TagManager {
     private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
-    private RestTemplate restTemplate;
-    private WeChatTokenManager weChatTokenManager;
+    private final RestTemplate restTemplate;
+    private final WeChatTokenRepository weChatTokenRepository;
 
-    public TagManager(RestTemplate restTemplate, WeChatTokenManager weChatTokenManager) {
+    public TagManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository) {
         this.restTemplate = restTemplate;
-        this.weChatTokenManager = weChatTokenManager;
+        this.weChatTokenRepository = weChatTokenRepository;
     }
 
     /**
@@ -55,7 +56,7 @@ public class TagManager {
      */
     public TagResponse createTag(
         @NotBlank(message = "标签名字不能为空") @Size(max = 30, message = "最大长度不能超过30个字符") String tagValue) throws WeChatException, ParamCheckException {
-        String url = MessageFormat.format(UrlConstant.CREATE_TAGS_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.CREATE_TAGS_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"创建公众号标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         JSONObject param = new JSONObject();
@@ -80,7 +81,7 @@ public class TagManager {
      * @throws WeChatException 微信服务端验证异常
      */
     public List<Tag> getTag() throws WeChatException{
-        String url = MessageFormat.format(UrlConstant.GET_TAGS_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.GET_TAGS_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"获取公众号已创建的标签url:{}",url);
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String body = entity.getBody();
@@ -106,7 +107,7 @@ public class TagManager {
      */
     public WeChatResponse updateTag(@NotNull(message = "标签id不能为空") Integer id,
         @NotBlank(message = "标签名字不能为空") @Size(max = 30, message = "最大长度不能超过30个字符") String tagValue) throws WeChatException, ParamCheckException {
-        String url = MessageFormat.format(UrlConstant.UPDATE_TAGS_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.UPDATE_TAGS_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"更新标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         JSONObject param = new JSONObject();
@@ -138,7 +139,7 @@ public class TagManager {
      */
     public WeChatResponse delete(
         @NotNull(message = "标签id不能为空") Integer id) throws WeChatException, ParamCheckException {
-        String url = MessageFormat.format(UrlConstant.DELETE_TAGS_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.DELETE_TAGS_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"删除标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         JSONObject param = new JSONObject();
@@ -172,7 +173,7 @@ public class TagManager {
      */
     public TagUserResponse getTagUser(@NotNull(message = "标签id不能为空") Integer tagId,
         String nextOpenId) throws WeChatException, ParamCheckException {
-        String url = MessageFormat.format(UrlConstant.GET_TAG_USERS_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.GET_TAG_USERS_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"获取标签下粉丝列表url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("tagid", tagId);
@@ -207,7 +208,7 @@ public class TagManager {
         @NotEmpty(message = "用户id列表不能为空") @Size(max = 50, message = "每次传入的 openid 列表个数不能超过50个") List<String> openIdList,
         @NotNull(message = "标签id不能为空") Integer tagId) throws WeChatException, ParamCheckException {
 
-        String url = MessageFormat.format(UrlConstant.USERS_BATCH_TAGGING_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.USERS_BATCH_TAGGING_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"用户批量打标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("openid_list", openIdList);
@@ -242,7 +243,7 @@ public class TagManager {
         @NotEmpty(message = "用户id列表不能为空") @Size(max = 50, message = "每次传入的 openid 列表个数不能超过50个") List<String> openIdList,
         @NotNull(message = "标签id不能为空") Integer tagId) throws WeChatException, ParamCheckException {
 
-        String url = MessageFormat.format(UrlConstant.USERS_BATCH_UNTAGGING_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.USERS_BATCH_UNTAGGING_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"批量取消用户标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("openid_list", openIdList);
@@ -271,7 +272,7 @@ public class TagManager {
      * @throws ParamCheckException 参数检查不通过
      */
     public List<Integer> getUserTags(String openId) throws WeChatException, ParamCheckException{
-        String url = MessageFormat.format(UrlConstant.GET_USER_TAG_URL, weChatTokenManager.getTokenFromLocal());
+        String url = MessageFormat.format(UrlConstant.GET_USER_TAG_URL, weChatTokenRepository.get());
         LoggerUtils.debug(logger,"获取用户身上的标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("openid", openId);
