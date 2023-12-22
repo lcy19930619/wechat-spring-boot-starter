@@ -1,10 +1,9 @@
 package net.jlxxw.wechat.security;
 
-import net.jlxxw.wechat.security.properties.WeChatSecurityProperties;
-import net.jlxxw.wechat.security.store.EmbeddedIpSegmentStore;
-import net.jlxxw.wechat.security.store.IpSegmentStore;
+import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
+import net.jlxxw.wechat.security.repository.EmbeddedIpSegmentRepository;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,14 +20,8 @@ public class WeChatSecurityAutoConfiguration {
 
 
     @Bean
-    @ConfigurationProperties("wechat.security")
-    public WeChatSecurityProperties weChatSecurityProperties(){
-        return new WeChatSecurityProperties();
-    }
-
-
-    @Bean
-    public IpSegmentStore ipSegmentStore() {
-        return new EmbeddedIpSegmentStore();
+    @ConditionalOnMissingBean(IpSegmentRepository.class)
+    public IpSegmentRepository ipSegmentRepository() {
+        return new EmbeddedIpSegmentRepository();
     }
 }

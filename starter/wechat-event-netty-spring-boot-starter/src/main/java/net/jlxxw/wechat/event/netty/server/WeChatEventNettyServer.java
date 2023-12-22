@@ -16,9 +16,10 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import jakarta.annotation.PostConstruct;
-import net.jlxxw.wechat.event.netty.channel.WeChatChannel;
+import net.jlxxw.wechat.event.netty.handler.MessageHandler;
 import net.jlxxw.wechat.event.netty.handler.MetricsHandler;
 import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
+import net.jlxxw.wechat.security.filter.SecurityFilterTemplate;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,9 @@ public class WeChatEventNettyServer {
     @Autowired
     private WeChatEventNettyServerProperties weChatEventNettyServerProperties;
     @Autowired
-    private WeChatChannel weChatChannel;
+    private MessageHandler messageHandler;
+
+    private SecurityFilterTemplate securityFilterTemplate;
 
     @PostConstruct
     public void postConstruct() {
@@ -89,7 +92,7 @@ public class WeChatEventNettyServer {
                             }
 
                             // 自定义处理handler
-                            socketChannel.pipeline().addLast("http-server", weChatChannel);
+                            socketChannel.pipeline().addLast("http-server", messageHandler);
                             LoggerUtils.debug(logger, "初始化 netty 微信协议处理器 成功");
 
                         }

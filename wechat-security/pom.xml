@@ -27,6 +27,10 @@
             <groupId>net.jlxxw</groupId>
             <artifactId>wechat-properties</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-repository</artifactId>
+        </dependency>
     </dependencies>
 
     <properties>

@@ -8,7 +8,6 @@
         <version>2.0.1.20231216</version>
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>net.jlxxw</groupId>
     <artifactId>wechat-event-netty-spring-boot-starter</artifactId>
     <name>wechat-netty-spring-boot-starter</name>
     <description>wechat-netty-spring-boot-starter</description>

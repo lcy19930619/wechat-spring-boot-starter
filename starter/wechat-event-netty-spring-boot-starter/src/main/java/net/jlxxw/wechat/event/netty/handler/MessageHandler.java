@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.event.netty.channel;
+package net.jlxxw.wechat.event.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -10,16 +10,11 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.event.component.EventBus;
-import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.security.store.IpSegmentStore;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.net.InetSocketAddress;
-import java.util.Objects;
 
 /**
  * netty微信回调处理接口
@@ -29,33 +24,15 @@ import java.util.Objects;
  */
 @Component
 @ChannelHandler.Sharable
-public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> {
-    private static final Logger logger = LoggerFactory.getLogger(WeChatChannel.class);
+public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    private static final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
     @Autowired
     private EventBus eventBus;
-    @Autowired(required = false)
-    private IpSegmentStore ipSegmentStore;
-    @Autowired
-    private WeChatProperties weChatProperties;
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
         LoggerUtils.debug(logger, "netty 开始处理");
-        if (weChatProperties.isEnableWeChatCallBackServerSecurityCheck() && ipSegmentStore != null) {
-            // 开启微信回调ip安全检查时执行
 
-            // 获取远程socket信息
-            InetSocketAddress socketAddress = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
-            // 获取远程ip地址信息
-            String ipAddress = socketAddress.getAddress().getHostAddress();
-            LoggerUtils.debug(logger, "微信回调ip安全检查执行,远程ip:{}", ipAddress);
-            if (Objects.nonNull(ipSegmentStore) && !ipSegmentStore.security(ipAddress)) {
-                LoggerUtils.warn(logger, "非法ip，不予处理:{}", ipAddress);
-                // 非法ip，不予处理
-                channelHandlerContext.writeAndFlush(responseOK(HttpResponseStatus.FORBIDDEN, Unpooled.copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8))).addListener(ChannelFutureListener.CLOSE);
-                return;
-            }
-        }
         // 获取请求体数据缓存
         ByteBuf content = fullHttpRequest.content();
         // 请求体数据转byte数组
@@ -73,7 +50,7 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
         ByteBuf byteBuf = Unpooled.directBuffer(resultData.length());
         byteBuf.writeCharSequence(resultData, CharsetUtil.UTF_8);
         // 包装响应结果
-        FullHttpResponse response = responseOK(HttpResponseStatus.OK, byteBuf);
+        FullHttpResponse response = response(byteBuf);
         // 发送响应,应答数据采用直接写入方式,减少 pipeline 处理流程,提升效率
         // 如果要采用全部 pipeline 处理，应改为 channelHandlerContext.channel().writeAndFlush()
         channelHandlerContext
@@ -86,12 +63,11 @@ public class WeChatChannel extends SimpleChannelInboundHandler<FullHttpRequest> 
     /**
      * 包装响应结果，使用http1.1协议格式
      *
-     * @param status  响应状态码
      * @param content 响应内容
      * @return 包装后到对象
      */
-    private FullHttpResponse responseOK(HttpResponseStatus status, ByteBuf content) {
-        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, status, content);
+    private FullHttpResponse response(ByteBuf content) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
         response.headers().set("Content-Type", "application/xml;charset=UTF-8");
         response.headers().set("Content_Length", response.content().readableBytes());
         return response;

@@ -143,7 +143,7 @@ we-chat:
 #### 自定义白名单存储器
 ```java
 
-import net.jlxxw.wechat.security.store.IpSegmentStore;
+import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
 
 import java.util.HashSet;
 import java.util.List;

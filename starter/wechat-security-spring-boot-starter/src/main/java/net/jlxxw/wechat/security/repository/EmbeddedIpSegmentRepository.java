@@ -1,4 +1,6 @@
-package net.jlxxw.wechat.security.store;
+package net.jlxxw.wechat.security.repository;
+
+import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -9,7 +11,7 @@ import java.util.Set;
  * @author chunyang.leng
  * @date 2023-12-19 03:52
  */
-public class EmbeddedIpSegmentStore implements IpSegmentStore {
+public class EmbeddedIpSegmentRepository implements IpSegmentRepository {
     /**
      * 存储器
      */
