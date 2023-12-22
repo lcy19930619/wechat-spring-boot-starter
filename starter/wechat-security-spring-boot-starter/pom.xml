@@ -22,5 +22,11 @@
             <groupId>net.jlxxw</groupId>
             <artifactId>wechat-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-event-netty-spring-boot-starter</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

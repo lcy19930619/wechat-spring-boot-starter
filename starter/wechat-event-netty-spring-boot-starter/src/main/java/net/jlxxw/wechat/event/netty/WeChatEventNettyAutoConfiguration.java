@@ -1,5 +1,12 @@
 package net.jlxxw.wechat.event.netty;
 
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import net.jlxxw.wechat.event.codec.WeChatMessageCodec;
 import net.jlxxw.wechat.event.codec.WeChatPlaintextWeChatMessageCodec;
 import net.jlxxw.wechat.event.component.EventBus;
@@ -8,8 +15,9 @@ import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
-import net.jlxxw.wechat.event.netty.properties.EventThreadPoolProperties;
-import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
+import net.jlxxw.wechat.event.netty.handler.MetricsHandler;
+import net.jlxxw.wechat.event.netty.properties.*;
+import net.jlxxw.wechat.event.netty.server.WeChatEventNettyServer;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import org.slf4j.Logger;
@@ -20,6 +28,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.List;
@@ -87,4 +96,94 @@ public class WeChatEventNettyAutoConfiguration {
     public WeChatMessageCodec weChatPlaintextMessageCodec() {
         return new WeChatPlaintextWeChatMessageCodec();
     }
+
+
+    @Bean
+    public WeChatEventNettyServer weChatEventNettyServer(WeChatEventNettyServerProperties weChatEventNettyServerProperties,
+                                                         List<ChannelHandler> channelHandlerList) {
+        return new WeChatEventNettyServer(weChatEventNettyServerProperties,channelHandlerList);
+    }
+
+    @Bean
+    @Order(0)
+    @ConditionalOnProperty(value = "wechat.event.server.netty.log.enable",havingValue = "true")
+    public ChannelHandler loggingHandler(WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+        NettyLogProperties nettyLog = weChatEventNettyServerProperties.getLog();
+        return new LoggingHandler(nettyLog.getLevel());
+    }
+
+    /**
+     * 指标采集监控
+     * @param weChatEventNettyServerProperties
+     * @return
+     */
+    @Bean
+    @Order(1)
+    @ConditionalOnProperty(value = "wechat.event.server.netty.metrics.enable",havingValue = "true")
+    public ChannelHandler metricsHandler(WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+        NettyMetricsProperties metrics = weChatEventNettyServerProperties.getMetrics();
+        return new MetricsHandler(metrics);
+    }
+
+
+    /**
+     * 请求解码器
+     * @param weChatEventNettyServerProperties
+     * @return
+     */
+    @Bean
+    @Order(2)
+    public ChannelHandler httpRequestDecoder(WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+        HttpRequestDecoderProperties decoder = weChatEventNettyServerProperties.getHttpRequestDecoder();
+        return new HttpRequestDecoder(decoder.getMaxInitialLineLength(),decoder.getMaxHeaderSize(),decoder.getMaxChunkSize());
+    }
+
+
+    /**
+     * 聚合器
+     * @param weChatEventNettyServerProperties
+     * @return
+     */
+    @Bean
+    @Order(3)
+    public ChannelHandler httpObjectAggregator(WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+        HttpObjectAggregatorProperties httpObjectAggregator = weChatEventNettyServerProperties.getHttpObjectAggregator();
+        return new HttpObjectAggregator(httpObjectAggregator.getMaxContentLength());
+    }
+
+    /**
+     * 应答编码器
+     * @return
+     */
+    @Bean
+    @Order(4)
+    public ChannelHandler httpResponseEncoder() {
+        return new HttpResponseEncoder();
+    }
+
+    /**
+     * 分块
+     * @return
+     */
+    @Bean
+    @Order(5)
+    public ChannelHandler chunkedWriteHandler() {
+        return new ChunkedWriteHandler();
+    }
+
+
+    /**
+     * 空闲检测
+     * @param weChatEventNettyServerProperties
+     * @return
+     */
+    @Bean
+    @Order(6)
+    public ChannelHandler idleStateHandler(WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+        IdleStateProperties idleState = weChatEventNettyServerProperties.getIdleState();
+        return new IdleStateHandler(idleState.getReaderIdleTimeSeconds(),idleState.getWriterIdleTimeSeconds(),idleState.getAllIdleTimeSeconds());
+    }
+
+
+
 }

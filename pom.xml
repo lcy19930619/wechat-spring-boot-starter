@@ -134,6 +134,11 @@
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-event-netty-spring-boot-starter</artifactId>
+                <version>${version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-function-spring-boot-starter</artifactId>
                 <version>${version}</version>
             </dependency>

@@ -1,8 +1,9 @@
-package net.jlxxw.wechat.security.netty.handler;
+package net.jlxxw.wechat.event.netty.handler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -11,7 +12,9 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
+import net.jlxxw.wechat.security.blacklist.BlackList;
 import net.jlxxw.wechat.security.filter.SecurityFilterTemplate;
+import org.springframework.core.Ordered;
 
 import java.net.InetSocketAddress;
 import java.util.Set;
@@ -19,28 +22,42 @@ import java.util.Set;
 /**
  * netty 安全处理器
  */
+@ChannelHandler.Sharable
 public class SecurityHandler extends ChannelInboundHandlerAdapter implements SecurityFilterTemplate {
 
     private final IpSegmentRepository ipSegmentRepository;
-
-    public SecurityHandler(IpSegmentRepository ipSegmentRepository) {
+    private final BlackList blackList;
+    public SecurityHandler(IpSegmentRepository ipSegmentRepository, BlackList blackList) {
         this.ipSegmentRepository = ipSegmentRepository;
+        this.blackList = blackList;
     }
 
-    private ChannelHandlerContext channelHandlerContext;
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        this.channelHandlerContext = ctx;
-        InetSocketAddress socketAddress = (InetSocketAddress) channelHandlerContext.channel().remoteAddress();
+        InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         // 获取远程ip地址信息
         String ipAddress = socketAddress.getAddress().getHostAddress();
         boolean security = security(ipAddress);
         if (!security) {
             reject(ipAddress);
+            FullHttpResponse forbidden = response(Unpooled.copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8));
+            ctx.writeAndFlush(forbidden)
+                    .addListener(ChannelFutureListener.CLOSE);
             return;
         }
         // 安全，可以继续转发
         super.channelActive(ctx);
+    }
+
+    /**
+     * 判断此ip是否在黑名单列表中
+     *
+     * @param ip 目标ip
+     * @return true 在黑名单中, false 不在黑名单中
+     */
+    @Override
+    public boolean blacklisted(String ip) {
+        return blackList.include(ip);
     }
 
     /**
@@ -60,10 +77,9 @@ public class SecurityHandler extends ChannelInboundHandlerAdapter implements Sec
      */
     @Override
     public void reject(String ip) {
-        FullHttpResponse forbidden = response(Unpooled.copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8));
-        channelHandlerContext.writeAndFlush(forbidden)
-                .addListener(ChannelFutureListener.CLOSE);
+        blackList.add(ip);
     }
+
 
     private FullHttpResponse response(ByteBuf content) {
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.FORBIDDEN, content);

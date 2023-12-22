@@ -39,20 +39,69 @@ public class WeChatEventNettyServerProperties extends WeChatEventServerPropertie
      */
     private EventThreadPoolProperties eventThreadPool;
 
-
-
-
-
+    /**
+     * netty 日志
+     */
+    private NettyLogProperties log;
+    /**
+     * netty 指标
+     */
+    private NettyMetricsProperties metrics;
 
     /**
-     * 是否开启日志监控
+     * http 请求解码器配置
      */
-    private boolean enableLog = false;
+    private HttpRequestDecoderProperties httpRequestDecoder;
 
     /**
-     * 是否开启指标分析
+     * http 聚合器
      */
-    private boolean enableMetrics = false;
+    private HttpObjectAggregatorProperties httpObjectAggregator;
+
+    /**
+     * 读取超时配置
+     */
+    private IdleStateProperties idleState;
+
+    public IdleStateProperties getIdleState() {
+        return idleState;
+    }
+
+    public void setIdleState(IdleStateProperties idleState) {
+        this.idleState = idleState;
+    }
+
+    public HttpObjectAggregatorProperties getHttpObjectAggregator() {
+        return httpObjectAggregator;
+    }
+
+    public void setHttpObjectAggregator(HttpObjectAggregatorProperties httpObjectAggregator) {
+        this.httpObjectAggregator = httpObjectAggregator;
+    }
+
+    public HttpRequestDecoderProperties getHttpRequestDecoder() {
+        return httpRequestDecoder;
+    }
+
+    public void setHttpRequestDecoder(HttpRequestDecoderProperties httpRequestDecoder) {
+        this.httpRequestDecoder = httpRequestDecoder;
+    }
+
+    public NettyLogProperties getLog() {
+        return log;
+    }
+
+    public void setLog(NettyLogProperties log) {
+        this.log = log;
+    }
+
+    public NettyMetricsProperties getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(NettyMetricsProperties metrics) {
+        this.metrics = metrics;
+    }
 
     /**
      * 通道连接超时时间，单位：秒
@@ -101,21 +150,6 @@ public class WeChatEventNettyServerProperties extends WeChatEventServerPropertie
         this.maxThreadSize = maxThreadSize;
     }
 
-    public boolean isEnableLog() {
-        return enableLog;
-    }
-
-    public void setEnableLog(boolean enableLog) {
-        this.enableLog = enableLog;
-    }
-
-    public boolean isEnableMetrics() {
-        return enableMetrics;
-    }
-
-    public void setEnableMetrics(boolean enableMetrics) {
-        this.enableMetrics = enableMetrics;
-    }
 
     public int getChannelTimeout() {
         return channelTimeout;

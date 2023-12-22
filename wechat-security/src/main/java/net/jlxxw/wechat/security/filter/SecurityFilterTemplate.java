@@ -18,6 +18,10 @@ public interface SecurityFilterTemplate {
      * @return
      */
     default boolean security(String ip) {
+        boolean blacklisted = blacklisted(ip);
+        if (blacklisted) {
+            return false;
+        }
         Set<String> all = loadAllIpSegments();
         if (Objects.isNull(all)) {
             logger.warn("安全过滤器未能发现ip段存储，已允许访问,客户端ip：{}",ip);
@@ -26,6 +30,12 @@ public interface SecurityFilterTemplate {
         return all.parallelStream().anyMatch(ipSegment -> segment(ip, ipSegment));
     }
 
+    /**
+     * 判断此ip是否在黑名单列表中
+     * @param ip 目标ip
+     * @return true 在黑名单中, false 不在黑名单中
+     */
+    boolean blacklisted(String ip);
 
     /**
      * 加载全部ip段信息

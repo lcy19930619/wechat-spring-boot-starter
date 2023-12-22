@@ -1,10 +1,7 @@
 package net.jlxxw.wechat.event.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -24,7 +21,11 @@ import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 /**
@@ -34,18 +35,26 @@ import org.springframework.stereotype.Component;
  * @date 2021/1/25 9:31 上午
  */
 @Component
-public class WeChatEventNettyServer {
+public class WeChatEventNettyServer implements ApplicationRunner {
     private static final ServerBootstrap BOOTSTRAP = new ServerBootstrap();
     private static final Logger logger = LoggerFactory.getLogger(WeChatEventNettyServer.class);
-    @Autowired
-    private WeChatEventNettyServerProperties weChatEventNettyServerProperties;
-    @Autowired
-    private MessageHandler messageHandler;
+    private final WeChatEventNettyServerProperties weChatEventNettyServerProperties;
 
-    private SecurityFilterTemplate securityFilterTemplate;
+    private final List<ChannelHandler> channelHandlerList;
 
-    @PostConstruct
-    public void postConstruct() {
+    public WeChatEventNettyServer(WeChatEventNettyServerProperties weChatEventNettyServerProperties, List<ChannelHandler> channelHandlerList) {
+        this.weChatEventNettyServerProperties = weChatEventNettyServerProperties;
+        this.channelHandlerList = channelHandlerList;
+    }
+
+    /**
+     * Callback used to run the bean.
+     *
+     * @param args incoming application arguments
+     * @throws Exception on error
+     */
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
         if (!weChatEventNettyServerProperties.getEnable()) {
             logger.info("用户配置关闭 wechat event netty 服务器");
             return;
@@ -62,39 +71,9 @@ public class WeChatEventNettyServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            if (weChatEventNettyServerProperties.isEnableMetrics()){
-                                // 指标采集监控
-                                socketChannel.pipeline().addLast(new MetricsHandler());
+                            for (ChannelHandler channelHandler : channelHandlerList) {
+                                socketChannel.pipeline().addLast( channelHandler);
                             }
-
-                            // 请求解码器
-                            socketChannel.pipeline().addLast("http-decoder", new HttpRequestDecoder());
-                            LoggerUtils.debug(logger, "初始化 netty 请求解码器 成功");
-
-                            // 将HTTP消息的多个部分合成一条完整的HTTP消息
-                            socketChannel.pipeline().addLast("http-aggregator", new HttpObjectAggregator(weChatEventNettyServerProperties.getHttpAggregatorMaxLength()));
-                            LoggerUtils.debug(logger, "初始化 netty http聚合器 成功");
-
-                            // 响应转码器
-                            socketChannel.pipeline().addLast("http-encoder", new HttpResponseEncoder());
-                            LoggerUtils.debug(logger, "初始化 netty 响应编码器 成功");
-
-                            // 解决大码流的问题，ChunkedWriteHandler：向客户端发送HTML5文件
-                            socketChannel.pipeline().addLast("http-chunked", new ChunkedWriteHandler());
-                            LoggerUtils.debug(logger, "初始化 netty 分块写入处理程序 成功");
-
-                            // 读空闲检测，超时时间，默认 15 秒,作为微信客户端，只需要检测读超时即可
-                            socketChannel.pipeline().addLast(new ReadTimeoutHandler(weChatEventNettyServerProperties.getChannelTimeout()));
-
-                            if (weChatEventNettyServerProperties.isEnableLog()){
-                                // 日志调试，info 级别
-                                socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
-                            }
-
-                            // 自定义处理handler
-                            socketChannel.pipeline().addLast("http-server", messageHandler);
-                            LoggerUtils.debug(logger, "初始化 netty 微信协议处理器 成功");
-
                         }
                     })
                     .localAddress(weChatEventNettyServerProperties.getPort())
@@ -121,5 +100,4 @@ public class WeChatEventNettyServer {
         t.setDaemon(false);
         t.start();
     }
-
 }

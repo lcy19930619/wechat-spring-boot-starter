@@ -7,8 +7,11 @@ import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.EventExecutor;
 import io.netty.util.concurrent.ImmediateEventExecutor;
 import io.netty.util.concurrent.SingleThreadEventExecutor;
+import net.jlxxw.wechat.event.netty.properties.NettyMetricsProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -22,6 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author chunyang.leng
  * @date 2022/4/22 9:46 上午
  */
+@ChannelHandler.Sharable
 public class MetricsHandler extends ChannelDuplexHandler {
     private static final Logger LOG = LoggerFactory.getLogger(MetricsHandler.class);
 
@@ -52,6 +56,12 @@ public class MetricsHandler extends ChannelDuplexHandler {
         thread.setDaemon(false);
         return thread;
     });
+
+    private NettyMetricsProperties nettyMetricsProperties;
+
+    public MetricsHandler(NettyMetricsProperties nettyMetricsProperties) {
+        this.nettyMetricsProperties = nettyMetricsProperties;
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

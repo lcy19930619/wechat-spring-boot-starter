@@ -14,6 +14,8 @@ import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,12 +24,15 @@ import org.springframework.stereotype.Component;
  * @author chunyang.leng
  * @date 2021/1/25 9:46 上午
  */
-@Component
+
 @ChannelHandler.Sharable
 public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private static final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
-    @Autowired
-    private EventBus eventBus;
+    private final EventBus eventBus;
+
+    public MessageHandler(EventBus eventBus) {
+        this.eventBus = eventBus;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
@@ -59,20 +64,6 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
                 // 处理完毕，关闭连接
                 .addListener(ChannelFutureListener.CLOSE);
     }
-
-    /**
-     * 包装响应结果，使用http1.1协议格式
-     *
-     * @param content 响应内容
-     * @return 包装后到对象
-     */
-    private FullHttpResponse response(ByteBuf content) {
-        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
-        response.headers().set("Content-Type", "application/xml;charset=UTF-8");
-        response.headers().set("Content_Length", response.content().readableBytes());
-        return response;
-    }
-
     /**
      * 异常信息记录
      * @param ctx
@@ -90,5 +81,18 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
         LoggerUtils.error(logger,"wechat-netty-thread 发生未知异常",cause);
         // 关闭异常连接
         ctx.close();
+    }
+
+    /**
+     * 包装响应结果，使用http1.1协议格式
+     *
+     * @param content 响应内容
+     * @return 包装后到对象
+     */
+    private FullHttpResponse response(ByteBuf content) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
+        response.headers().set("Content-Type", "application/xml;charset=UTF-8");
+        response.headers().set("Content_Length", response.content().readableBytes());
+        return response;
     }
 }

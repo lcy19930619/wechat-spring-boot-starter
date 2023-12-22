@@ -16,6 +16,19 @@ public class WeChatSecurityProperties {
      */
     private boolean enable = false;
 
+    /**
+     * 黑名单配置信息
+     */
+    private BlackListProperties blackList;
+
+    public BlackListProperties getBlackList() {
+        return blackList;
+    }
+
+    public void setBlackList(BlackListProperties blackList) {
+        this.blackList = blackList;
+    }
+
     public boolean isEnable() {
         return enable;
     }
