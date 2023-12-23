@@ -69,7 +69,7 @@
         <module>wechat-repository</module>
 
         <module>starter/wechat-event-netty-spring-boot-starter</module>
-        <module>starter/wechat-event-web-spring-boot-starter</module>
+        <module>starter/wechat-event-web-spring-boot3-starter</module>
         <module>starter/wechat-function-spring-boot-starter</module>
         <module>starter/wechat-repository-mysql-spring-boot-starter</module>
         <module>starter/wechat-security-spring-boot-starter</module>

@@ -9,7 +9,7 @@
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <groupId>net.jlxxw</groupId>
-    <artifactId>wechat-event-web-spring-boot-starter</artifactId>
+    <artifactId>wechat-event-web-spring-boot3-starter</artifactId>
     <name>wechat-web-spring-boot-starter</name>
     <description>wechat-web-spring-boot-starter</description>
     <properties>

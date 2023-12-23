@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.security.filter;
+package net.jlxxw.wechat.security.template;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

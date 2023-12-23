@@ -13,8 +13,7 @@ import io.netty.handler.codec.http.HttpVersion;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
 import net.jlxxw.wechat.security.blacklist.BlackList;
-import net.jlxxw.wechat.security.filter.SecurityFilterTemplate;
-import org.springframework.core.Ordered;
+import net.jlxxw.wechat.security.template.SecurityFilterTemplate;
 
 import java.net.InetSocketAddress;
 import java.util.Set;

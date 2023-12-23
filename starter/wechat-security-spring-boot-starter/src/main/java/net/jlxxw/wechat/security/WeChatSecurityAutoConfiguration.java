@@ -1,11 +1,13 @@
 package net.jlxxw.wechat.security;
 
+import net.jlxxw.wechat.event.netty.WeChatEventNettyAutoConfiguration;
 import net.jlxxw.wechat.event.netty.handler.SecurityHandler;
 import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
 import net.jlxxw.wechat.security.blacklist.BlackList;
 import net.jlxxw.wechat.security.properties.WeChatSecurityProperties;
 import net.jlxxw.wechat.security.repository.BlackListRepository;
 import net.jlxxw.wechat.security.repository.EmbeddedIpSegmentRepository;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -35,11 +37,13 @@ public class WeChatSecurityAutoConfiguration {
      * @return
      */
     @Bean
+    @ConditionalOnBean(WeChatEventNettyAutoConfiguration.class)
     public SecurityHandler securityHandler(IpSegmentRepository ipSegmentRepository, BlackList blackList){
         return new SecurityHandler(ipSegmentRepository,blackList);
     }
 
     @Bean
+    @ConditionalOnMissingBean(BlackList.class)
     public BlackList blackList(WeChatSecurityProperties weChatSecurityProperties) {
         return new BlackListRepository(weChatSecurityProperties.getBlackList());
     }
