@@ -6,6 +6,7 @@ import net.jlxxw.wechat.function.ai.AiBotFunction;
 import net.jlxxw.wechat.function.ai.properties.WeChatAiBotProperties;
 import net.jlxxw.wechat.function.api.OpenApiManager;
 import net.jlxxw.wechat.function.auth.WebPageAuthorizationManager;
+import net.jlxxw.wechat.function.ip.IpManager;
 import net.jlxxw.wechat.function.material.MaterialManager;
 import net.jlxxw.wechat.function.material.PermanentMaterialManager;
 import net.jlxxw.wechat.function.material.TempMaterialManager;
@@ -47,6 +48,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 微信公众号函数模块自动装配
+ *
  * @author lcy
  */
 @Configuration
@@ -76,7 +78,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
                 .setConnectionManager(connectionManager)
                 .build();
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(build));
-        logger.info( "初始化 RestTemplate");
+        logger.info("初始化 RestTemplate");
         return restTemplate;
     }
 
@@ -119,7 +121,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
 
 
     @Bean
-    public ParamCheckAOP paramCheckAOP(){
+    public ParamCheckAOP paramCheckAOP() {
         return new ParamCheckAOP();
     }
 
@@ -232,4 +234,12 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
                                    BatchExecutor batchExecutor) {
         return new UserManager(restTemplate, weChatTokenRepository, batchExecutor);
     }
+
+    @Bean
+    @ConditionalOnBean(WeChatTokenRepository.class)
+    public IpManager ipManager(RestTemplate restTemplate,
+                               WeChatTokenRepository weChatTokenRepository) {
+        return new IpManager(restTemplate, weChatTokenRepository);
+    }
+
 }

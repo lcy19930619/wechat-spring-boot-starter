@@ -1,7 +1,9 @@
 package net.jlxxw.wechat.repository.mysql;
 
+import net.jlxxw.wechat.repository.jsapi.WeChatJsApiTicketRepository;
 import net.jlxxw.wechat.repository.mysql.mapper.TokenMapper;
 import net.jlxxw.wechat.repository.mysql.properties.WeChatMySqlProperties;
+import net.jlxxw.wechat.repository.mysql.token.WeChatJsApiTicketRepositoryImpl;
 import net.jlxxw.wechat.repository.mysql.token.WeChatTokenRepositoryImpl;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import org.mybatis.spring.annotation.MapperScan;
@@ -56,6 +58,12 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
     @Bean
     public WeChatTokenRepository weChatTokenRepository() {
         return new WeChatTokenRepositoryImpl(tokenMapper);
+    }
+
+
+    @Bean
+    public WeChatJsApiTicketRepository weChatJsApiTicketRepository() {
+        return new WeChatJsApiTicketRepositoryImpl(tokenMapper);
     }
 
 

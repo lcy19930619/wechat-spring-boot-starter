@@ -27,7 +27,9 @@ public interface SecurityFilterTemplate {
             logger.warn("安全过滤器未能发现ip段存储，已允许访问,客户端ip：{}",ip);
             return true;
         }
-        return all.parallelStream().anyMatch(ipSegment -> segment(ip, ipSegment));
+        return all
+                .parallelStream()
+                .anyMatch(ipSegment -> ipSegment.equals(ip) || segment(ip, ipSegment));
     }
 
     /**
