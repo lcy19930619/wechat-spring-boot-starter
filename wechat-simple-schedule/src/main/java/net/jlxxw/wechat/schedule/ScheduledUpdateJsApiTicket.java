@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.schedul;
+package net.jlxxw.wechat.schedule;
 
 import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.function.token.TokenManager;
@@ -19,14 +19,13 @@ import java.time.LocalDateTime;
  * @author chunyang.leng
  * @date 2021/1/20 2:46 下午
  */
-@Configuration
 public class ScheduledUpdateJsApiTicket {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateJsApiTicket.class);
     private final WeChatTokenRepository weChatTokenRepository;
 
-    private TokenManager tokenManager;
+    private final TokenManager tokenManager;
 
-    private WeChatJsApiTicketRepository weChatJsApiTicketRepository;
+    private final WeChatJsApiTicketRepository weChatJsApiTicketRepository;
 
     public ScheduledUpdateJsApiTicket(WeChatTokenRepository weChatTokenRepository,
                                       TokenManager tokenManager,

@@ -25,7 +25,7 @@ public interface UrlConstant {
     /**
      * 微信回调白名单url
      */
-    String WECHAT_CALL_BACK_SERVER_IP_PREFIX = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token=";
+    String WECHAT_CALL_BACK_SERVER_IP_PREFIX = "https://api.weixin.qq.com/cgi-bin/getcallbackip?access_token={0}";
 
     /**
      * 获取一个用户的基本信息接口

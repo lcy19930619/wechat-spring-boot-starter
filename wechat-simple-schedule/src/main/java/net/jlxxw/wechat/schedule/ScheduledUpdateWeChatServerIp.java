@@ -1,12 +1,12 @@
-package net.jlxxw.wechat.schedul;
+package net.jlxxw.wechat.schedule;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import net.jlxxw.wechat.constant.UrlConstant;
 
 import net.jlxxw.wechat.properties.WeChatProperties;
+import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
-import net.jlxxw.wechat.security.WeChatServerSecurityCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
@@ -26,15 +26,10 @@ public class ScheduledUpdateWeChatServerIp {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateWeChatServerIp.class);
     private WeChatTokenRepository weChatTokenRepository;
     private RestTemplate restTemplate;
-    private WeChatServerSecurityCheck weChatServerSecurityCheck;
     private WeChatProperties weChatProperties;
 
-    public ScheduledUpdateWeChatServerIp(WeChatTokenRepository weChatTokenRepository, RestTemplate restTemplate, WeChatServerSecurityCheck weChatServerSecurityCheck, WeChatProperties weChatProperties) {
-        this.weChatTokenRepository = weChatTokenRepository;
-        this.restTemplate = restTemplate;
-        this.weChatServerSecurityCheck = weChatServerSecurityCheck;
-        this.weChatProperties = weChatProperties;
-    }
+    private IpSegmentRepository ipSegmentRepository;
+
 
     /**
      * 每间隔三小时去更新一次服务器回调接口ip白名单
@@ -53,7 +48,7 @@ public class ScheduledUpdateWeChatServerIp {
         JSONObject jsonObject = JSONObject.parseObject(forObject);
         final JSONArray ipList = jsonObject.getJSONArray("ip_list");
         if (!CollectionUtils.isEmpty(ipList)) {
-            weChatServerSecurityCheck.updateWeiXinServerIpRange(ipList.toJavaList(String.class));
+            //weChatServerSecurityCheck.updateWeiXinServerIpRange(ipList.toJavaList(String.class));
         }
     }
 }

@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.schedul;
+package net.jlxxw.wechat.schedule;
 
 import java.time.LocalDateTime;
 import net.jlxxw.wechat.exception.WeChatException;
@@ -18,7 +18,6 @@ import org.springframework.scheduling.annotation.Scheduled;
  * @author chunyang.leng
  * @date 2021/1/20 2:46 下午
  */
-@Configuration
 public class ScheduledUpdateToken {
     private static final Logger logger = LoggerFactory.getLogger(ScheduledUpdateToken.class);
     private final WeChatTokenRepository weChatTokenRepository;
