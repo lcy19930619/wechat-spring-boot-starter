@@ -7,6 +7,7 @@
         <groupId>net.jlxxw</groupId>
         <artifactId>wechat-spring-boot-starter</artifactId>
         <version>2.0.1.20231216</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>wechat-repository</artifactId>

@@ -58,18 +58,18 @@
     </properties>
 
     <modules>
-        <module>wechat-common</module>
         <module>wechat-properties</module>
+        <module>wechat-common</module>
         <module>wechat-event</module>
         <module>wechat-function</module>
+        <module>wechat-repository</module>
+        <module>wechat-security</module>
+        <module>wechat-simple-schedule</module>
         <module>wechat-repository-mysql</module>
         <module>wechat-test</module>
-        <module>wechat-simple-schedule</module>
-        <module>wechat-security</module>
-        <module>wechat-repository</module>
 
         <module>starter/wechat-event-netty-spring-boot-starter</module>
-        <module>starter/wechat-event-web-spring-boot3-starter</module>
+        <module>starter/wechat-event-web-spring-boot-starter</module>
         <module>starter/wechat-function-spring-boot-starter</module>
         <module>starter/wechat-repository-mysql-spring-boot-starter</module>
         <module>starter/wechat-security-spring-boot-starter</module>
@@ -90,57 +90,62 @@
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-common</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-event</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-security</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-function</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-repository</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-properties</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-repository-mysql</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-simple-schedule</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-repository-mysql-spring-boot-starter</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-event-netty-spring-boot-starter</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-event-web-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-function-spring-boot-starter</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
             </dependency>
 
 

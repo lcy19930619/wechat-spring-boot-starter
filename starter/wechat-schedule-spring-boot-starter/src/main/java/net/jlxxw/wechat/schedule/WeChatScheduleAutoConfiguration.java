@@ -3,8 +3,6 @@ package net.jlxxw.wechat.schedule;
 import net.jlxxw.wechat.function.token.TokenManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
-import net.jlxxw.wechat.schedul.ScheduledUpdateToken;
-import net.jlxxw.wechat.schedul.ScheduledUpdateWeChatServerIp;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

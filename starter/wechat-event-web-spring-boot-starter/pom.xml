@@ -9,7 +9,7 @@
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <groupId>net.jlxxw</groupId>
-    <artifactId>wechat-event-web-spring-boot3-starter</artifactId>
+    <artifactId>wechat-event-web-spring-boot-starter</artifactId>
     <name>wechat-web-spring-boot-starter</name>
     <description>wechat-web-spring-boot-starter</description>
     <properties>
@@ -20,12 +20,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>log4j-api</artifactId>
-                    <groupId>org.apache.logging.log4j</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
@@ -33,6 +27,10 @@
             <artifactId>wechat-event</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-security</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

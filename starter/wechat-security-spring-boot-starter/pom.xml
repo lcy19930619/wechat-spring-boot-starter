@@ -7,6 +7,7 @@
         <groupId>net.jlxxw</groupId>
         <artifactId>wechat-spring-boot-starter</artifactId>
         <version>2.0.1.20231216</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>wechat-security-spring-boot-starter</artifactId>
@@ -25,6 +26,13 @@
         <dependency>
             <groupId>net.jlxxw</groupId>
             <artifactId>wechat-event-netty-spring-boot-starter</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-event-web-spring-boot-starter</artifactId>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
