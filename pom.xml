@@ -65,7 +65,6 @@
         <module>wechat-repository</module>
         <module>wechat-security</module>
         <module>wechat-simple-schedule</module>
-        <module>wechat-repository-mysql</module>
         <module>wechat-test</module>
 
         <module>starter/wechat-event-netty-spring-boot-starter</module>
@@ -115,11 +114,6 @@
             <dependency>
                 <groupId>net.jlxxw</groupId>
                 <artifactId>wechat-properties</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.jlxxw</groupId>
-                <artifactId>wechat-repository-mysql</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
