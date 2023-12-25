@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties("wechat")
+@EnableConfigurationProperties
 public class WeChatProperties {
 
     /**

@@ -96,20 +96,21 @@ public class WeChatCiphertextWeChatMessageCodec implements WeChatMessageCodec {
         this.token = weChatProperties.getVerifyToken();
         this.appId = weChatProperties.getAppId();
         aesKey = Base64.decodeBase64(encodingAesKey + "=");
+        System.out.println();
     }
 
     /**
      * 信息解密
      *
-     * @param url  url
+     * @param uri  uri
      * @param data 密文
      * @return 明文
      */
     @Override
     public String decrypt(String uri, String data) throws AesException {
         /*
-                处理微信uri参数，并封装到map中
-             */
+          处理微信uri参数，并封装到map中
+        */
         Map<String, String> map = new HashMap<>(16);
         int index = uri.indexOf("?");
         String str = uri.substring(index + 1);
