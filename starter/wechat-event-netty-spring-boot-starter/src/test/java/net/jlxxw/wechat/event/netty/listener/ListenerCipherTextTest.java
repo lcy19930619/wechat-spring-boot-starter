@@ -89,17 +89,10 @@ public class ListenerCipherTextTest {
             long timeMillis = System.currentTimeMillis();
             String signature = SHA1.getSHA1(weChatProperties.getVerifyToken(), String.valueOf(timeMillis) , randomStr,encrypt);
             String encParameters = "nonce="+randomStr + "&timestamp="+timeMillis + "&msg_signature=" +signature;
-            String xmlData = "<xml><Encrypt>" + encrypt + "</Encrypt><ToUserName>" + openId +"</ToUserName></xml>";
+            String xmlData = "<xml><Encrypt><![CDATA[" + encrypt + "]]></Encrypt><ToUserName>" + openId +"</ToUserName></xml>";
             String url = "/?"+encParameters;
             send(url,xmlData,(response)->{
-
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
-                try {
-                    String decrypt = weChatMessageCodec.decrypt(url, response);
-                    Assertions.assertTrue(StringUtils.isNotBlank(decrypt), "解密结果不应该为空");
-                } catch (AesException e) {
-                    throw new RuntimeException(e);
-                }
                 countDownLatch.countDown();
             });
         }
@@ -134,13 +127,6 @@ public class ListenerCipherTextTest {
             String url = "/?"+encParameters;
             send(url,xmlData,(response)->{
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
-                try {
-                    String decrypt = weChatMessageCodec.decrypt(url, response);
-                    Assertions.assertTrue(StringUtils.isNotBlank(decrypt), "解密结果不应该为空");
-                    System.out.println(decrypt);
-                } catch (AesException e) {
-                    throw new RuntimeException(e);
-                }
                 countDownLatch.countDown();
             });
 

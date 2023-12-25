@@ -46,8 +46,8 @@ public class XMLParse {
             NodeList nodelist1 = root.getElementsByTagName("Encrypt");
             NodeList nodelist2 = root.getElementsByTagName("ToUserName");
             result[0] = 0;
-            result[1] = nodelist1.item(0).getTextContent();
-            result[2] = nodelist2.item(0).getTextContent();
+            result[1] = nodelist1.item(0).getTextContent().trim();
+            result[2] = nodelist2.item(0).getTextContent().trim();
             return result;
         } catch (Exception e) {
             throw new AesException(AesExceptionEnum.PARSE_XML_ERROR, e);
