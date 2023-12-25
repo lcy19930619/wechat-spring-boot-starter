@@ -12,11 +12,7 @@
 
     <artifactId>wechat-security-spring-boot-starter</artifactId>
 
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <description>微信公众号回调信息安全认证自动装配</description>
 
     <dependencies>
         <dependency>

@@ -13,12 +13,9 @@
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-properties</artifactId>
     <name>wechat-properties</name>
-    <description>wechat-properties</description>
-    <properties>
-        <java.version>1.8</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+    <description>项目核心属性配置，即appid和secret等配置</description>
+
+
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>

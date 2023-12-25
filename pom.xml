@@ -59,20 +59,20 @@
 
     <modules>
         <module>wechat-properties</module>
+        <module>wechat-repository</module>
         <module>wechat-common</module>
         <module>wechat-event</module>
         <module>wechat-function</module>
-        <module>wechat-repository</module>
         <module>wechat-security</module>
         <module>wechat-simple-schedule</module>
-        <module>wechat-test</module>
-
         <module>starter/wechat-event-netty-spring-boot-starter</module>
         <module>starter/wechat-event-web-spring-boot-starter</module>
         <module>starter/wechat-function-spring-boot-starter</module>
         <module>starter/wechat-repository-mysql-spring-boot-starter</module>
         <module>starter/wechat-security-spring-boot-starter</module>
         <module>starter/wechat-simple-schedule-spring-boot-starter</module>
+
+        <module>wechat-test</module>
     </modules>
 
 

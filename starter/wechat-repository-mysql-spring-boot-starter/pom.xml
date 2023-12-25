@@ -7,7 +7,9 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>wechat-repository-mysql-spring-boot-starter</artifactId>
-    <name>wechat-default-spring-boot-starter</name>
+    <name>wechat-repository-mysql-spring-boot-starter</name>
+    <description>项目持久层接口 mysql 版本自动装配</description>
+
 
     <dependencies>
         <dependency>

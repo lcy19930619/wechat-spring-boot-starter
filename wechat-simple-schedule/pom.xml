@@ -9,6 +9,8 @@
     </parent>
     <artifactId>wechat-simple-schedule</artifactId>
     <name>wechat-simple-schedule</name>
+
+    <description>简单的定时任务模块，无法应对并发情况，仅适用单机模式</description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

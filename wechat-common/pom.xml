@@ -10,11 +10,9 @@
     </parent>
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-common</artifactId>
-    <name>wechat-spring-boot-starter-common</name>
-    <description>wechat-spring-boot-starter-common</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
+    <name>wechat-common</name>
+    <description>微信公众号基础类包，微信项目入参数封装</description>
+
     <dependencies>
         <dependency>
             <groupId>jakarta.validation</groupId>

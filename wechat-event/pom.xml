@@ -9,14 +9,10 @@
         <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>net.jlxxw</groupId>
     <artifactId>wechat-event</artifactId>
     <name>wechat-event</name>
-    <description>wechat-event</description>
+    <description>微信公众号回调事件处理模块，包括事件信息，消息信息</description>
 
-    <properties>
-        <java.version>17</java.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>net.jlxxw</groupId>

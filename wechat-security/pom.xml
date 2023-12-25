@@ -8,7 +8,7 @@
     </parent>
 
     <artifactId>wechat-security</artifactId>
-
+    <description>微信安全认证模块，用于检测请求是否来自微信服务器</description>
 
     <dependencies>
         <dependency>

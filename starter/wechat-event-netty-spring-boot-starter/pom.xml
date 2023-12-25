@@ -9,11 +9,8 @@
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <artifactId>wechat-event-netty-spring-boot-starter</artifactId>
-    <name>wechat-netty-spring-boot-starter</name>
-    <description>wechat-netty-spring-boot-starter</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
+    <name>wechat-event-netty-spring-boot-starter</name>
+    <description>微信公众号回调处理，netty 模式自动装配</description>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

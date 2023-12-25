@@ -12,11 +12,7 @@
 
     <artifactId>wechat-simple-schedule-spring-boot-starter</artifactId>
 
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <description>简单的定时任务自动装配</description>
 
     <dependencies>
         <dependency>

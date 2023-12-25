@@ -8,15 +8,11 @@
         <version>2.0.1.20231216</version>
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
-    <groupId>net.jlxxw</groupId>
     <artifactId>wechat-event-web-spring-boot-starter</artifactId>
-    <name>wechat-web-spring-boot-starter</name>
-    <description>wechat-web-spring-boot-starter</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
-    <dependencies>
+    <name>wechat-event-web-spring-boot-starter</name>
+    <description>微信事件回调处理，web 模式自动装配</description>
 
+    <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

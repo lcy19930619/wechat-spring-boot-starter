@@ -12,10 +12,6 @@
 
     <artifactId>wechat-repository</artifactId>
 
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <description>项目持久层模块，存储token等数据</description>
 
 </project>

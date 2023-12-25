@@ -10,11 +10,9 @@
     </parent>
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-test</artifactId>
-    <name>wechat-spring-boot-starter-test</name>
-    <description>wechat-spring-boot-starter-test</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
+    <name>wechat-test</name>
+    <description>单元测试模块</description>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

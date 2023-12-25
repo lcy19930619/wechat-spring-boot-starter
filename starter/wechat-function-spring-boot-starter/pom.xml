@@ -11,13 +11,7 @@
     </parent>
 
     <artifactId>wechat-function-spring-boot-starter</artifactId>
-
-    <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
+    <description>微信公众号相关接口封装自动装配</description>
     <dependencies>
         <dependency>
             <groupId>net.jlxxw</groupId>

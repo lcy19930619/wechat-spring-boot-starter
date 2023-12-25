@@ -8,10 +8,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>net.jlxxw</groupId>
     <artifactId>wechat-function</artifactId>
     <name>wechat-function</name>
-
+    <description>微信公众号相关接口封装模块</description>
 
     <dependencies>
         <dependency>
