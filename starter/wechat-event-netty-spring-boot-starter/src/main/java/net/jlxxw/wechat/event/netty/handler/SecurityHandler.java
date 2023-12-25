@@ -19,7 +19,7 @@ import java.net.InetSocketAddress;
 import java.util.Set;
 
 /**
- * netty 安全处理器
+ * netty 安全处理器,由 security 模块进行装配
  */
 @ChannelHandler.Sharable
 public class SecurityHandler extends ChannelInboundHandlerAdapter implements SecurityFilterTemplate {

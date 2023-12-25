@@ -1,6 +1,6 @@
 package net.jlxxw.wechat.listener.message;
 
-import net.jlxxw.wechat.component.listener.AbstractWeChatMessageListener;
+import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.response.WeChatMessageResponse;

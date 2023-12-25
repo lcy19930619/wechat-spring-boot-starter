@@ -1,0 +1,6 @@
+wechat:
+  event:
+    server:
+      netty:
+        codec: plain_text
+        port: 19090

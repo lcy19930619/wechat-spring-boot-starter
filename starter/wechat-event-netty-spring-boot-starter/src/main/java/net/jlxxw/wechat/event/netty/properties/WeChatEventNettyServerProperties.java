@@ -1,7 +1,7 @@
 package net.jlxxw.wechat.event.netty.properties;
 
 import io.netty.util.NettyRuntime;
-import net.jlxxw.wechat.event.properties.WeChatEventServerProperties;
+import net.jlxxw.wechat.event.enums.Codec;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties("wechat.event.server.netty")
-public class WeChatEventNettyServerProperties extends WeChatEventServerProperties {
+public class WeChatEventNettyServerProperties {
     /**
      * 是否启用netty作为微信的核心接口处理器
      */
@@ -29,6 +29,12 @@ public class WeChatEventNettyServerProperties extends WeChatEventServerPropertie
      */
     private Integer queueSize = 500;
 
+
+    /**
+     * 编解码器选择,默认明文方式
+     */
+    private Codec codec = Codec.PLAIN_TEXT;
+
     /**
      * 工作组线程数
      */
@@ -37,31 +43,31 @@ public class WeChatEventNettyServerProperties extends WeChatEventServerPropertie
     /**
      * 事件处理线程池配置
      */
-    private EventThreadPoolProperties eventThreadPool;
+    private EventThreadPoolProperties eventThreadPool = new EventThreadPoolProperties();
 
     /**
      * netty 日志
      */
-    private NettyLogProperties log;
+    private NettyLogProperties log = new NettyLogProperties();
     /**
      * netty 指标
      */
-    private NettyMetricsProperties metrics;
+    private NettyMetricsProperties metrics = new NettyMetricsProperties();
 
     /**
      * http 请求解码器配置
      */
-    private HttpRequestDecoderProperties httpRequestDecoder;
+    private HttpRequestDecoderProperties httpRequestDecoder = new HttpRequestDecoderProperties();
 
     /**
      * http 聚合器
      */
-    private HttpObjectAggregatorProperties httpObjectAggregator;
+    private HttpObjectAggregatorProperties httpObjectAggregator = new HttpObjectAggregatorProperties();
 
     /**
      * 读取超时配置
      */
-    private IdleStateProperties idleState;
+    private IdleStateProperties idleState = new IdleStateProperties();
 
     public IdleStateProperties getIdleState() {
         return idleState;
@@ -182,4 +188,14 @@ public class WeChatEventNettyServerProperties extends WeChatEventServerPropertie
     public void setEventThreadPool(EventThreadPoolProperties eventThreadPool) {
         this.eventThreadPool = eventThreadPool;
     }
+
+
+    public Codec getCodec() {
+        return codec;
+    }
+
+    public void setCodec(Codec codec) {
+        this.codec = codec;
+    }
+
 }

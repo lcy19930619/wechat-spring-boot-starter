@@ -14,6 +14,10 @@
     <description>微信公众号相关接口封装自动装配</description>
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+        <dependency>
             <groupId>net.jlxxw</groupId>
             <artifactId>wechat-function</artifactId>
         </dependency>

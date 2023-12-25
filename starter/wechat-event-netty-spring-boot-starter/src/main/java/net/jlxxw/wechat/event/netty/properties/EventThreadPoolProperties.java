@@ -2,6 +2,7 @@ package net.jlxxw.wechat.event.netty.properties;
 
 /**
  * 事件线程池配置
+ * @author lcy
  */
 public class EventThreadPoolProperties {
     /**

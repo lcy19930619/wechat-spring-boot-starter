@@ -5,6 +5,14 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpRequestDecoder;
+import io.netty.handler.codec.http.HttpResponseEncoder;
+import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.handler.timeout.IdleStateHandler;
+import net.jlxxw.wechat.event.netty.properties.HttpObjectAggregatorProperties;
+import net.jlxxw.wechat.event.netty.properties.HttpRequestDecoderProperties;
+import net.jlxxw.wechat.event.netty.properties.IdleStateProperties;
 import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
@@ -59,6 +67,28 @@ public class WeChatEventNettyServer implements ApplicationRunner {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
+
+
+                            HttpRequestDecoderProperties decoder = weChatEventNettyServerProperties.getHttpRequestDecoder();
+                            HttpRequestDecoder httpRequestDecoder = new HttpRequestDecoder(decoder.getMaxInitialLineLength(), decoder.getMaxHeaderSize(), decoder.getMaxChunkSize());
+                            socketChannel.pipeline().addLast(httpRequestDecoder);
+
+
+                            HttpObjectAggregatorProperties httpObjectAggregatorProperties = weChatEventNettyServerProperties.getHttpObjectAggregator();
+                            HttpObjectAggregator httpObjectAggregator = new HttpObjectAggregator(httpObjectAggregatorProperties.getMaxContentLength());
+                            socketChannel.pipeline().addLast(httpObjectAggregator);
+
+
+                            socketChannel.pipeline().addLast(new HttpResponseEncoder());
+
+                            socketChannel.pipeline().addLast(new ChunkedWriteHandler());
+
+
+                            IdleStateProperties idleStateProperties = weChatEventNettyServerProperties.getIdleState();
+                            IdleStateHandler idleStateHandler = new IdleStateHandler(idleStateProperties.getReaderIdleTimeSeconds(), idleStateProperties.getWriterIdleTimeSeconds(), idleStateProperties.getAllIdleTimeSeconds());
+                            socketChannel.pipeline().addLast(idleStateHandler);
+
+
                             for (ChannelHandler channelHandler : channelHandlerList) {
                                 socketChannel.pipeline().addLast( channelHandler);
                             }
