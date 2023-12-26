@@ -1,9 +1,19 @@
+logging:
+  level:
+    net.jlxxw: debug
 wechat:
   event:
     server:
       netty:
         codec: cipher_text
         port: 19090
+        log:
+          enable: true
+          level: debug
+        metrics:
+          enable: true
+
+
   # 需要替换为真实数据
   app-id: wx97562dcec7e78aca
   # 需要替换为真实数据

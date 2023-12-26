@@ -14,6 +14,9 @@ import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
 import net.jlxxw.wechat.security.blacklist.BlackList;
 import net.jlxxw.wechat.security.template.SecurityFilterTemplate;
+import net.jlxxw.wechat.util.LoggerUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
 import java.util.Set;
@@ -24,11 +27,14 @@ import java.util.Set;
 @ChannelHandler.Sharable
 public class SecurityHandler extends ChannelInboundHandlerAdapter implements SecurityFilterTemplate {
 
+    private static final Logger logger = LoggerFactory.getLogger(SecurityHandler.class);
+
     private final IpSegmentRepository ipSegmentRepository;
     private final BlackList blackList;
     public SecurityHandler(IpSegmentRepository ipSegmentRepository, BlackList blackList) {
         this.ipSegmentRepository = ipSegmentRepository;
         this.blackList = blackList;
+        LoggerUtils.info(logger,"公众号组件 ---> netty模式 ip 安全检查器已启动");
     }
 
     @Override
@@ -36,7 +42,12 @@ public class SecurityHandler extends ChannelInboundHandlerAdapter implements Sec
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         // 获取远程ip地址信息
         String ipAddress = socketAddress.getAddress().getHostAddress();
+        LoggerUtils.debug(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{}",ipAddress);
+
+        LoggerUtils.debug(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},开始进行安全检查",ipAddress);
         boolean security = security(ipAddress);
+        LoggerUtils.debug(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},安全检查结束,是否允许通过:{}",ipAddress,security);
+
         if (!security) {
             reject(ipAddress);
             FullHttpResponse forbidden = response(Unpooled.copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8));
@@ -76,6 +87,7 @@ public class SecurityHandler extends ChannelInboundHandlerAdapter implements Sec
      */
     @Override
     public void reject(String ip) {
+        LoggerUtils.info(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},执行拒绝处理",ip);
         blackList.add(ip);
     }
 

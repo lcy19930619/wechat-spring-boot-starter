@@ -13,10 +13,6 @@ import net.jlxxw.wechat.event.component.EventBus;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 /**
  * netty微信回调处理接口
@@ -36,7 +32,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
-        LoggerUtils.debug(logger, "netty 开始处理");
+        String channelId = channelHandlerContext.channel().id().asShortText();
+        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，开始处理数据,channelId:{}", channelId);
 
         // 获取请求体数据缓存
         ByteBuf content = fullHttpRequest.content();
@@ -47,7 +44,9 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
         // 获取请求的uri
         String uri = fullHttpRequest.uri();
         // 事件总线开始执行处理逻辑
+        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线开始执行处理逻辑,channelId:{}", channelId);
         final String resultData = eventBus.dispatcher(reqContent, uri);
+        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线处理数据结束,channelId:{}", channelId);
         // 响应数据刷新到缓冲区
         // ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
 
@@ -63,6 +62,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
                 .writeAndFlush(response)
                 // 处理完毕，关闭连接
                 .addListener(ChannelFutureListener.CLOSE);
+        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，处理数据结束,channelId:{}", channelId);
+
     }
     /**
      * 异常信息记录

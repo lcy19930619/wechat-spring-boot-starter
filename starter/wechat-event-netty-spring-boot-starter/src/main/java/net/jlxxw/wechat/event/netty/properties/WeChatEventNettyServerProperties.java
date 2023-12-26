@@ -40,89 +40,19 @@ public class WeChatEventNettyServerProperties {
      */
     private Integer maxThreadSize = NettyRuntime.availableProcessors() * 2;
 
-    /**
-     * 事件处理线程池配置
-     */
-    private EventThreadPoolProperties eventThreadPool = new EventThreadPoolProperties();
-
-    /**
-     * netty 日志
-     */
-    private NettyLogProperties log = new NettyLogProperties();
-    /**
-     * netty 指标
-     */
-    private NettyMetricsProperties metrics = new NettyMetricsProperties();
-
-    /**
-     * http 请求解码器配置
-     */
-    private HttpRequestDecoderProperties httpRequestDecoder = new HttpRequestDecoderProperties();
-
-    /**
-     * http 聚合器
-     */
-    private HttpObjectAggregatorProperties httpObjectAggregator = new HttpObjectAggregatorProperties();
-
-    /**
-     * 读取超时配置
-     */
-    private IdleStateProperties idleState = new IdleStateProperties();
-
-    public IdleStateProperties getIdleState() {
-        return idleState;
-    }
-
-    public void setIdleState(IdleStateProperties idleState) {
-        this.idleState = idleState;
-    }
-
-    public HttpObjectAggregatorProperties getHttpObjectAggregator() {
-        return httpObjectAggregator;
-    }
-
-    public void setHttpObjectAggregator(HttpObjectAggregatorProperties httpObjectAggregator) {
-        this.httpObjectAggregator = httpObjectAggregator;
-    }
-
-    public HttpRequestDecoderProperties getHttpRequestDecoder() {
-        return httpRequestDecoder;
-    }
-
-    public void setHttpRequestDecoder(HttpRequestDecoderProperties httpRequestDecoder) {
-        this.httpRequestDecoder = httpRequestDecoder;
-    }
-
-    public NettyLogProperties getLog() {
-        return log;
-    }
-
-    public void setLog(NettyLogProperties log) {
-        this.log = log;
-    }
-
-    public NettyMetricsProperties getMetrics() {
-        return metrics;
-    }
-
-    public void setMetrics(NettyMetricsProperties metrics) {
-        this.metrics = metrics;
-    }
-
-    /**
-     * 通道连接超时时间，单位：秒
-     */
-    private int channelTimeout = 15;
-
-    /**
-     * 聚合内容的最大长度，单位：字节
-     */
-    private int httpAggregatorMaxLength = 65535;
 
     /**
      * netty 主线程名称
      */
     private String mainThreadName = "WeChat-netty-thread-listener";
+
+    public String getMainThreadName() {
+        return mainThreadName;
+    }
+
+    public void setMainThreadName(String mainThreadName) {
+        this.mainThreadName = mainThreadName;
+    }
 
     public Boolean getEnable() {
         return enable;
@@ -148,48 +78,6 @@ public class WeChatEventNettyServerProperties {
         this.queueSize = queueSize;
     }
 
-    public Integer getMaxThreadSize() {
-        return maxThreadSize;
-    }
-
-    public void setMaxThreadSize(Integer maxThreadSize) {
-        this.maxThreadSize = maxThreadSize;
-    }
-
-
-    public int getChannelTimeout() {
-        return channelTimeout;
-    }
-
-    public void setChannelTimeout(int channelTimeout) {
-        this.channelTimeout = channelTimeout;
-    }
-
-    public int getHttpAggregatorMaxLength() {
-        return httpAggregatorMaxLength;
-    }
-
-    public void setHttpAggregatorMaxLength(int httpAggregatorMaxLength) {
-        this.httpAggregatorMaxLength = httpAggregatorMaxLength;
-    }
-
-    public String getMainThreadName() {
-        return mainThreadName;
-    }
-
-    public void setMainThreadName(String mainThreadName) {
-        this.mainThreadName = mainThreadName;
-    }
-
-    public EventThreadPoolProperties getEventThreadPool() {
-        return eventThreadPool;
-    }
-
-    public void setEventThreadPool(EventThreadPoolProperties eventThreadPool) {
-        this.eventThreadPool = eventThreadPool;
-    }
-
-
     public Codec getCodec() {
         return codec;
     }
@@ -198,4 +86,11 @@ public class WeChatEventNettyServerProperties {
         this.codec = codec;
     }
 
+    public Integer getMaxThreadSize() {
+        return maxThreadSize;
+    }
+
+    public void setMaxThreadSize(Integer maxThreadSize) {
+        this.maxThreadSize = maxThreadSize;
+    }
 }

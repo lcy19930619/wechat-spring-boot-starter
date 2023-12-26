@@ -14,13 +14,10 @@ import net.jlxxw.wechat.dto.message.event.SubscribeQrsceneEventMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
 import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.event.codec.WeChatMessageCodec;
-import net.jlxxw.wechat.event.codec.WeChatCiphertextWeChatMessageCodec;
 import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
-import net.jlxxw.wechat.exception.AesException;
-import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
@@ -138,9 +135,9 @@ public class EventBus {
         this.unKnowWeChatEventListener = unKnowWeChatEventListener;
         this.unKnowWeChatMessageListener = unKnowWeChatMessageListener;
         this.weChatMessageCodec = weChatMessageCodec;
-        logger.info("初始化事件总线");
+        LoggerUtils.info(logger, "公众号组件 ---> 初始化事件总线");
         init();
-        logger.info("事件总线初始化完毕");
+        LoggerUtils.info(logger, "公众号组件 ---> 事件总线初始化完毕");
     }
 
     public void init() {
@@ -161,7 +158,7 @@ public class EventBus {
             map.forEach((k, v) -> {
                 if (v.size() > 1) {
                     // 因为每个消息都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
-                    throw new BeanCreationException("微信 " + k.getDescription() + " messageListener不能注册多次");
+                    throw new BeanCreationException("公众号组件 ---> 微信 " + k.getDescription() + " messageListener不能注册多次");
                 }
                 messageListenerMap.put(k, v.get(0));
             });
@@ -171,7 +168,7 @@ public class EventBus {
         final WeChatMessageTypeEnum[] values = WeChatMessageTypeEnum.values();
         for (WeChatMessageTypeEnum value : values) {
             if (!messageListenerMap.containsKey(value)) {
-                LoggerUtils.warn(logger, value.getDescription() + "消息处理器未注册!!!");
+                LoggerUtils.warn(logger, "公众号组件 ---> " + value.getDescription() + "消息处理器未注册!!!");
             }
         }
 
@@ -181,7 +178,7 @@ public class EventBus {
             eventMap.forEach((k, v) -> {
                 if (v.size() > 1) {
                     // 因为每个事件都需要由一个返回值，如果配置多个监听器，则无法知道哪个返回值可用，故，限制只能有一个监听器
-                    throw new BeanCreationException("微信 " + k.getDescription() + " eventListener不能注册多次");
+                    throw new BeanCreationException("公众号组件 ---> 微信 " + k.getDescription() + " eventListener不能注册多次");
                 }
                 eventListenerMap.put(k, v.get(0));
             });
@@ -191,8 +188,14 @@ public class EventBus {
         final WeChatEventTypeEnum[] eventValues = WeChatEventTypeEnum.values();
         for (WeChatEventTypeEnum value : eventValues) {
             if (!eventListenerMap.containsKey(value)) {
-                LoggerUtils.warn(logger, value.getDescription() + "事件处理器未注册!!!");
+                LoggerUtils.warn(logger, "公众号组件 ---> " + value.getDescription() + "事件处理器未注册!!!");
             }
+        }
+        if (unKnowWeChatEventListener == null) {
+            LoggerUtils.warn(logger, "公众号组件 ---> 未发现未知事件处理器，可能存在事件回调丢失情况");
+        }
+        if (unKnowWeChatMessageListener == null) {
+            LoggerUtils.warn(logger, "公众号组件 ---> 未发现未知消息处理器，可能存在消息回调丢失情况");
         }
     }
 
@@ -209,7 +212,7 @@ public class EventBus {
             // 微信发送进来的xml
             String inputXML = new String(data, StandardCharsets.UTF_8);
             // 消息解密
-            String decryptMsg = weChatMessageCodec.decrypt(uri,  inputXML);
+            String decryptMsg = weChatMessageCodec.decrypt(uri, inputXML);
             // 将解密后的数据，转换为byte数组，用于协议的具体处理
             data = decryptMsg.getBytes(StandardCharsets.UTF_8);
             // 调用具体的分发器，实现数据的处理

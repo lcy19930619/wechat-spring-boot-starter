@@ -1,5 +1,10 @@
 package net.jlxxw.wechat.event.netty.properties;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties("wechat.event.server.netty.http.request.decoder")
 public class HttpRequestDecoderProperties {
     private int maxInitialLineLength = 4096;
     private int maxHeaderSize = 8192;

@@ -1,3 +1,6 @@
+logging:
+  level:
+    net.jlxxw: debug
 wechat:
   event:
     server:

@@ -79,7 +79,6 @@ public class WeChatCiphertextWeChatMessageCodec implements WeChatMessageCodec {
     }
 
     /**
-     * 后置处理器
      *  token 公众平台上，开发者设置的token
      *  encodingAesKey 公众平台上，开发者设置的EncodingAESKey
      *  appId 公众平台 appId
@@ -96,7 +95,6 @@ public class WeChatCiphertextWeChatMessageCodec implements WeChatMessageCodec {
         this.token = weChatProperties.getVerifyToken();
         this.appId = weChatProperties.getAppId();
         aesKey = Base64.decodeBase64(encodingAesKey + "=");
-        System.out.println();
     }
 
     /**

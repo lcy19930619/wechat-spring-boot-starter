@@ -1,5 +1,10 @@
 package net.jlxxw.wechat.event.netty.properties;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@ConfigurationProperties("wechat.event.server.netty.channel.idle")
 public class IdleStateProperties {
 
     private int readerIdleTimeSeconds = 15 * 1000;

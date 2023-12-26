@@ -1,7 +1,11 @@
 package net.jlxxw.wechat.event.netty.properties;
 
 import io.netty.handler.logging.LogLevel;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+@ConfigurationProperties("wechat.event.server.netty.log")
 public class NettyLogProperties {
 
     /**
@@ -12,7 +16,7 @@ public class NettyLogProperties {
     /**
      * 日志级别
      */
-    private LogLevel level;
+    private LogLevel level = LogLevel.INFO;
 
     public boolean isEnable() {
         return enable;

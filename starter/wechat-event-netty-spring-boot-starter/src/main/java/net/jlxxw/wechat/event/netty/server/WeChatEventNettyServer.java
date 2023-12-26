@@ -25,7 +25,8 @@ import java.util.List;
 
 
 /**
- * 通过netty接口提升微信核心接口性能
+ * 公众号开发组件
+ * 事件模式入口 -- netty 模式
  *
  * @author chunyang.leng
  * @date 2021/1/25 9:31 上午
@@ -38,9 +39,22 @@ public class WeChatEventNettyServer implements ApplicationRunner {
 
     private final List<ChannelHandler> channelHandlerList;
 
-    public WeChatEventNettyServer(WeChatEventNettyServerProperties weChatEventNettyServerProperties, List<ChannelHandler> channelHandlerList) {
+    private final HttpObjectAggregatorProperties httpObjectAggregatorProperties;
+
+    private final HttpRequestDecoderProperties httpRequestDecoderProperties;
+
+    private final IdleStateProperties idleStateProperties;
+
+    public WeChatEventNettyServer(WeChatEventNettyServerProperties weChatEventNettyServerProperties,
+                                  List<ChannelHandler> channelHandlerList,
+                                  HttpObjectAggregatorProperties httpObjectAggregatorProperties,
+                                  HttpRequestDecoderProperties httpRequestDecoderProperties,
+                                  IdleStateProperties idleStateProperties) {
         this.weChatEventNettyServerProperties = weChatEventNettyServerProperties;
         this.channelHandlerList = channelHandlerList;
+        this.httpObjectAggregatorProperties = httpObjectAggregatorProperties;
+        this.httpRequestDecoderProperties = httpRequestDecoderProperties;
+        this.idleStateProperties = idleStateProperties;
     }
 
     /**
@@ -52,11 +66,11 @@ public class WeChatEventNettyServer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         if (!weChatEventNettyServerProperties.getEnable()) {
-            logger.info("用户配置关闭 wechat event netty 服务器");
+            logger.warn("公众号组件 ---> 用户配置关闭 netty 服务器");
             return;
         }
         Thread t = new Thread(() -> {
-            LoggerUtils.info(logger, "初始化 netty 组件");
+            LoggerUtils.info(logger, "公众号组件 ---> 初始化 netty 监听线程");
             //new 一个主线程组
             EventLoopGroup bossGroup = new NioEventLoopGroup(1);
             //new 一个工作线程组
@@ -67,24 +81,20 @@ public class WeChatEventNettyServer implements ApplicationRunner {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-
-
-                            HttpRequestDecoderProperties decoder = weChatEventNettyServerProperties.getHttpRequestDecoder();
-                            HttpRequestDecoder httpRequestDecoder = new HttpRequestDecoder(decoder.getMaxInitialLineLength(), decoder.getMaxHeaderSize(), decoder.getMaxChunkSize());
+                            // http 请求解码器
+                            HttpRequestDecoder httpRequestDecoder = new HttpRequestDecoder(httpRequestDecoderProperties.getMaxInitialLineLength(), httpRequestDecoderProperties.getMaxHeaderSize(), httpRequestDecoderProperties.getMaxChunkSize());
                             socketChannel.pipeline().addLast(httpRequestDecoder);
 
-
-                            HttpObjectAggregatorProperties httpObjectAggregatorProperties = weChatEventNettyServerProperties.getHttpObjectAggregator();
+                            // http 聚合器
                             HttpObjectAggregator httpObjectAggregator = new HttpObjectAggregator(httpObjectAggregatorProperties.getMaxContentLength());
                             socketChannel.pipeline().addLast(httpObjectAggregator);
 
-
+                            // http 应答编码器
                             socketChannel.pipeline().addLast(new HttpResponseEncoder());
-
+                            // http 分块
                             socketChannel.pipeline().addLast(new ChunkedWriteHandler());
 
-
-                            IdleStateProperties idleStateProperties = weChatEventNettyServerProperties.getIdleState();
+                            // 空闲检测
                             IdleStateHandler idleStateHandler = new IdleStateHandler(idleStateProperties.getReaderIdleTimeSeconds(), idleStateProperties.getWriterIdleTimeSeconds(), idleStateProperties.getAllIdleTimeSeconds());
                             socketChannel.pipeline().addLast(idleStateHandler);
 
@@ -102,11 +112,14 @@ public class WeChatEventNettyServer implements ApplicationRunner {
             //绑定端口,开始接收进来的连接
             try {
                 ChannelFuture future = BOOTSTRAP.bind(weChatEventNettyServerProperties.getPort()).sync();
-                LoggerUtils.info(logger, "微信netty服务启动，开始监听端口: {}", weChatEventNettyServerProperties.getPort());
+                LoggerUtils.info(logger, "公众号组件 ---> netty 服务启动完毕，开始监听端口: {}", weChatEventNettyServerProperties.getPort());
                 future.channel().closeFuture().sync();
             } catch (InterruptedException e) {
-                LoggerUtils.error(logger, "微信netty服务启动失败！！！", e);
-                System.exit(0);
+                LoggerUtils.error(logger, "公众号组件 ---> netty 服务收到中断，netty 服务关闭！！！", e);
+                //关闭主线程组
+                bossGroup.shutdownGracefully();
+                //关闭工作线程组
+                workGroup.shutdownGracefully();
             } finally {
                 //关闭主线程组
                 bossGroup.shutdownGracefully();

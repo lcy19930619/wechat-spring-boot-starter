@@ -1,9 +1,14 @@
 package net.jlxxw.wechat.event.netty.properties;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
 /**
  * 事件线程池配置
  * @author lcy
  */
+@Configuration
+@ConfigurationProperties("wechat.event.server.netty.event.pool")
 public class EventThreadPoolProperties {
     /**
      * 线程池核心数
