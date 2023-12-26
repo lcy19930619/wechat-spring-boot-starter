@@ -7,3 +7,6 @@ wechat:
       netty:
         codec: plain_text
         port: 19090
+        verify-token-url: /verify
+        core-controller-url: /we
+  verify-token: 1234567890

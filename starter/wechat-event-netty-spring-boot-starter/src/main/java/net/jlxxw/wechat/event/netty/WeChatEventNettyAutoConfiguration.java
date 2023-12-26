@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.event.netty;
 
 import io.netty.channel.ChannelHandler;
+import io.netty.handler.codec.http.*;
 import io.netty.handler.logging.LoggingHandler;
 import jakarta.annotation.PostConstruct;
 import net.jlxxw.wechat.event.codec.WeChatCiphertextWeChatMessageCodec;
@@ -11,7 +12,10 @@ import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
+import net.jlxxw.wechat.event.netty.handler.DefaultHandler;
 import net.jlxxw.wechat.event.netty.handler.MessageHandler;
+import net.jlxxw.wechat.event.netty.handler.VerifyTokenHandler;
+import net.jlxxw.wechat.event.netty.invoke.OtherHttpRequestHandler;
 import net.jlxxw.wechat.event.netty.properties.*;
 import net.jlxxw.wechat.event.netty.server.WeChatEventNettyServer;
 import net.jlxxw.wechat.exception.AesException;
@@ -126,11 +130,43 @@ public class WeChatEventNettyAutoConfiguration {
         return new LoggingHandler(nettyLogProperties.getLevel());
     }
 
+
     @Bean
     @Order(2)
-    public ChannelHandler messageHandler(EventBus eventBus) {
-        LoggerUtils.info(logger, "公众号组件 ---> Netty 消息处理器 加载完毕");
-        return new MessageHandler(eventBus);
+    public ChannelHandler verifyTokenHandler(WeChatProperties weChatProperties,
+                                             WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+        LoggerUtils.info(logger, "公众号组件 ---> Netty 部署验证消息处理器 加载完毕");
+        return new VerifyTokenHandler(weChatProperties,weChatEventNettyServerProperties);
+    }
+
+    @Bean
+    @Order(3)
+    public ChannelHandler messageHandler(EventBus eventBus,WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+        LoggerUtils.info(logger, "公众号组件 ---> Netty 核心消息处理器 加载完毕");
+        return new MessageHandler(eventBus,weChatEventNettyServerProperties);
+    }
+
+    @Bean
+    @Order(4)
+    public ChannelHandler defaultHandler(OtherHttpRequestHandler otherHttpRequestHandler) {
+        LoggerUtils.info(logger, "公众号组件 ---> Netty 消息兜底处理器 加载完毕");
+        return new DefaultHandler(otherHttpRequestHandler);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(OtherHttpRequestHandler.class)
+    public OtherHttpRequestHandler otherHttpRequestHandler() {
+        LoggerUtils.warn(logger, "公众号组件 ---> Netty 默认 http 兜底处理器 加载完毕");
+        return new OtherHttpRequestHandler() {
+
+            private final Logger logger = LoggerFactory.getLogger(OtherHttpRequestHandler.class);
+            @Override
+            public FullHttpResponse invoke(FullHttpRequest request) {
+                String uri = request.uri();
+                LoggerUtils.warn(logger, "公众号组件 ---> 发现不支持的请求,method:{},url:{}，返回 404",request.method().name(), uri);
+                return new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.NOT_FOUND);
+            }
+        };
     }
 
 

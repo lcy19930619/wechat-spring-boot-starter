@@ -10,6 +10,7 @@ import io.netty.handler.codec.http.*;
 import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.event.component.EventBus;
+import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +26,26 @@ import org.slf4j.LoggerFactory;
 public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private static final Logger logger = LoggerFactory.getLogger(MessageHandler.class);
     private final EventBus eventBus;
+    private final WeChatEventNettyServerProperties weChatEventNettyServerProperties;
 
-    public MessageHandler(EventBus eventBus) {
+    public MessageHandler(EventBus eventBus, WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
         this.eventBus = eventBus;
+        this.weChatEventNettyServerProperties = weChatEventNettyServerProperties;
     }
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, FullHttpRequest fullHttpRequest) throws Exception {
+        // 获取请求的uri
+        String uri = fullHttpRequest.uri();
+
+        String coreControllerUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
+        if (!uri.contains(coreControllerUrl)) {
+            // 不属于自己这个channel处理，丢给下一个channel
+            channelHandlerContext.fireChannelRead(fullHttpRequest.copy());
+            return;
+        }
+
+
         String channelId = channelHandlerContext.channel().id().asShortText();
         LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，开始处理数据,channelId:{}", channelId);
 
@@ -41,8 +55,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
         byte[] reqContent = new byte[content.readableBytes()];
         // 缓存数据加载至byte数组中
         content.readBytes(reqContent);
-        // 获取请求的uri
-        String uri = fullHttpRequest.uri();
+
         // 事件总线开始执行处理逻辑
         LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线开始执行处理逻辑,channelId:{}", channelId);
         final String resultData = eventBus.dispatcher(reqContent, uri);
