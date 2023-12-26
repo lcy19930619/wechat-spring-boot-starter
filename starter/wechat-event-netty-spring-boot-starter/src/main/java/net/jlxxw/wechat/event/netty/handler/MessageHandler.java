@@ -45,7 +45,6 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
             return;
         }
 
-
         String channelId = channelHandlerContext.channel().id().asShortText();
         LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，开始处理数据,channelId:{}", channelId);
 
@@ -58,41 +57,45 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 
         // 事件总线开始执行处理逻辑
         LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线开始执行处理逻辑,channelId:{}", channelId);
-        final String resultData = eventBus.dispatcher(reqContent, uri);
-        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线处理数据结束,channelId:{}", channelId);
-        // 响应数据刷新到缓冲区
-        // ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
+        eventBus.dispatcher(reqContent, uri, (resultData) -> {
+            LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线处理数据结束,channelId:{}", channelId);
+            // 响应数据刷新到缓冲区
+            // ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
 
-        // 切换直接内存写入
-        ByteBuf byteBuf = Unpooled.directBuffer(resultData.length());
-        byteBuf.writeCharSequence(resultData, CharsetUtil.UTF_8);
-        // 包装响应结果
-        FullHttpResponse response = response(byteBuf);
-        // 发送响应,应答数据采用直接写入方式,减少 pipeline 处理流程,提升效率
-        // 如果要采用全部 pipeline 处理，应改为 channelHandlerContext.channel().writeAndFlush()
-        channelHandlerContext
-                // 发送应答数据
-                .writeAndFlush(response)
-                // 处理完毕，关闭连接
-                .addListener(ChannelFutureListener.CLOSE);
-        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，处理数据结束,channelId:{}", channelId);
+            // 切换直接内存写入
+            ByteBuf byteBuf = Unpooled.directBuffer(resultData.length());
+            byteBuf.writeCharSequence(resultData, CharsetUtil.UTF_8);
+            // 包装响应结果
+            FullHttpResponse response = response(byteBuf);
+            // 发送响应,应答数据采用直接写入方式,减少 pipeline 处理流程,提升效率
+            // 如果要采用全部 pipeline 处理，应改为 channelHandlerContext.channel().writeAndFlush()
+            channelHandlerContext
+                    // 发送应答数据
+                    .writeAndFlush(response)
+                    // 处理完毕，关闭连接
+                    .addListener(ChannelFutureListener.CLOSE);
+            LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，处理数据结束,channelId:{}", channelId);
+
+        });
 
     }
+
     /**
      * 异常信息记录
+     *
      * @param ctx
      * @param cause
      * @throws Exception
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        if (cause instanceof ReadTimeoutException){
+        if (cause instanceof ReadTimeoutException) {
             // 15秒未接收到服务器信息，自动断开链接
             ctx.close();
             return;
         }
         // 记录异常日志
-        LoggerUtils.error(logger,"wechat-netty-thread 发生未知异常",cause);
+        LoggerUtils.error(logger, "wechat-netty-thread 发生未知异常", cause);
         // 关闭异常连接
         ctx.close();
     }

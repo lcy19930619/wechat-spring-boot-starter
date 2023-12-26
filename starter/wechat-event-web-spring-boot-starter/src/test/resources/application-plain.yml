@@ -20,3 +20,7 @@ wechat:
         core-controller-url: /we
         verify-token-url: /vtl
         codec: plain_text
+spring:
+  threads:
+    virtual:
+      enabled: true

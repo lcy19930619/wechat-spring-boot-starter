@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.*;
@@ -35,6 +36,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.RejectedExecutionException;
 
 import static org.springframework.http.RequestEntity.post;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
@@ -53,6 +56,8 @@ public class ListenerPlainTextTest {
     private WebApplicationContext webApplicationContext;
 
     private MockMvc mockMvc;
+
+
     @PostConstruct
     public void before() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();

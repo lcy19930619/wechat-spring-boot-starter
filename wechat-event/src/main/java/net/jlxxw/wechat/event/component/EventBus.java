@@ -35,8 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executor;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -88,7 +90,7 @@ public class EventBus {
 
     }
 
-    private final ThreadPoolTaskExecutor eventBusThreadPool;
+    private final Executor eventBusThreadPool;
     /**
      * 有可能未注册任何消息处理器
      */
@@ -123,7 +125,7 @@ public class EventBus {
      * @param unKnowWeChatEventListener      未知类型事件处理器
      * @param unKnowWeChatMessageListener    未知类型消息处理器
      */
-    public EventBus(ThreadPoolTaskExecutor eventBusThreadPool,
+    public EventBus(Executor eventBusThreadPool,
                     List<AbstractWeChatMessageListener> abstractWeChatMessageListeners,
                     List<AbstractWeChatEventListener> abstractWeChatEventListeners,
                     UnKnowWeChatEventListener unKnowWeChatEventListener,
@@ -199,40 +201,40 @@ public class EventBus {
         }
     }
 
+
     /**
-     * 微信消息加解密处理，netty使用
-     *
-     * @param bytes 微信请求的全部数据
-     * @param uri   微信携带的uri，用于获取加解密参数内容
+     * 消费处理数据，等待时间
+     * @param bytes 数据
+     * @param uri 请求 uri
+     * @param responseConsumer 应答信息消费者
      */
-    public String dispatcher(byte[] bytes, String uri) {
-        final byte[] finalBytes = bytes;
-        final Future<String> future = eventBusThreadPool.submit(() -> {
-            byte[] data = finalBytes;
-            // 微信发送进来的xml
-            String inputXML = new String(data, StandardCharsets.UTF_8);
-            // 消息解密
-            String decryptMsg = weChatMessageCodec.decrypt(uri, inputXML);
-            // 将解密后的数据，转换为byte数组，用于协议的具体处理
-            data = decryptMsg.getBytes(StandardCharsets.UTF_8);
-            // 调用具体的分发器，实现数据的处理
-            String result = dispatcher(data);
-            // 如果启用了信息加解密功能，则对返回值进行加密处理
-            result = weChatMessageCodec.encrypt(result);
-            return result;
+    public void dispatcher(byte[] bytes, String uri, Consumer<String> responseConsumer) {
+        eventBusThreadPool.execute(() -> {
+            String result = "";
+            try {
+                byte[] data = bytes;
+                // 微信发送进来的xml
+                String inputXML = new String(data, StandardCharsets.UTF_8);
+                // 消息解密
+                String decryptMsg = weChatMessageCodec.decrypt(uri, inputXML);
+                // 将解密后的数据，转换为byte数组，用于协议的具体处理
+                data = decryptMsg.getBytes(StandardCharsets.UTF_8);
+                // 调用具体的分发器，实现数据的处理
+                result = dispatcher(data);
+                // 如果启用了信息加解密功能，则对返回值进行加密处理
+                result = weChatMessageCodec.encrypt(result);
+            }catch (Exception e) {
+                logger.error("事件分发处理出现异常,返回兜底空白字符串,微信参数:" + new String(bytes, StandardCharsets.UTF_8) + " ,uri参数:" + uri + ",异常信息:", e);
+            }
+            responseConsumer.accept(result);
         });
-        try {
-            return future.get(5, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            logger.error("事件分发处理出现异常,微信参数:" + new String(bytes, StandardCharsets.UTF_8) + " ,uri参数:" + uri + ",异常信息:", e);
-            return "";
-        }
+
     }
 
     /**
      * 处理微信请求信息，无加密，netty使用
      */
-    public String dispatcher(byte[] bytes) {
+    private String dispatcher(byte[] bytes) {
         try {
             // jackson会自动关闭流，不需要手动关闭
             ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
