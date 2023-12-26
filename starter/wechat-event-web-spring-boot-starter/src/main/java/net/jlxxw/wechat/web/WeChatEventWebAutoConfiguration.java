@@ -59,6 +59,11 @@ public class WeChatEventWebAutoConfiguration {
                 weChatMessageCodec);
     }
 
+    /**
+     * web 模式下兜底线程池
+     * @param eventThreadPoolProperties
+     * @return
+     */
     @Bean("eventBusThreadPool")
     @ConditionalOnMissingBean(name = "eventBusThreadPool")
     public ThreadPoolTaskExecutor eventBusThreadPool(EventThreadPoolProperties eventThreadPoolProperties) {
@@ -82,12 +87,17 @@ public class WeChatEventWebAutoConfiguration {
         return executor;
     }
 
-
+    /**
+     * 如果开启了虚拟线程，则使用虚拟线程池，
+     * @return
+     */
     @Bean("eventBusThreadPool")
     @ConditionalOnThreading(Threading.VIRTUAL)
     @ConditionalOnMissingBean(name = "eventBusThreadPool")
-    public Executor VirtualThreadTaskExecutor() {
-        return new VirtualThreadTaskExecutor("wechat-vir-");
+    public Executor VirtualThreadTaskExecutor(EventThreadPoolProperties eventThreadPoolProperties) {
+        String threadNamePrefix = eventThreadPoolProperties.getThreadNamePrefix();
+
+        return new VirtualThreadTaskExecutor("vir-"+threadNamePrefix);
     }
 
 

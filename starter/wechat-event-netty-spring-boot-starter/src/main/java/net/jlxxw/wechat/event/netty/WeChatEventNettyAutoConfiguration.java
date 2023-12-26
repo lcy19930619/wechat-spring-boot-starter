@@ -69,6 +69,11 @@ public class WeChatEventNettyAutoConfiguration {
                 weChatMessageCodec);
     }
 
+    /**
+     * netty 模式不需要使用虚拟线程，即可达到足够的性能要求，如果使用虚拟线程，反而可能存在性能问题
+     * @param eventThreadPoolProperties
+     * @return
+     */
     @Bean("eventBusThreadPool")
     @ConditionalOnMissingBean(name = "eventBusThreadPool")
     public ThreadPoolTaskExecutor eventBusThreadPool(EventThreadPoolProperties eventThreadPoolProperties) {

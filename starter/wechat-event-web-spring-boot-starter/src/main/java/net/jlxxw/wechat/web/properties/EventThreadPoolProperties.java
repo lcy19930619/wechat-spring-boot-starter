@@ -22,7 +22,7 @@ public class EventThreadPoolProperties {
     /**
      * 线程名称前缀
      */
-    private String threadNamePrefix = "wechat-netty-event-pool";
+    private String threadNamePrefix = "wechat-web-event-pool";
 
     /**
      * 线程池队列大小
