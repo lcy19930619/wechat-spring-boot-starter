@@ -93,7 +93,15 @@ public class ListenerCipherTextTest {
             String url = "/?"+encParameters;
             send(url,xmlData,(response)->{
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
-                countDownLatch.countDown();
+                try {
+                    String plainXML = wechatMessageCrypt.decryptXML(response);
+                    Assertions.assertTrue(StringUtils.isNotBlank(plainXML), "解密结果不应该为空");
+                    System.out.println(plainXML);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }finally {
+                    countDownLatch.countDown();
+                }
             });
         }
         countDownLatch.await();
@@ -127,7 +135,15 @@ public class ListenerCipherTextTest {
             String url = "/?"+encParameters;
             send(url,xmlData,(response)->{
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
-                countDownLatch.countDown();
+                try {
+                    String plainXML = wechatMessageCrypt.decryptXML(response);
+                    Assertions.assertTrue(StringUtils.isNotBlank(plainXML), "解密结果不应该为空");
+                    System.out.println(plainXML);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }finally {
+                    countDownLatch.countDown();
+                }
             });
 
         }
