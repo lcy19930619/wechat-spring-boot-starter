@@ -54,13 +54,13 @@ public class ListenerPlainTextTest {
         Resource[] eventMessageResources = pathMatchingResourcePatternResolver.getResources("mock/data/xml/event/*Message.xml");
         Assertions.assertNotNull(eventMessageResources, "测试事件资源不应该为空");
         CountDownLatch countDownLatch = new CountDownLatch(eventMessageResources.length);
-
+        String coreControllerUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
         for (Resource resource : eventMessageResources) {
             InputStream inputStream = resource.getInputStream();
             List<String> list = IOUtils.readLines(inputStream, "utf-8");
             String xmlData = String.join("\n", list);
 
-            send("/",xmlData,(response)->{
+            send(coreControllerUrl,xmlData,(response)->{
                 System.out.println(response);
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
                 countDownLatch.countDown();
@@ -75,6 +75,7 @@ public class ListenerPlainTextTest {
     @Test
     public void startMessagePlainTextTest() throws IOException, InterruptedException {
         PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
+        String coreControllerUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
 
         Resource[] messageResources = pathMatchingResourcePatternResolver.getResources("mock/data/xml/message/*Message.xml");
         Assert.assertNotNull("测试消息资源不应该为空", messageResources);
@@ -86,7 +87,7 @@ public class ListenerPlainTextTest {
             List<String> list = IOUtils.readLines(inputStream, "utf-8");
             String xmlData = String.join("\n", list);
 
-            send("/",xmlData,(response)->{
+            send(coreControllerUrl,xmlData,(response)->{
                 System.out.println(response);
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
                 countDownLatch.countDown();

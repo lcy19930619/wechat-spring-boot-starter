@@ -76,7 +76,7 @@ public class ListenerCipherTextTest {
         Resource[] eventMessageResources = pathMatchingResourcePatternResolver.getResources("mock/data/xml/event/*Message.xml");
         Assertions.assertNotNull(eventMessageResources, "测试事件资源不应该为空");
         CountDownLatch countDownLatch = new CountDownLatch(eventMessageResources.length);
-
+        String coreControllerUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
         for (Resource resource : eventMessageResources) {
             InputStream inputStream = resource.getInputStream();
             List<String> list = IOUtils.readLines(inputStream, "utf-8");
@@ -90,7 +90,7 @@ public class ListenerCipherTextTest {
             String signature = SHA1.getSHA1(weChatProperties.getVerifyToken(), String.valueOf(timeMillis) , randomStr,encrypt);
             String encParameters = "nonce="+randomStr + "&timestamp="+timeMillis + "&msg_signature=" +signature;
             String xmlData = "<xml><Encrypt><![CDATA[" + encrypt + "]]></Encrypt><ToUserName>" + openId +"</ToUserName></xml>";
-            String url = "/?"+encParameters;
+            String url = coreControllerUrl + "?"+encParameters;
             send(url,xmlData,(response)->{
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
                 try {
@@ -113,6 +113,7 @@ public class ListenerCipherTextTest {
     @Test
     public void startMessagePlainTextTest() throws IOException, InterruptedException, AesException {
         PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
+        String coreControllerUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
 
         Resource[] messageResources = pathMatchingResourcePatternResolver.getResources("mock/data/xml/message/*Message.xml");
         Assert.assertNotNull("测试消息资源不应该为空", messageResources);
@@ -132,7 +133,7 @@ public class ListenerCipherTextTest {
             String encParameters = "nonce="+randomStr + "&timestamp="+timeMillis + "&msg_signature=" +signature;
             String xmlData = "<xml><Encrypt>" + encrypt + "</Encrypt><ToUserName>" + openId +"</ToUserName></xml>";
 
-            String url = "/?"+encParameters;
+            String url = coreControllerUrl + "?"+encParameters;
             send(url,xmlData,(response)->{
                 Assertions.assertTrue(StringUtils.isNotBlank(response), "测试结果不应该为空");
                 try {

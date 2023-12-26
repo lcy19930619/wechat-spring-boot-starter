@@ -10,8 +10,8 @@ wechat:
         log:
           enable: true
           level: debug
-        metrics:
-          enable: true
+        verify-token-url: /verify
+        core-controller-url: /we
 
 
   # 需要替换为真实数据
