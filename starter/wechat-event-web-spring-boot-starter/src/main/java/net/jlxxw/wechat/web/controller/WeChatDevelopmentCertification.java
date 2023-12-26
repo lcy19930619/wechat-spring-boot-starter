@@ -36,7 +36,7 @@ public class WeChatDevelopmentCertification {
      * @return 返回给微信的信息
      * @throws NoSuchAlgorithmException 编解码失败
      */
-    @GetMapping("${wechat.event.server.web.verify-token-url:verifyToken}")
+    @GetMapping("${wechat.event.server.web.verify-token-url:/verifyToken}")
     public String verifyToken(HttpServletRequest request) throws NoSuchAlgorithmException {
         String msgSignature = request.getParameter("signature");
         String msgTimestamp = request.getParameter("timestamp");

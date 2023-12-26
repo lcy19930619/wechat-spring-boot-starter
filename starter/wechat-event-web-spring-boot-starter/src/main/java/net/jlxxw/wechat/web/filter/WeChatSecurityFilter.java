@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Set;
 
+/**
+ * @author lcy
+ */
 public class WeChatSecurityFilter implements Filter, SecurityFilterTemplate {
 
     private final BlackList blackList;

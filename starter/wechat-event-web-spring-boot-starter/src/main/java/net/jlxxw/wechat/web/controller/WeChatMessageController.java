@@ -1,10 +1,8 @@
 package net.jlxxw.wechat.web.controller;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import net.jlxxw.wechat.event.component.EventBus;
-import net.jlxxw.wechat.util.LoggerUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +21,6 @@ import java.io.PrintWriter;
  * @date 2021/1/20 12:48 下午
  */
 @Controller
-@ConditionalOnProperty(value = "we-chat.netty.server.enable-netty", havingValue = "false")
 public class WeChatMessageController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatMessageController.class);
     @Autowired
@@ -35,7 +32,7 @@ public class WeChatMessageController {
      * @param response 用于向微信写入应答数据信息
      * @throws Exception
      */
-    @RequestMapping("${wechat.event.server.web.core-controller-url:weChat}")
+    @RequestMapping("${wechat.event.server.web.core-controller-url:/weChat}")
     public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try (InputStream inputStream = request.getInputStream()){
             byte[] bytes = IOUtils.toByteArray(inputStream);
