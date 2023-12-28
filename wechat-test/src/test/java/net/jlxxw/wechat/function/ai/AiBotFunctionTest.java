@@ -1,13 +1,6 @@
 package net.jlxxw.wechat.function.ai;
 
 import net.jlxxw.wechat.base.BaseTest;
-import net.jlxxw.wechat.enums.AiBotEnvEnum;
-import net.jlxxw.wechat.exception.ParamCheckException;
-import net.jlxxw.wechat.response.ai.ChatResponse;
-import net.jlxxw.wechat.response.ai.WeChatAiBotSignatureResponse;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

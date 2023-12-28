@@ -17,10 +17,10 @@ import net.jlxxw.wechat.function.push.SyncPushTemplate;
 import net.jlxxw.wechat.function.qrcode.QrcodeManager;
 import net.jlxxw.wechat.function.tag.TagManager;
 import net.jlxxw.wechat.function.token.TokenManager;
-
 import net.jlxxw.wechat.function.user.UserManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
+import net.jlxxw.wechat.util.LoggerUtils;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -32,8 +32,6 @@ import org.apache.hc.core5.http.config.Registry;
 import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -54,7 +52,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 @ComponentScan("net.jlxxw.wechat.function")
 @ConditionalOnProperty(value = "wechat.function.enable", havingValue = "true")
-public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
+public class WeChatFunctionAutoConfiguration  {
     private static final Logger logger = LoggerFactory.getLogger(WeChatFunctionAutoConfiguration.class);
 
     @Bean
@@ -78,21 +76,10 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
                 .setConnectionManager(connectionManager)
                 .build();
         RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory(build));
-        logger.info("初始化 RestTemplate");
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化 RestTemplate");
         return restTemplate;
     }
 
-
-    /**
-     * Callback used to run the bean.
-     *
-     * @param args incoming application arguments
-     * @throws Exception on error
-     */
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-
-    }
 
     /**
      * 批量执行线程池
@@ -116,12 +103,14 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
         executor.setThreadNamePrefix("batch-execute-pool-");
         //配置拒绝策略
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化 批量处理线程池");
         return executor;
     }
 
 
     @Bean
     public ParamCheckAOP paramCheckAOP() {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化 函数参数检查切面");
         return new ParamCheckAOP();
     }
 
@@ -129,6 +118,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatAiBotProperties.class)
     public AiBotFunction aiBotFunction(RestTemplate restTemplate,
                                        WeChatAiBotProperties aiBotProperties) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 aiBotFunction");
         return new AiBotFunction(aiBotProperties, restTemplate);
     }
 
@@ -138,6 +128,8 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     public OpenApiManager openApiManager(RestTemplate restTemplate,
                                          WeChatProperties weChatProperties,
                                          WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
+
         return new OpenApiManager(weChatProperties, weChatTokenRepository, restTemplate);
     }
 
@@ -146,6 +138,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatProperties.class)
     public WebPageAuthorizationManager webPageAuthorizationManager(RestTemplate restTemplate,
                                                                    WeChatProperties weChatProperties) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new WebPageAuthorizationManager(restTemplate, weChatProperties);
     }
 
@@ -154,6 +147,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public MaterialManager materialManager(RestTemplate restTemplate,
                                            WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new MaterialManager(restTemplate, weChatTokenRepository);
     }
 
@@ -161,6 +155,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public PermanentMaterialManager permanentMaterialManager(RestTemplate restTemplate,
                                                              WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new PermanentMaterialManager(restTemplate, weChatTokenRepository);
     }
 
@@ -169,6 +164,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public TempMaterialManager tempMaterialManager(RestTemplate restTemplate,
                                                    WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new TempMaterialManager(restTemplate, weChatTokenRepository);
     }
 
@@ -177,6 +173,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public MenuManager menuManager(RestTemplate restTemplate,
                                    WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new MenuManager(weChatTokenRepository, restTemplate);
     }
 
@@ -184,6 +181,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public PersonalizedMenuManager personalizedMenuManager(RestTemplate restTemplate,
                                                            WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new PersonalizedMenuManager(weChatTokenRepository, restTemplate);
     }
 
@@ -192,6 +190,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     public SyncPushCustomer syncPushCustomer(RestTemplate restTemplate,
                                              BatchExecutor batchExecutor,
                                              WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new SyncPushCustomer(restTemplate, batchExecutor, weChatTokenRepository);
     }
 
@@ -200,6 +199,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     public SyncPushTemplate syncPushTemplate(RestTemplate restTemplate,
                                              BatchExecutor batchExecutor,
                                              WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new SyncPushTemplate(restTemplate, batchExecutor, weChatTokenRepository);
     }
 
@@ -208,6 +208,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public QrcodeManager qrcodeManager(RestTemplate restTemplate,
                                        WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new QrcodeManager(weChatTokenRepository, restTemplate);
     }
 
@@ -216,6 +217,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public TagManager tagManager(RestTemplate restTemplate,
                                  WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new TagManager(restTemplate, weChatTokenRepository);
     }
 
@@ -223,6 +225,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatProperties.class)
     public TokenManager tokenManager(RestTemplate restTemplate,
                                      WeChatProperties weChatProperties) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new TokenManager(restTemplate, weChatProperties);
     }
 
@@ -232,6 +235,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     public UserManager userManager(RestTemplate restTemplate,
                                    WeChatTokenRepository weChatTokenRepository,
                                    BatchExecutor batchExecutor) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new UserManager(restTemplate, weChatTokenRepository, batchExecutor);
     }
 
@@ -239,6 +243,7 @@ public class WeChatFunctionAutoConfiguration implements ApplicationRunner {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public IpManager ipManager(RestTemplate restTemplate,
                                WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 ai聊天机器人");
         return new IpManager(restTemplate, weChatTokenRepository);
     }
 
