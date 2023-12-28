@@ -6,7 +6,7 @@ wechat:
     server:
       netty:
         codec: cipher_text
-        port: 19090
+        port: ${random.int[8000,9000]}
         log:
           enable: true
           level: debug

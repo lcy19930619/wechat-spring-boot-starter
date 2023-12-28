@@ -33,7 +33,6 @@ import java.util.List;
  */
 @Component
 public class WeChatEventNettyServer implements ApplicationRunner {
-    private static final ServerBootstrap BOOTSTRAP = new ServerBootstrap();
     private static final Logger logger = LoggerFactory.getLogger(WeChatEventNettyServer.class);
     private final WeChatEventNettyServerProperties weChatEventNettyServerProperties;
 
@@ -70,6 +69,7 @@ public class WeChatEventNettyServer implements ApplicationRunner {
             return;
         }
         Thread t = new Thread(() -> {
+            ServerBootstrap BOOTSTRAP = new ServerBootstrap();
             LoggerUtils.info(logger, "公众号组件 ---> 初始化 netty 监听线程");
             //new 一个主线程组
             EventLoopGroup bossGroup = new NioEventLoopGroup(1);
