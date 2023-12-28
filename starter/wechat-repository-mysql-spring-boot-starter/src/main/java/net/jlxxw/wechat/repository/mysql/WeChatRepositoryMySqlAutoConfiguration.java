@@ -1,8 +1,10 @@
 package net.jlxxw.wechat.repository.mysql;
 
+import net.jlxxw.wechat.repository.aibot.WeChatAiBotTokenRepository;
 import net.jlxxw.wechat.repository.jsapi.WeChatJsApiTicketRepository;
 import net.jlxxw.wechat.repository.mysql.mapper.TokenMapper;
 import net.jlxxw.wechat.repository.mysql.properties.WeChatMySqlProperties;
+import net.jlxxw.wechat.repository.mysql.token.WeChatAiBotTokenRepositoryImpl;
 import net.jlxxw.wechat.repository.mysql.token.WeChatJsApiTicketRepositoryImpl;
 import net.jlxxw.wechat.repository.mysql.token.WeChatTokenRepositoryImpl;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -66,5 +69,10 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
         return new WeChatJsApiTicketRepositoryImpl(tokenMapper);
     }
 
+    @Bean
+    @ConditionalOnMissingBean(WeChatAiBotTokenRepository.class)
+    public WeChatAiBotTokenRepository weChatAiBotTokenRepository() {
+        return new WeChatAiBotTokenRepositoryImpl();
+    }
 
 }

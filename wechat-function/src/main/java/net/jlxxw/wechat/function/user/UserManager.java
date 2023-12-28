@@ -1,33 +1,26 @@
 package net.jlxxw.wechat.function.user;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import net.jlxxw.wechat.component.BatchExecutor;
 import net.jlxxw.wechat.constant.UrlConstant;
 import net.jlxxw.wechat.enums.LanguageEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
-import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.user.SubscriptionResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.MessageFormat;
-import java.util.*;
-import java.util.concurrent.CountDownLatch;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * 用户信息管理
@@ -40,12 +33,10 @@ public class UserManager {
     private static final Logger logger = LoggerFactory.getLogger(UserManager.class);
     public RestTemplate restTemplate;
     public WeChatTokenRepository weChatTokenRepository;
-    public BatchExecutor batchExecutor;
 
-    public UserManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository, BatchExecutor batchExecutor) {
+    public UserManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository) {
         this.restTemplate = restTemplate;
         this.weChatTokenRepository = weChatTokenRepository;
-        this.batchExecutor = batchExecutor;
     }
 
     /**
@@ -92,63 +83,6 @@ public class UserManager {
             }
         }
         return openIdSet;
-    }
-
-    /**
-     * 批量根据用户的openId获取用户的基本信息
-     *
-     * @param openIdList openId列表
-     * @return 用户基本信息
-     * @throws WeChatException 微信服务端验证异常
-     * @throws ParamCheckException 方法调用前，参数检查异常
-     * @see <a href="https://developers.weixin.qq.com/doc/offiaccount/User_Management/Get_users_basic_information_UnionID.html#UinonId">文档地址</a>
-     */
-    public List<SubscriptionResponse> findUserInfo(@NotEmpty(message = "待查询待openId列表不应为空") List<String> openIdList,
-                                                   @NotNull(message = "语言枚举不应为空") LanguageEnum languageEnum) throws WeChatException, ParamCheckException {
-        List<SubscriptionResponse> result = new LinkedList<>();
-        if (CollectionUtils.isEmpty(openIdList)) {
-            return result;
-        }
-        CountDownLatch countDownLatch = new CountDownLatch(openIdList.size());
-        batchExecutor.execute(true, openIdList, (tempList -> {
-
-            JSONObject requestParam = new JSONObject();
-            JSONArray jsonArray = new JSONArray();
-            for (String openId : tempList) {
-                JSONObject param = new JSONObject();
-                param.put("openid", openId);
-                param.put("lang", languageEnum.getCode());
-                jsonArray.add(param);
-            }
-            requestParam.put("user_list", jsonArray);
-
-            String token = weChatTokenRepository.get();
-            String url = UrlConstant.BATCH_USER_INFO_URL + token;
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            String json = JSON.toJSONString(requestParam);
-            HttpEntity<String> request = new HttpEntity<>(json, headers);
-            ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
-            JSONObject resultData = JSONObject.parseObject(responseEntity.getBody());
-
-            WeChatResponse response = resultData.toJavaObject(WeChatResponse.class);
-            if (!response.isSuccessful()) {
-                tempList.forEach(x->countDownLatch.countDown());
-                throw new WeChatException(response);
-            }
-            JSONArray infoList = resultData.getJSONArray("user_info_list");
-            List<SubscriptionResponse> subscriptionUsers = JSONArray.parseArray(JSON.toJSONString(infoList), SubscriptionResponse.class);
-            result.addAll(subscriptionUsers);
-            tempList.forEach(x->countDownLatch.countDown());
-        }), 100L);
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-        return result;
     }
 
     /**

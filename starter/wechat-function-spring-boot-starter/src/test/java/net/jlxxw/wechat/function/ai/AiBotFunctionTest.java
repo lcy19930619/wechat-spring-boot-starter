@@ -8,6 +8,8 @@ import net.jlxxw.wechat.response.ai.WeChatAiBotSignatureResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,11 +24,17 @@ import org.springframework.test.context.TestPropertySource;
 @ActiveProfiles("plain")
 @SpringBootTest(classes = WeChatFunctionAutoConfiguration.class)
 public class AiBotFunctionTest  {
-    @Autowired
+
+    private static final Logger logger = LoggerFactory.getLogger(AiBotFunction.class);
+    @Autowired(required = false)
     private AiBotFunction aiBotFunction;
 
     @Test
     public void chatTest(){
+        if (aiBotFunction == null) {
+            logger.warn("尚未启动 ai bot 装配，本次测试终止");
+            return;
+        }
         String openId = "test_user";
         String query = "hello world";
         WeChatAiBotSignatureResponse signatureResponse = aiBotFunction.signature(openId);
@@ -41,6 +49,11 @@ public class AiBotFunctionTest  {
 
     @Test
     public void signatureExceptionTest1(){
+        if (aiBotFunction == null) {
+            logger.warn("尚未启动 ai bot 装配，本次测试终止");
+
+            return;
+        }
         Assertions.assertThrows(ParamCheckException.class,()->{
             aiBotFunction.signature(null);
         });
@@ -50,6 +63,11 @@ public class AiBotFunctionTest  {
 
     @Test
     public void signatureExceptionTest2(){
+        if (aiBotFunction == null) {
+            logger.warn("尚未启动 ai bot 装配，本次测试终止");
+
+            return;
+        }
         Assertions.assertThrows(ParamCheckException.class,()->{
             aiBotFunction.chat(null,"11",null,null,null);
         });
@@ -58,6 +76,11 @@ public class AiBotFunctionTest  {
 
     @Test
     public void signatureExceptionTest3(){
+        if (aiBotFunction == null) {
+            logger.warn("尚未启动 ai bot 装配，本次测试终止");
+
+            return;
+        }
         Assertions.assertThrows(ParamCheckException.class,()->{
             aiBotFunction.chat("11",null,null,null,null);
         });

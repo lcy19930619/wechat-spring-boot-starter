@@ -45,22 +45,7 @@ public class SyncPushCustomerTest {
 
     }
 
-    /**
-     * 批量推送
-     */
-    @Test
-    public void pushCustomerListTest() {
-        ArticlesDTO articlesDTO = new ArticlesDTO();
-        articlesDTO.setPicUrl("测试图片url");
-        articlesDTO.setTitle("这里一个测试的标题");
-        articlesDTO.setUrl("测试跳转链接");
-        articlesDTO.setDescription("测试描述信息");
-        List<CustomerMessageDTO> dtoList = new ArrayList<>();
-        CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId, articlesDTO);
-        dtoList.add(dto);
-        List<WeChatResponse> weChatResponse = syncPushCustomer.pushCustomer(dtoList);
-        Assert.assertFalse("测试结果不应为空", CollectionUtils.isEmpty(weChatResponse));
-    }
+
 
 
     @Test

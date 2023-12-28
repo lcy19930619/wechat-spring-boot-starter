@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.enums.AiBotEnvEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
-import net.jlxxw.wechat.function.ai.properties.WeChatAiBotProperties;
+import net.jlxxw.wechat.repository.aibot.WeChatAiBotTokenRepository;
 import net.jlxxw.wechat.response.ai.ChatResponse;
 import net.jlxxw.wechat.response.ai.WeChatAiBotSignatureResponse;
 import org.apache.commons.lang3.StringUtils;
@@ -32,12 +32,13 @@ public class AiBotFunction {
 
     private static final Logger logger = LoggerFactory.getLogger(AiBotFunction.class);
 
-    private final WeChatAiBotProperties weChatAiBotProperties;
     private final RestTemplate restTemplate;
 
-    public AiBotFunction(WeChatAiBotProperties weChatAiBotProperties, RestTemplate restTemplate) {
-        this.weChatAiBotProperties = weChatAiBotProperties;
+    private final WeChatAiBotTokenRepository weChatAiBotTokenRepository;
+
+    public AiBotFunction(RestTemplate restTemplate, WeChatAiBotTokenRepository weChatAiBotTokenRepository) {
         this.restTemplate = restTemplate;
+        this.weChatAiBotTokenRepository = weChatAiBotTokenRepository;
     }
 
     /**
@@ -54,7 +55,7 @@ public class AiBotFunction {
      */
     public WeChatAiBotSignatureResponse signature(
         @NotBlank(message = "用户id不能为空") String userId) throws WeChatException, ParamCheckException {
-        String token = weChatAiBotProperties.getToken();
+        String token = weChatAiBotTokenRepository.get();
         if (StringUtils.isBlank(token)) {
             throw new ParamCheckException("token 不能为空");
         }
@@ -100,7 +101,7 @@ public class AiBotFunction {
                              List<String> firstPrioritySkills,
                              List<String> secondPrioritySkills) throws WeChatException, ParamCheckException {
 
-        String token = weChatAiBotProperties.getToken();
+        String token = weChatAiBotTokenRepository.get();
         if (StringUtils.isBlank(token)) {
             throw new ParamCheckException("token 不能为空");
         }

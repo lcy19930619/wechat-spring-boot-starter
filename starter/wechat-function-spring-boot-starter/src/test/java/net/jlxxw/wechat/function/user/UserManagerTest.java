@@ -38,14 +38,6 @@ public class UserManagerTest  {
         Assert.assertFalse("查询到的用户不应为空", CollectionUtils.isEmpty(all));
     }
 
-    @Test
-    public void findUserInfoTest() {
-        List<String> openIdList = new ArrayList<>();
-        openIdList.add(openId);
-        List<SubscriptionResponse> userInfo = userManager.findUserInfo(openIdList, LanguageEnum.ZH_CN);
-        Assert.assertFalse("查询到的用户信息不应为空", CollectionUtils.isEmpty(userInfo));
-
-    }
 
     @Test
     public void getUserInfoTest() {

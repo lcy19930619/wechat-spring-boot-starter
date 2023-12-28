@@ -53,26 +53,7 @@ public class SyncPushTemplateTest  {
         Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weChatResponse), 0L, (int) weChatResponse.getErrcode());
     }
 
-    /**
-     * 批量推送
-     */
-    @Test
-    public void pushTemplateListTest() {
-        String url = "xxxxxx";
 
-        WeChatTemplateDTO weChatTemplateDTO = new WeChatTemplateDTO();
-        weChatTemplateDTO
-                .buildToUser(openId)
-                .buildUrl(url)
-                .buildTemplateCode(templateId)
-                .buildFirstData("first DATA的具体值", ColorEnums.BLUE)
-                .buildKeyWord1Data("keyword1 DATA的具体值", null)
-                .buildOtherData("abc", "abc DATA的具体值", ColorEnums.ORANGE);
-        List<WeChatTemplateDTO> templateList = new ArrayList<>();
-        templateList.add(weChatTemplateDTO);
-        List<WeChatResponse> weChatResponse = syncPushTemplate.pushTemplate(templateList);
-        Assert.assertFalse("模版推送结果不应为空", CollectionUtils.isEmpty(weChatResponse));
-    }
 
 
 }

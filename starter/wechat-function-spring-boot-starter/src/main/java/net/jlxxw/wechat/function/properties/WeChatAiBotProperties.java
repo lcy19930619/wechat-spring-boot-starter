@@ -1,6 +1,7 @@
-package net.jlxxw.wechat.function.ai.properties;
+package net.jlxxw.wechat.function.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -11,8 +12,9 @@ import org.springframework.context.annotation.Configuration;
  * @author chunyang.leng
  * @date 2023-04-11 14:39
  */
+@EnableConfigurationProperties
 @Configuration
-@ConfigurationProperties("wechat.aibot")
+@ConfigurationProperties("wechat.function.aibot")
 public class WeChatAiBotProperties {
 
     /**
