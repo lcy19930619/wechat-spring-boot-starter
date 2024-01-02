@@ -52,10 +52,7 @@ public class WeChatEventNettyServerProperties {
      */
     private String coreControllerUrl = "/weChat";
 
-    /**
-     * 部署验证token url
-     */
-    private String verifyTokenUrl = "/verifyToken";
+
 
     public String getCoreControllerUrl() {
         return coreControllerUrl;
@@ -65,13 +62,6 @@ public class WeChatEventNettyServerProperties {
         this.coreControllerUrl = coreControllerUrl;
     }
 
-    public String getVerifyTokenUrl() {
-        return verifyTokenUrl;
-    }
-
-    public void setVerifyTokenUrl(String verifyTokenUrl) {
-        this.verifyTokenUrl = verifyTokenUrl;
-    }
 
     public String getMainThreadName() {
         return mainThreadName;

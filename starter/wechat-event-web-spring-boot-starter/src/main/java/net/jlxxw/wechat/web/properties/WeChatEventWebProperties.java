@@ -14,11 +14,6 @@ public class WeChatEventWebProperties {
     private String coreControllerUrl = "/weChat";
 
     /**
-     * 部署验证token url
-     */
-    private String verifyTokenUrl = "/verifyToken";
-
-    /**
      * 编解码方式
      */
     private Codec codec = Codec.PLAIN_TEXT;
@@ -29,14 +24,6 @@ public class WeChatEventWebProperties {
 
     public void setCodec(Codec codec) {
         this.codec = codec;
-    }
-
-    public String getVerifyTokenUrl() {
-        return verifyTokenUrl;
-    }
-
-    public void setVerifyTokenUrl(String verifyTokenUrl) {
-        this.verifyTokenUrl = verifyTokenUrl;
     }
 
     public String getCoreControllerUrl() {

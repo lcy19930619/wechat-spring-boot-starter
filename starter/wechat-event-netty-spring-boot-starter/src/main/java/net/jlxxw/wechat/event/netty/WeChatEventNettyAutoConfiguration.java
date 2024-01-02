@@ -14,7 +14,6 @@ import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
 import net.jlxxw.wechat.event.netty.handler.DefaultHandler;
 import net.jlxxw.wechat.event.netty.handler.MessageHandler;
-import net.jlxxw.wechat.event.netty.handler.VerifyTokenHandler;
 import net.jlxxw.wechat.event.netty.invoke.OtherHttpRequestHandler;
 import net.jlxxw.wechat.event.netty.properties.*;
 import net.jlxxw.wechat.event.netty.server.WeChatEventNettyServer;
@@ -137,18 +136,12 @@ public class WeChatEventNettyAutoConfiguration {
 
 
     @Bean
-    @Order(2)
-    public ChannelHandler verifyTokenHandler(WeChatProperties weChatProperties,
-                                             WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
-        LoggerUtils.info(logger, "公众号组件 ---> Netty 部署验证消息处理器 加载完毕");
-        return new VerifyTokenHandler(weChatProperties,weChatEventNettyServerProperties);
-    }
-
-    @Bean
     @Order(3)
-    public ChannelHandler messageHandler(EventBus eventBus,WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+    public ChannelHandler messageHandler(EventBus eventBus,
+                                         WeChatEventNettyServerProperties weChatEventNettyServerProperties,
+                                         WeChatProperties weChatProperties) {
         LoggerUtils.info(logger, "公众号组件 ---> Netty 核心消息处理器 加载完毕");
-        return new MessageHandler(eventBus,weChatEventNettyServerProperties);
+        return new MessageHandler(eventBus,weChatEventNettyServerProperties,weChatProperties);
     }
 
     @Bean

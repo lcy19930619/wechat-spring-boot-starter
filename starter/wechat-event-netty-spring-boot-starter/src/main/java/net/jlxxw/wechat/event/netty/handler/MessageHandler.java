@@ -11,9 +11,17 @@ import io.netty.handler.timeout.ReadTimeoutException;
 import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.event.component.EventBus;
 import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
+import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * netty微信回调处理接口
@@ -28,9 +36,13 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
     private final EventBus eventBus;
     private final WeChatEventNettyServerProperties weChatEventNettyServerProperties;
 
-    public MessageHandler(EventBus eventBus, WeChatEventNettyServerProperties weChatEventNettyServerProperties) {
+    private final WeChatProperties weChatProperties;
+    public MessageHandler(EventBus eventBus,
+                          WeChatEventNettyServerProperties weChatEventNettyServerProperties,
+                          WeChatProperties weChatProperties) {
         this.eventBus = eventBus;
         this.weChatEventNettyServerProperties = weChatEventNettyServerProperties;
+        this.weChatProperties = weChatProperties;
     }
 
     @Override
@@ -44,6 +56,59 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
             channelHandlerContext.fireChannelRead(fullHttpRequest.copy());
             return;
         }
+
+        HttpMethod method = fullHttpRequest.method();
+        if (method.equals(HttpMethod.GET)) {
+            // 验证签名
+            String verifyTokenUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
+
+            int index = uri.indexOf("?");
+            String urlData = uri.substring(index + 1);
+
+            String substring = uri.substring(0, index);
+            if (!substring.equals(verifyTokenUrl)) {
+                // 交给下个通道处理
+                channelHandlerContext.fireChannelRead(fullHttpRequest.copy());
+                return;
+            }
+
+
+            String[] split = urlData.split("&");
+            Map<String,String> map = new HashMap<>(16);
+
+            for (String line : split) {
+                String[] data = line.split("=");
+                if (data.length > 1) {
+                    map.put(data[0], data[1]);
+                }
+            }
+
+            String msgSignature = map.get("signature");
+            String msgTimestamp = map.get("timestamp");
+            String msgNonce = map.get("nonce");
+            String echostr = map.get("echostr");
+            LoggerUtils.info(logger,"接收到微信请求：signature={},timestamp={},nonce={},echostr={}", msgSignature, msgTimestamp, msgNonce, echostr);
+            if (verify(msgSignature, msgTimestamp, msgNonce)) {
+                LoggerUtils.info(logger,"验证通过");
+                // 切换直接内存写入
+                ByteBuf byteBuf = Unpooled.directBuffer(echostr.length());
+                byteBuf.writeCharSequence(echostr, CharsetUtil.UTF_8);
+                FullHttpResponse response = response(byteBuf,HttpResponseStatus.OK);
+
+                channelHandlerContext.writeAndFlush(response)
+                        .addListener(ChannelFutureListener.CLOSE);
+                return;
+            }
+            ByteBuf byteBuf = Unpooled.directBuffer("".length());
+            byteBuf.writeCharSequence("", CharsetUtil.UTF_8);
+            FullHttpResponse response = response(byteBuf,HttpResponseStatus.INTERNAL_SERVER_ERROR);
+            channelHandlerContext.writeAndFlush(response)
+                    .addListener(ChannelFutureListener.CLOSE);
+            LoggerUtils.info(logger,"验证失败,收到微信请求:{}",uri);
+
+            return;
+        }
+
 
         String channelId = channelHandlerContext.channel().id().asShortText();
         LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，开始处理数据,channelId:{}", channelId);
@@ -109,6 +174,73 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
     private FullHttpResponse response(ByteBuf content) {
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, content);
         response.headers().set("Content-Type", "application/xml;charset=UTF-8");
+        response.headers().set("Content_Length", response.content().readableBytes());
+        return response;
+    }
+
+
+
+
+
+
+
+    /**
+     * 验证Token
+     *
+     * @param msgSignature 签名串，对应URL参数的signature
+     * @param timeStamp    时间戳，对应URL参数的timestamp
+     * @param nonce        随机串，对应URL参数的nonce
+     * @return 是否为安全签名
+     */
+    private boolean verify(String msgSignature, String timeStamp, String nonce) throws NoSuchAlgorithmException {
+        String signature = sha1Sign(weChatProperties.getVerifyToken(), timeStamp, nonce);
+        if (!signature.equals(msgSignature)) {
+            throw new RuntimeException("token认证失败");
+        }
+        return true;
+    }
+
+    /**
+     * 进行 sha1 签名运算
+     * @param token 项目中配置的 微信验证token
+     * @param timestamp 时间戳
+     * @param nonce 随机字符串
+     * @return
+     * @throws NoSuchAlgorithmException
+     */
+    private static String sha1Sign(String token, String timestamp, String nonce) throws NoSuchAlgorithmException {
+        if (StringUtils.isBlank(token)) {
+            throw new IllegalArgumentException("verify-token不能为空");
+        }
+        String[] array = new String[]{token, timestamp, nonce};
+        StringBuffer sb = new StringBuffer();
+        // 字符串排序
+        Arrays.sort(array);
+        for (int i = 0; i < 3; i++) {
+            sb.append(array[i]);
+        }
+        String str = sb.toString();
+        // SHA1签名生成
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        md.update(str.getBytes());
+        byte[] digest = md.digest();
+
+        StringBuffer hexstr = new StringBuffer();
+        String shaHex = "";
+        for (int i = 0; i < digest.length; i++) {
+            shaHex = Integer.toHexString(digest[i] & 0xFF);
+            if (shaHex.length() < 2) {
+                hexstr.append(0);
+            }
+            hexstr.append(shaHex);
+        }
+        return hexstr.toString();
+
+    }
+
+    private FullHttpResponse response(ByteBuf content,HttpResponseStatus responseStatus) {
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, responseStatus, content);
+        response.headers().set("Content-Type", "txt/plain;charset=UTF-8");
         response.headers().set("Content_Length", response.content().readableBytes());
         return response;
     }

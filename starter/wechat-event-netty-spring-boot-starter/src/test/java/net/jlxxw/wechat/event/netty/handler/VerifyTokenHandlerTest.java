@@ -43,7 +43,7 @@ public class VerifyTokenHandlerTest {
 
     @Test
     public void test() throws InterruptedException, NoSuchAlgorithmException {
-        String verifyTokenUrl = weChatEventNettyServerProperties.getVerifyTokenUrl();
+        String verifyTokenUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
         String randomStr = getRandomStr();
         long timeMillis = System.currentTimeMillis();
         String timestamp = String.valueOf(timeMillis);
