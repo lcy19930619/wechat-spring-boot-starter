@@ -54,6 +54,7 @@ public class WeChatMessageController {
             } catch (IOException e) {
                 logger.error("输出数据出现未知异常",e);
             }
+            return;
         }
 
 
