@@ -10,12 +10,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -26,7 +25,7 @@ import java.util.Arrays;
  * @author chunyang.leng
  * @date 2021/1/20 12:48 下午
  */
-@Controller
+@RestController
 public class WeChatMessageController {
     private static final Logger logger = LoggerFactory.getLogger(WeChatMessageController.class);
     @Autowired
@@ -41,38 +40,27 @@ public class WeChatMessageController {
      * @param response 用于向微信写入应答数据信息
      * @throws Exception
      */
-    @RequestMapping("${wechat.event.server.web.core-controller-url:/weChat}")
-    public void coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @RequestMapping(value = "${wechat.event.server.web.core-controller-url:/weChat}",method= {RequestMethod.POST,RequestMethod.GET})
+    public String coreController(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String method = request.getMethod();
         if ("get".equalsIgnoreCase(method)) {
             // 验证签名
-            String verifyToken = verifyToken(request);
-            try (PrintWriter writer = response.getWriter()) {
-                writer.write(verifyToken);
-                writer.flush();
-            } catch (IOException e) {
-                logger.error("输出数据出现未知异常",e);
-            }
-            return;
-        }
-
-
-        try (InputStream inputStream = request.getInputStream()) {
-            byte[] bytes = IOUtils.toByteArray(inputStream);
-            String uri = request.getRequestURI();
-            String string = request.getQueryString();
             response.setCharacterEncoding("UTF-8");
-            eventBus.dispatcher(bytes, uri + "?" + string, (responseXML) -> {
-                try (PrintWriter writer = response.getWriter()) {
-                    writer.write(responseXML);
-                    writer.flush();
-                } catch (IOException e) {
-                    logger.error("输出数据出现未知异常",e);
-                }
-            });
-
+            return verifyToken(request);
         }
+
+        if ("post".equalsIgnoreCase(method)) {
+            try (InputStream inputStream = request.getInputStream()) {
+                byte[] bytes = IOUtils.toByteArray(inputStream);
+                String uri = request.getRequestURI();
+                String string = request.getQueryString();
+                response.setCharacterEncoding("UTF-8");
+                return eventBus.dispatcher(bytes, uri + "?" + string);
+            }
+        }
+        logger.error("收到了未知请求,method:{}",method);
+        return "error";
     }
 
 

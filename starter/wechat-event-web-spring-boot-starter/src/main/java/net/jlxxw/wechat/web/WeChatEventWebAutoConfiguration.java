@@ -11,24 +11,15 @@ import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.util.LoggerUtils;
-import net.jlxxw.wechat.web.properties.EventThreadPoolProperties;
-import org.apache.tomcat.util.threads.VirtualThreadExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnThreading;
-import org.springframework.boot.autoconfigure.thread.Threading;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.VirtualThreadTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.List;
-import java.util.concurrent.*;
 
 /**
  * @author chunyang.leng
@@ -44,63 +35,19 @@ public class WeChatEventWebAutoConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(WeChatEventWebAutoConfiguration.class);
 
     @Bean
-    public EventBus eventBus(@Qualifier("eventBusThreadPool") Executor eventBusThreadPool,
-                             @Autowired(required = false) List<AbstractWeChatMessageListener> abstractWeChatMessageListeners,
+    public EventBus eventBus(@Autowired(required = false) List<AbstractWeChatMessageListener> abstractWeChatMessageListeners,
                              @Autowired(required = false) List<AbstractWeChatEventListener> abstractWeChatEventListeners,
                              @Autowired(required = false) UnKnowWeChatEventListener unKnowWeChatEventListener,
                              @Autowired(required = false) UnKnowWeChatMessageListener unKnowWeChatMessageListener,
                              WeChatMessageCodec weChatMessageCodec) {
         return new EventBus(
-                eventBusThreadPool,
+                null,
                 abstractWeChatMessageListeners,
                 abstractWeChatEventListeners,
                 unKnowWeChatEventListener,
                 unKnowWeChatMessageListener,
                 weChatMessageCodec);
     }
-
-    /**
-     * web 模式下兜底线程池
-     * @param eventThreadPoolProperties
-     * @return
-     */
-    @Bean("eventBusThreadPool")
-    @ConditionalOnMissingBean(name = "eventBusThreadPool")
-    public ThreadPoolTaskExecutor eventBusThreadPool(EventThreadPoolProperties eventThreadPoolProperties) {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        //获取到服务器的cpu内核
-        int i = Runtime.getRuntime().availableProcessors();
-        //核心池大小
-        executor.setCorePoolSize(eventThreadPoolProperties.getCore());
-        //最大线程数
-        executor.setMaxPoolSize(eventThreadPoolProperties.getMaxCore());
-        //队列长度
-        executor.setQueueCapacity(eventThreadPoolProperties.getQueueSize());
-        //线程空闲时间
-        executor.setKeepAliveSeconds(eventThreadPoolProperties.getKeepAliveSeconds());
-        //线程前缀名称
-        executor.setThreadNamePrefix(eventThreadPoolProperties.getThreadNamePrefix());
-        //配置拒绝策略
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-
-        LoggerUtils.debug(logger, "公众号组件 ---> 事件处理线程池 加载完毕");
-        return executor;
-    }
-
-    /**
-     * 如果开启了虚拟线程，则使用虚拟线程池，
-     * @return
-     */
-    @Bean("eventBusThreadPool")
-    @ConditionalOnThreading(Threading.VIRTUAL)
-    @ConditionalOnMissingBean(name = "eventBusThreadPool")
-    public Executor VirtualThreadTaskExecutor(EventThreadPoolProperties eventThreadPoolProperties) {
-        String threadNamePrefix = eventThreadPoolProperties.getThreadNamePrefix();
-
-        return new VirtualThreadTaskExecutor("vir-"+threadNamePrefix);
-    }
-
-
 
     @Bean
     @ConditionalOnProperty(value = "wechat.event.server.web.codec", havingValue = "CIPHER_TEXT")

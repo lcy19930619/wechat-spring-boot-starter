@@ -23,7 +23,6 @@ import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.util.CollectionUtils;
 
 import java.io.ByteArrayInputStream;
@@ -36,8 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -198,6 +195,33 @@ public class EventBus {
         }
         if (unKnowWeChatMessageListener == null) {
             LoggerUtils.warn(logger, "公众号组件 ---> 未发现未知消息处理器，可能存在消息回调丢失情况");
+        }
+    }
+
+
+
+    /**
+     * 不使用线程池，消费处理数据
+     * @param bytes 数据
+     * @param uri 请求 uri
+     */
+    public String dispatcher(byte[] bytes, String uri) {
+        String result = "";
+        try {
+            byte[] data = bytes;
+            // 微信发送进来的xml
+            String inputXML = new String(data, StandardCharsets.UTF_8);
+            // 消息解密
+            String decryptMsg = weChatMessageCodec.decrypt(uri, inputXML);
+            // 将解密后的数据，转换为byte数组，用于协议的具体处理
+            data = decryptMsg.getBytes(StandardCharsets.UTF_8);
+            // 调用具体的分发器，实现数据的处理
+            result = dispatcher(data);
+            // 如果启用了信息加解密功能，则对返回值进行加密处理
+            return weChatMessageCodec.encrypt(result);
+        }catch (Exception e) {
+            logger.error("事件分发处理出现异常,返回兜底空白字符串,微信参数:" + new String(bytes, StandardCharsets.UTF_8) + " ,uri参数:" + uri + ",异常信息:", e);
+            return "";
         }
     }
 
