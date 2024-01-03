@@ -23,6 +23,7 @@ import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +53,7 @@ public class WeChatEventNettyAutoConfiguration {
     }
 
     @Bean
-    public EventBus eventBus(ThreadPoolTaskExecutor eventBusThreadPool,
+    public EventBus eventBus(@Qualifier("eventBusThreadPool") ThreadPoolTaskExecutor eventBusThreadPool,
                              @Autowired(required = false) List<AbstractWeChatMessageListener> abstractWeChatMessageListeners,
                              @Autowired(required = false) List<AbstractWeChatEventListener> abstractWeChatEventListeners,
                              @Autowired(required = false) UnKnowWeChatEventListener unKnowWeChatEventListener,
