@@ -4,6 +4,10 @@ package net.jlxxw.wechat.event.netty.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * http 聚合
+ * @author lcy
+ */
 @Configuration
 @ConfigurationProperties("wechat.event.server.netty.http.object.aggregator")
 public class HttpObjectAggregatorProperties {

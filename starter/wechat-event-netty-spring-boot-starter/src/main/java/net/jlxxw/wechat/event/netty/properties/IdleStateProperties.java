@@ -3,13 +3,25 @@ package net.jlxxw.wechat.event.netty.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * netty channel 空闲检测
+ * @author lcy
+ */
 @Configuration
 @ConfigurationProperties("wechat.event.server.netty.channel.idle")
 public class IdleStateProperties {
-
-    private int readerIdleTimeSeconds = 15 * 1000;
-    private int writerIdleTimeSeconds = 15 * 1000;
-    private int allIdleTimeSeconds = 15 * 1000;
+    /**
+     * 读空闲，单位：秒
+     */
+    private int readerIdleTimeSeconds = 15 ;
+    /**
+     * 写空闲，单位：秒
+     */
+    private int writerIdleTimeSeconds = 15 ;
+    /**
+     * 全部空闲，单位：秒
+     */
+    private int allIdleTimeSeconds = 15 ;
 
     public int getReaderIdleTimeSeconds() {
         return readerIdleTimeSeconds;

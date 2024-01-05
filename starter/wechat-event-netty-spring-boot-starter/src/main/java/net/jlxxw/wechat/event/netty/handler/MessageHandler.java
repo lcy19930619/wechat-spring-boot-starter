@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * netty微信回调处理接口
+ * netty 微信回调处理接口，用于处理 netty 模式中接受到到 微信数据，包括用户输入到消息、微信发送的事件等
  *
  * @author chunyang.leng
  * @date 2021/1/25 9:46 上午
@@ -37,6 +37,13 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
     private final WeChatEventNettyServerProperties weChatEventNettyServerProperties;
 
     private final WeChatProperties weChatProperties;
+
+    /**
+     * 构建一个消息处理器，用于处理微信消息
+     * @param eventBus 事件总线
+     * @param weChatEventNettyServerProperties netty 模式相关配置信息
+     * @param weChatProperties 微信公众号基础信息配置信息
+     */
     public MessageHandler(EventBus eventBus,
                           WeChatEventNettyServerProperties weChatEventNettyServerProperties,
                           WeChatProperties weChatProperties) {
@@ -59,26 +66,17 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 
         HttpMethod method = fullHttpRequest.method();
         if (method.equals(HttpMethod.GET)) {
-            // 验证签名
-            String verifyTokenUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
+            // get 请求只有验证签名
 
             int index = uri.indexOf("?");
             String urlData = uri.substring(index + 1);
-
-            String substring = uri.substring(0, index);
-            if (!substring.equals(verifyTokenUrl)) {
-                // 交给下个通道处理
-                channelHandlerContext.fireChannelRead(fullHttpRequest.copy());
-                return;
-            }
-
 
             String[] split = urlData.split("&");
             Map<String,String> map = new HashMap<>(16);
 
             for (String line : split) {
                 String[] data = line.split("=");
-                if (data.length > 1) {
+                if (data.length >=2) {
                     map.put(data[0], data[1]);
                 }
             }
@@ -89,6 +87,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
             String echostr = map.get("echostr");
             LoggerUtils.info(logger,"接收到微信请求：signature={},timestamp={},nonce={},echostr={}", msgSignature, msgTimestamp, msgNonce, echostr);
             if (verify(msgSignature, msgTimestamp, msgNonce)) {
+                // 微信接口验证通过
                 LoggerUtils.info(logger,"验证通过");
                 // 切换直接内存写入
                 ByteBuf byteBuf = Unpooled.directBuffer(echostr.length());
@@ -99,6 +98,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
                         .addListener(ChannelFutureListener.CLOSE);
                 return;
             }
+            // 微信接口验证失败，返回空白字符串
             ByteBuf byteBuf = Unpooled.directBuffer("".length());
             byteBuf.writeCharSequence("", CharsetUtil.UTF_8);
             FullHttpResponse response = response(byteBuf,HttpResponseStatus.INTERNAL_SERVER_ERROR);
@@ -109,7 +109,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
             return;
         }
 
-
+        // 通道id，仅用于日志中使用
         String channelId = channelHandlerContext.channel().id().asShortText();
         LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，开始处理数据,channelId:{}", channelId);
 

@@ -4,6 +4,9 @@ import io.netty.handler.logging.LogLevel;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author lcy
+ */
 @Configuration
 @ConfigurationProperties("wechat.event.server.netty.log")
 public class NettyLogProperties {

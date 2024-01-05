@@ -22,7 +22,9 @@ import java.net.InetSocketAddress;
 import java.util.Set;
 
 /**
- * netty 安全处理器,由 security 模块进行装配
+ * 简单的 netty 安全处理器,仅用于检测数据是否来自微信服务器，
+ * 由 wechat-security-spring-boot-starter 模块进行装配
+ * @author lcy
  */
 @ChannelHandler.Sharable
 public class SecurityHandler extends ChannelInboundHandlerAdapter implements SecurityFilterTemplate {
@@ -31,6 +33,12 @@ public class SecurityHandler extends ChannelInboundHandlerAdapter implements Sec
 
     private final IpSegmentRepository ipSegmentRepository;
     private final BlackList blackList;
+
+    /**
+     * 构建一个简单的安全处理器
+     * @param ipSegmentRepository 可信ip存储器
+     * @param blackList 黑名单列表模块
+     */
     public SecurityHandler(IpSegmentRepository ipSegmentRepository, BlackList blackList) {
         this.ipSegmentRepository = ipSegmentRepository;
         this.blackList = blackList;
@@ -49,7 +57,9 @@ public class SecurityHandler extends ChannelInboundHandlerAdapter implements Sec
         LoggerUtils.debug(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},安全检查结束,是否允许通过:{}",ipAddress,security);
 
         if (!security) {
+            // 拒绝本次调用，并记录ip地址
             reject(ipAddress);
+            // 返回 403
             FullHttpResponse forbidden = response(Unpooled.copiedBuffer("IP FORBIDDEN", CharsetUtil.UTF_8));
             ctx.writeAndFlush(forbidden)
                     .addListener(ChannelFutureListener.CLOSE);

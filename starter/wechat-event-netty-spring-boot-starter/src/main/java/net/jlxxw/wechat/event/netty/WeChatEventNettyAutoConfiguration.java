@@ -105,8 +105,12 @@ public class WeChatEventNettyAutoConfiguration {
         return new WeChatCiphertextWeChatMessageCodec(weChatProperties);
     }
 
+    /**
+     * 默认明文编码
+     * @return
+     */
     @Bean
-    @ConditionalOnProperty(value = "wechat.event.server.netty.codec", havingValue = "PLAIN_TEXT")
+    @ConditionalOnMissingBean
     public WeChatMessageCodec weChatPlaintextMessageCodec() {
         LoggerUtils.info(logger, "公众号组件 ---> 编解码器明文模式 加载完毕");
         return new WeChatPlaintextWeChatMessageCodec();
