@@ -37,6 +37,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * 微信公众号事件处理器自动装配
+ * @author lcy
  */
 @Configuration
 @ComponentScan(value = {
@@ -78,8 +79,6 @@ public class WeChatEventNettyAutoConfiguration {
     @ConditionalOnMissingBean(name = "eventBusThreadPool")
     public ThreadPoolTaskExecutor eventBusThreadPool(EventThreadPoolProperties eventThreadPoolProperties) {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        //获取到服务器的cpu内核
-        int i = Runtime.getRuntime().availableProcessors();
         //核心池大小
         executor.setCorePoolSize(eventThreadPoolProperties.getCore());
         //最大线程数

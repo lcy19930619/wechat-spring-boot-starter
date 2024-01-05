@@ -13,6 +13,8 @@ import java.io.PrintWriter;
 import java.util.Set;
 
 /**
+ * 简单的安全过滤器，只用于判断请求ip是否属于微信服务器，
+ * 由 wechat-security-spring-boot-starter 模块进行装配
  * @author lcy
  */
 public class WeChatSecurityFilter implements Filter, SecurityFilterTemplate {
@@ -20,6 +22,12 @@ public class WeChatSecurityFilter implements Filter, SecurityFilterTemplate {
     private final BlackList blackList;
 
     private final IpSegmentRepository ipSegmentRepository;
+
+    /**
+     * 安全过滤器，
+     * @param blackList 黑名单列表
+     * @param ipSegmentRepository IP 存储器
+     */
 
     public WeChatSecurityFilter(BlackList blackList, IpSegmentRepository ipSegmentRepository) {
         this.blackList = blackList;
@@ -42,6 +50,7 @@ public class WeChatSecurityFilter implements Filter, SecurityFilterTemplate {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         boolean http = request instanceof HttpServletRequest;
         if (!http) {
+            // 不是 http 请求，直接转发走
             chain.doFilter(request, response);
             return;
         }
@@ -50,14 +59,17 @@ public class WeChatSecurityFilter implements Filter, SecurityFilterTemplate {
         String ipAddress = NetworkUtil.getIpAddress(httpServletRequest);
         boolean security = security(ipAddress);
         if (security) {
+            // 本次接受到的请求是安全的，可以继续处理数据
             chain.doFilter(request, response);
             return;
         }
 
+        // 拒绝 当前ip请求，并记录到黑名单中
         reject(ipAddress);
 
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
 
+        // 返回http 403
         httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
         httpServletResponse.setContentType("text/html");
         PrintWriter writer = httpServletResponse.getWriter();

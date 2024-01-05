@@ -4,6 +4,9 @@ import net.jlxxw.wechat.event.enums.Codec;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author lcy
+ */
 @Configuration
 @ConfigurationProperties("wechat.event.server.web")
 public class WeChatEventWebProperties {

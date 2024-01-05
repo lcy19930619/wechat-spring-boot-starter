@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 /**
- * 微信入口核心控制器，该接口仅在禁用netty服务时启用
+ * 微信入口核心控制器
  *
  * @author chunyang.leng
  * @date 2021/1/20 12:48 下午
@@ -56,6 +56,7 @@ public class WeChatMessageController {
                 String uri = request.getRequestURI();
                 String string = request.getQueryString();
                 response.setCharacterEncoding("UTF-8");
+                // web 模式中使用同步处理方式处理数据内容，防止线程资源滥用
                 return eventBus.dispatcher(bytes, uri + "?" + string);
             }
         }

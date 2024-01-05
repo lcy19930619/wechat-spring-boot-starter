@@ -14,6 +14,7 @@ import net.jlxxw.wechat.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,6 +41,8 @@ public class WeChatEventWebAutoConfiguration {
                              @Autowired(required = false) UnKnowWeChatEventListener unKnowWeChatEventListener,
                              @Autowired(required = false) UnKnowWeChatMessageListener unKnowWeChatMessageListener,
                              WeChatMessageCodec weChatMessageCodec) {
+        LoggerUtils.info(logger, "公众号组件 ---> 事件总线 加载完毕");
+
         return new EventBus(
                 null,
                 abstractWeChatMessageListeners,
@@ -57,7 +60,7 @@ public class WeChatEventWebAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(value = "wechat.event.server.web.codec", havingValue = "PLAIN_TEXT")
+    @ConditionalOnMissingBean
     public WeChatMessageCodec weChatPlaintextMessageCodec() {
         LoggerUtils.info(logger, "公众号组件 ---> 编解码器明文模式 加载完毕");
         return new WeChatPlaintextWeChatMessageCodec();

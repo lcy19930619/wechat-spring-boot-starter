@@ -1,0 +1,22 @@
+logging:
+  level:
+    net.jlxxw: debug
+server:
+  port: 9990
+  tomcat:
+    accept-count: 100
+wechat:
+  repository:
+    mysql:
+      enable: true
+      enable-auto-create-js-api-table: true
+      enable-auto-create-token-table: true
+
+spring:
+  datasource:
+    url: jdbc:mysql://rm-bp1415437557sd78yrw.mysql.rds.aliyuncs.com:3306/yfb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&serverTimezone=Asia/Shanghai&connectTimeout=300000&socketTimeout=300000
+    password:
+    username:
+  test:
+    database:
+      replace: none

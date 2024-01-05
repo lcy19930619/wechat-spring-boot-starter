@@ -210,7 +210,11 @@ public class WeChatFunctionAutoConfiguration  {
         return new IpManager(restTemplate, weChatTokenRepository);
     }
 
-
+    /**
+     * 默认的 ai 机器人 token 存储器
+     * @param weChatAiBotProperties
+     * @return
+     */
     @Bean
     @ConditionalOnBean(WeChatAiBotProperties.class)
     public WeChatAiBotTokenRepository weChatAiBotTokenRepository(WeChatAiBotProperties weChatAiBotProperties) {
