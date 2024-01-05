@@ -14,9 +14,6 @@ wechat:
 
 spring:
   datasource:
-    url: jdbc:mysql://rm-bp1415437557sd78yrw.mysql.rds.aliyuncs.com:3306/yfb?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&serverTimezone=Asia/Shanghai&connectTimeout=300000&socketTimeout=300000
-    password:
-    username:
-  test:
-    database:
-      replace: none
+    url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE&serverTimezone=Asia/Shanghai&connectTimeout=300000&socketTimeout=300000
+    password: 123456
+    username: root
