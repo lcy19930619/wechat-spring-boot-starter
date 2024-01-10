@@ -10,10 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties("wechat.repository.mysql")
 public class WeChatMySqlProperties {
-    /**
-     * 是否启动此模块
-     */
-    private boolean enable = true;
+
     /**
      * 是否自动创建token表，默认：自动创建
      */
@@ -23,13 +20,18 @@ public class WeChatMySqlProperties {
      */
     private boolean enableAutoCreateJsApiTable = true;
 
+    /**
+     * 数据源 bean 名称，在多数据源环境下，可以使用此参数，指定数据源
+     * 默认： dataSource
+     */
+    private String dataSourceBeanName = "dataSource";
 
-    public boolean isEnable() {
-        return enable;
+    public String getDataSourceBeanName() {
+        return dataSourceBeanName;
     }
 
-    public void setEnable(boolean enable) {
-        this.enable = enable;
+    public void setDataSourceBeanName(String dataSourceBeanName) {
+        this.dataSourceBeanName = dataSourceBeanName;
     }
 
     public boolean isEnableAutoCreateTokenTable() {
