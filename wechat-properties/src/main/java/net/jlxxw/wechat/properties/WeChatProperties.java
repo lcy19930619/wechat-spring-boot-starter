@@ -25,10 +25,6 @@ public class WeChatProperties {
      */
     private String secret;
 
-    /**
-     * 获取access_token填写client_credential
-     */
-    private String grantType;
 
     /**
      * 绑定开发者服务器用的验证token,即公众平台上，开发者设置的token
@@ -54,14 +50,6 @@ public class WeChatProperties {
 
     public void setSecret(String secret) {
         this.secret = secret;
-    }
-
-    public String getGrantType() {
-        return grantType;
-    }
-
-    public void setGrantType(String grantType) {
-        this.grantType = grantType;
     }
 
     public String getVerifyToken() {

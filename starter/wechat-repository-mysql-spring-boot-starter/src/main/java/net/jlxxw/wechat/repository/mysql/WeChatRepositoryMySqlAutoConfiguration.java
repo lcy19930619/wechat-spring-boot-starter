@@ -7,6 +7,7 @@ import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import java.util.List;
 /**
  * mysql 模块自动装配
  * 使用 jdbc  操作数据
+ *
  * @author lcy
  */
 @Configuration
@@ -64,6 +66,10 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
         String dataSourceBeanName = weChatMysqlProperties.getDataSourceBeanName();
 
         String[] beanNames = defaultListableBeanFactory.getBeanNamesForType(DataSource.class);
+        if (beanNames.length == 0) {
+            throw new BeanCreationException("未能发现数据源");
+        }
+        logger.info("发现数据源:{}",String.join(",",beanNames));
         if (beanNames.length > 1) {
             for (String beanName : beanNames) {
                 if (beanName.equals(dataSourceBeanName)) {
@@ -73,7 +79,8 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
             }
         }
         // 可能抛出 找不到bean
-        dataSource = defaultListableBeanFactory.getBean(dataSourceBeanName,DataSource.class);
+        dataSource = defaultListableBeanFactory.getBean(dataSourceBeanName, DataSource.class);
+        logger.info("使用数据源:{}",dataSourceBeanName);
 
 
         if (weChatMysqlProperties.isEnableAutoCreateJsApiTable()) {
@@ -83,7 +90,7 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
             statement.execute(sql);
             statement.close();
             connection.close();
-            logger.info( "已自动创建 js api ticket 表");
+            logger.info("已自动创建 wechat_js_api_ticket 表");
         }
 
         if (weChatMysqlProperties.isEnableAutoCreateTokenTable()) {
@@ -93,17 +100,18 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
             statement.execute(sql);
             statement.close();
             connection.close();
-            logger.info( "已自动创建 token 表");
+            logger.info("已自动创建 wechat_token 表");
         }
 
     }
 
     @Bean
     public WeChatTokenRepository weChatTokenRepository() {
-        return new WeChatTokenRepository(){
+        return new WeChatTokenRepository() {
             private static final String insertSQL = "INSERT INTO wechat_token (`token`) values(?)";
 
             private static final String selectSQL = "SELECT `token` FROM wechat_token order by id desc limit 1";
+
             /**
              * 保存token
              *
@@ -117,11 +125,11 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
                     connection = dataSource.getConnection();
                     connection.setAutoCommit(true);
                     preparedStatement = connection.prepareStatement(insertSQL);
-                    preparedStatement.setString(1,token);
+                    preparedStatement.setString(1, token);
                     preparedStatement.execute();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
-                }finally {
+                } finally {
                     try {
                         if (preparedStatement != null) {
                             preparedStatement.close();
@@ -129,7 +137,7 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
                         if (connection != null) {
                             connection.close();
                         }
-                    }catch (SQLException ignore) {
+                    } catch (SQLException ignore) {
 
                     }
                 }
@@ -144,6 +152,10 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
             public String get() {
                 try (Connection connection = dataSource.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
                     ResultSet resultSet = preparedStatement.executeQuery();
+                    boolean next = resultSet.next();
+                    if (!next) {
+                        throw new IllegalStateException("数据库中不存在 token");
+                    }
                     return resultSet.getString(1);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -159,6 +171,7 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
             private static final String insertSQL = "INSERT INTO wechat_js_api_ticket (`ticket`) values(?)";
 
             private static final String selectSQL = "SELECT `ticket` FROM wechat_js_api_ticket order by id desc limit 1";
+
             /**
              * 存储数据
              *
@@ -172,11 +185,11 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
                     connection = dataSource.getConnection();
                     connection.setAutoCommit(true);
                     preparedStatement = connection.prepareStatement(insertSQL);
-                    preparedStatement.setString(1,jsApiTicket);
+                    preparedStatement.setString(1, jsApiTicket);
                     preparedStatement.execute();
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
-                }finally {
+                } finally {
                     try {
                         if (preparedStatement != null) {
                             preparedStatement.close();
@@ -184,7 +197,7 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
                         if (connection != null) {
                             connection.close();
                         }
-                    }catch (SQLException ignore) {
+                    } catch (SQLException ignore) {
 
                     }
                 }
@@ -200,6 +213,10 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
                 try (Connection connection = dataSource.getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement(selectSQL)) {
                     ResultSet resultSet = preparedStatement.executeQuery();
+                    boolean next = resultSet.next();
+                    if (!next) {
+                        throw new IllegalStateException("数据库中不存在 ticket");
+                    }
                     return resultSet.getString(1);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -212,10 +229,8 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
     @ConditionalOnMissingBean(WeChatAiBotTokenRepository.class)
     public WeChatAiBotTokenRepository weChatAiBotTokenRepository() {
         // 默认返回 null
-        return ()-> null;
+        return () -> null;
     }
-
-
 
 
     private String load(String path) throws IOException {
@@ -229,6 +244,6 @@ public class WeChatRepositoryMySqlAutoConfiguration implements ApplicationRunner
             lines.add(line);
             line = bufferedReader.readLine();
         }
-        return String.join("",lines);
+        return String.join("", lines);
     }
 }
