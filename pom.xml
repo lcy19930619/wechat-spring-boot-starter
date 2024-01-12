@@ -139,7 +139,16 @@
                 <artifactId>wechat-function-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-security-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-simple-schedule-spring-boot-starter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
 
             <dependency>

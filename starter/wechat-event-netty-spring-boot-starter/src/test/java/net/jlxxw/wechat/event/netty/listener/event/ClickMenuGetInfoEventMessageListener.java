@@ -1,8 +1,8 @@
 package net.jlxxw.wechat.event.netty.listener.event;
 
-import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
+import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
 import org.junit.Assert;
 import org.springframework.stereotype.Component;
