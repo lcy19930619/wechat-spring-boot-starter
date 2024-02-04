@@ -20,7 +20,7 @@ import net.jlxxw.wechat.function.user.UserManager;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.repository.aibot.WeChatAiBotTokenRepository;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;

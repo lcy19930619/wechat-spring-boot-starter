@@ -14,7 +14,7 @@ import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.repository.ip.IpSegmentRepository;
 import net.jlxxw.wechat.security.blacklist.BlackList;
 import net.jlxxw.wechat.security.template.SecurityFilterTemplate;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

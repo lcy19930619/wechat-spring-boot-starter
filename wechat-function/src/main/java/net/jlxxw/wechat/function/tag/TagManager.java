@@ -16,7 +16,7 @@ import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.tag.Tag;
 import net.jlxxw.wechat.response.tag.TagResponse;
 import net.jlxxw.wechat.response.tag.TagUserResponse;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;

@@ -11,7 +11,7 @@ import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.MenuResponse;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -12,7 +12,7 @@ import net.jlxxw.wechat.exception.WeChatException;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.qrcode.QrCodeResponse;
 import net.jlxxw.wechat.response.qrcode.TempQrCodeResponse;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;

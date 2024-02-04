@@ -15,6 +15,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.jlxxw</groupId>
+            <artifactId>wechat-log</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
         </dependency>

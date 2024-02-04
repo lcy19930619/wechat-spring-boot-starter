@@ -58,6 +58,7 @@
     </properties>
 
     <modules>
+        <module>wechat-log</module>
         <module>wechat-properties</module>
         <module>wechat-repository</module>
         <module>wechat-common</module>
@@ -71,6 +72,7 @@
         <module>starter/wechat-repository-mysql-spring-boot-starter</module>
         <module>starter/wechat-security-spring-boot-starter</module>
         <module>starter/wechat-simple-schedule-spring-boot-starter</module>
+        <module>starter/wechat-log-logback-spring-boot-starter</module>
     </modules>
 
 
@@ -83,6 +85,11 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.jlxxw</groupId>
+                <artifactId>wechat-log</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.jlxxw</groupId>

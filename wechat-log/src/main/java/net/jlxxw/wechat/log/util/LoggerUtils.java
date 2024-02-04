@@ -1,4 +1,4 @@
-package net.jlxxw.wechat.util;
+package net.jlxxw.wechat.log.util;
 
 import org.slf4j.Logger;
 
@@ -10,6 +10,12 @@ import java.util.stream.Stream;
  * @date 2021-03-05 5:38 下午
  */
 public class LoggerUtils {
+
+    private static Logger logger = null;
+
+    public static void init(Logger logger){
+        LoggerUtils.logger = logger;
+    }
 
     public static void debug(Logger logger, String message, Object... args) {
         if (logger.isDebugEnabled()) {
@@ -40,5 +46,22 @@ public class LoggerUtils {
             }
             logger.error(message, throwable);
         }
+    }
+
+
+    public static void debug(String message, Object... args) {
+        debug(logger,message,args);
+    }
+
+    public static void info( String message, Object... args) {
+        info(logger,message,args);
+    }
+
+    public static void warn(String message, Object... args) {
+        warn(logger,message,args);
+    }
+
+    public static void error( String message, Throwable throwable) {
+        error(logger,message,throwable);
     }
 }

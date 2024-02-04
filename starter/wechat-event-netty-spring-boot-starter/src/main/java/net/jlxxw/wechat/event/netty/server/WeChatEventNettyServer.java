@@ -14,7 +14,7 @@ import net.jlxxw.wechat.event.netty.properties.HttpObjectAggregatorProperties;
 import net.jlxxw.wechat.event.netty.properties.HttpRequestDecoderProperties;
 import net.jlxxw.wechat.event.netty.properties.IdleStateProperties;
 import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;

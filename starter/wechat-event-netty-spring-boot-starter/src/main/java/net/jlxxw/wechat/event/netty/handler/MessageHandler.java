@@ -12,7 +12,7 @@ import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.event.component.EventBus;
 import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
 import net.jlxxw.wechat.properties.WeChatProperties;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

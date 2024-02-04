@@ -19,7 +19,7 @@ import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatEventListener;
 import net.jlxxw.wechat.event.component.listener.UnKnowWeChatMessageListener;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
-import net.jlxxw.wechat.util.LoggerUtils;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanCreationException;
