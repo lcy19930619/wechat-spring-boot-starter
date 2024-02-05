@@ -22,6 +22,7 @@ public class LoggerFacadeLogbackImpl extends AbstractLoggerFacade {
 
     public LoggerFacadeLogbackImpl() {
         setProperties(LoggerPropertiesKey.WECHAT_LOG_CONFIG_LOCATION,"classpath:wechat-logback.xml");
+        setProperties(LoggerPropertiesKey.WECHAT_LOG_ENABLE_DEFAULT_LOG_CONFIG,"true");
     }
 
     /**

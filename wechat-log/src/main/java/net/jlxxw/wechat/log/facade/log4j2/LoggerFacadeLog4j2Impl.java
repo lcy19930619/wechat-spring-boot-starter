@@ -31,6 +31,7 @@ public class LoggerFacadeLog4j2Impl extends AbstractLoggerFacade {
 
     public LoggerFacadeLog4j2Impl() {
         setProperties(LoggerPropertiesKey.WECHAT_LOG_CONFIG_LOCATION,"classpath:wechat-log4j2.xml");
+        setProperties(LoggerPropertiesKey.WECHAT_LOG_ENABLE_DEFAULT_LOG_CONFIG,"true");
     }
 
 

@@ -15,9 +15,9 @@ import java.util.stream.Stream;
 public class LoggerUtils {
 
     private static Logger logger = null;
-    private static LoggerFacade facade = null;
 
     static {
+        LoggerFacade facade = null;
         try {
             Class.forName("ch.qos.logback.classic.Logger");
             facade = new LoggerFacadeLogbackImpl();

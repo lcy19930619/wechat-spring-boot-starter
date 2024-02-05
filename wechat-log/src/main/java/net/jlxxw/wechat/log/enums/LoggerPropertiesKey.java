@@ -22,7 +22,7 @@ public enum LoggerPropertiesKey {
 
     /**
      * 日志文件存储路径
-     * value: ${user.home}/log/wechat/wechat.log
+     * value: ./log/wechat/wechat.log
      */
     WECHAT_LOG_CONFIG_STORE_PATH("wechat.log.config.store.path"),
 

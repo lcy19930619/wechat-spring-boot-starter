@@ -3,7 +3,6 @@ package net.jlxxw.wechat.log.facade;
 import net.jlxxw.wechat.log.enums.LoggerPropertiesKey;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.File;
 import java.util.Objects;
 
 /**
@@ -15,8 +14,7 @@ public abstract class AbstractLoggerFacade implements LoggerFacade {
     static {
         String loggingPath = System.getProperty(LoggerPropertiesKey.WECHAT_LOG_CONFIG_STORE_PATH.getKey());
         if (StringUtils.isBlank(loggingPath)) {
-            String userHome = System.getProperty("user.home");
-            System.setProperty(LoggerPropertiesKey.WECHAT_LOG_CONFIG_STORE_PATH.getKey(), userHome + File.separator + "logs");
+            System.setProperty(LoggerPropertiesKey.WECHAT_LOG_CONFIG_STORE_PATH.getKey(), ".");
         }
 
 
