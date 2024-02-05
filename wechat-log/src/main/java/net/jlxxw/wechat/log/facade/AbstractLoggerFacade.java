@@ -63,7 +63,7 @@ public abstract class AbstractLoggerFacade implements LoggerFacade {
 
         String configPath = System.getProperty(WECHAT_LOG_CONFIG_LOCATION);
         if (StringUtils.isBlank(configPath)) {
-            System.setProperty(WECHAT_LOG_CONFIG_LOCATION, "info");
+            System.setProperty(WECHAT_LOG_CONFIG_LOCATION, "classpath:wechat-logback.xml");
         }
 
     }
