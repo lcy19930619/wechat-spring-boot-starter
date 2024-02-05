@@ -7,6 +7,5 @@ wechat:
       netty:
         codec: plain_text
         port: ${random.int[9000,10000]}
-        verify-token-url: /verify
         core-controller-url: /we
   verify-token: 1234567890

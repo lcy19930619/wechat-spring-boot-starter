@@ -10,7 +10,6 @@ wechat:
   app-id: wx97562dcec7e78aca
   # 需要替换为真实数据
   secret: 995bc3e1c1e0d30884f3d2e1f033eced
-  grant-type: client_credential
   verify-token: mytoken123456
   # 需要替换为真实数据
   encoding-aes-key: 9hFP1tCoPIRB8rFk4ukaYn6bw1Gbxs53yIGVplNsxxx
@@ -18,7 +17,6 @@ wechat:
     server:
       web:
         core-controller-url: /we
-        verify-token-url: /vtl
         codec: plain_text
 spring:
   threads:

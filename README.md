@@ -404,3 +404,35 @@ public class MyTokenRepositoryImpl implements WeChatTokenRepository {
 5、调用监听器的 handler 方法，执行相关业务  
 6、向微信服务器返回数据
 
+
+# 完整配置文件
+```yaml
+wechat:
+  # 需要替换为真实数据
+  app-id: wx97562dcec7e78aca
+  # 需要替换为真实数据
+  secret: 995bc3e1c1e0d30884f3d2e1f033eced
+  verify-token: mytoken123456
+  # 需要替换为真实数据
+  encoding-aes-key: 9hFP1tCoPIRB8rFk4ukaYn6bw1Gbxs53yIGVplNsxxx
+  event:
+    server:
+      # 引入 event-netty 使用，与 event-web 互斥
+      netty:
+        codec: cipher_text
+        port: 9999
+        log:
+          enable: true
+          level: debug
+        verify-token-url: /verify
+        core-controller-url: /we
+      # 引入 event-web 使用，与 event-netty 互斥
+      web:
+        core-controller-url: /we
+        codec: cipher_text
+  # 引入 wechat-repository-mysql-spring-boot-starter 使用
+  repository:
+    mysql:
+      enable-auto-create-js-api-table: true
+      enable-auto-create-token-table: true
+```
