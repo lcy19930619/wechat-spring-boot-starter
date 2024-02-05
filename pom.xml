@@ -72,7 +72,6 @@
         <module>starter/wechat-repository-mysql-spring-boot-starter</module>
         <module>starter/wechat-security-spring-boot-starter</module>
         <module>starter/wechat-simple-schedule-spring-boot-starter</module>
-        <module>starter/wechat-log-logback-spring-boot-starter</module>
     </modules>
 
 

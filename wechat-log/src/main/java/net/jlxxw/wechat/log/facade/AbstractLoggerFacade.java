@@ -8,16 +8,8 @@ import java.io.File;
  * @author 冷春阳
  * @date 2024-02-04 18:21
  */
-public class AbstractLoggerFacade implements LoggerFacade {
+public abstract class AbstractLoggerFacade implements LoggerFacade {
 
-
-    /**
-     * 载入配置模块
-     */
-    @Override
-    public void loadLogConfiguration() {
-
-    }
 
     /**
      * 日志配置文件位置

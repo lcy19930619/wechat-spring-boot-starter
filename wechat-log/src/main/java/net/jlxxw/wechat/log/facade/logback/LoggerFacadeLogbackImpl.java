@@ -1,5 +1,6 @@
-package net.jlxxw.wechat.log.facade;
+package net.jlxxw.wechat.log.facade.logback;
 
+import net.jlxxw.wechat.log.facade.AbstractLoggerFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

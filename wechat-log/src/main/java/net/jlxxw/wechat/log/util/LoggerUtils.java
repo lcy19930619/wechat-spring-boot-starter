@@ -1,5 +1,7 @@
 package net.jlxxw.wechat.log.util;
 
+import net.jlxxw.wechat.log.facade.LoggerFacade;
+import net.jlxxw.wechat.log.facade.logback.LoggerFacadeLogbackImpl;
 import org.slf4j.Logger;
 
 import java.util.stream.Collectors;
@@ -12,9 +14,17 @@ import java.util.stream.Stream;
 public class LoggerUtils {
 
     private static Logger logger = null;
+    private static LoggerFacade facade = null;
 
-    public static void init(Logger logger){
-        LoggerUtils.logger = logger;
+    static {
+        try {
+            Class.forName("ch.qos.logback.classic.Logger");
+            facade = new LoggerFacadeLogbackImpl();
+        } catch (ClassNotFoundException e) {
+            // log4j2 init
+        }
+        facade.loadLogConfiguration();
+        logger = facade.getLogger();
     }
 
     public static void debug(Logger logger, String message, Object... args) {
