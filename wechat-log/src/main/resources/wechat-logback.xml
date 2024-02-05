@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration debug="false" scan="true" scanPeriod="30 seconds" packagingData="true">
+<configuration debug="false" scan="false" packagingData="true">
     <contextName>wechat</contextName>
 
     <appender name="WECHAT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${wechat.log.config.store.path}/wechat/wechat.log</file>
+        <file>${wechat.log.config.store.path}/logs/wechat/wechat.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>${wechat.log.config.store.path}/wechat/wechat.log.%i</fileNamePattern>
+            <fileNamePattern>${wechat.log.config.store.path}/logs/wechat/wechat.log.%i</fileNamePattern>
             <maxIndex>${wechat.log.config.max.index}</maxIndex>
         </rollingPolicy>
 

@@ -1,6 +1,7 @@
 package net.jlxxw.wechat.log.util;
 
 import net.jlxxw.wechat.log.facade.LoggerFacade;
+import net.jlxxw.wechat.log.facade.log4j2.LoggerFacadeLog4j2Impl;
 import net.jlxxw.wechat.log.facade.logback.LoggerFacadeLogbackImpl;
 import org.slf4j.Logger;
 
@@ -22,6 +23,7 @@ public class LoggerUtils {
             facade = new LoggerFacadeLogbackImpl();
         } catch (ClassNotFoundException e) {
             // log4j2 init
+            facade = new LoggerFacadeLog4j2Impl();
         }
         facade.loadLogConfiguration();
         logger = facade.getLogger();

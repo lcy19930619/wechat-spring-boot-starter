@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="WARN">
+    <Properties>
+        <Property name="logPath" value="${wechat.log.config.store.path}"/>
+        <Property name="maxIndex" value="${wechat.log.config.max.index}"/>
+        <Property name="fileSize" value="${wechat.log.config.max.file.size}"/>
+        <Property name="level" value="${wechat.log.config.store.path}"/>
+    </Properties>
+    <RollingFile name="WECHAT_LOG_FILE" fileName="${logPath}/logs/wechat/wechat.log"
+                 filePattern="${logPath}/logs/wechat/wechat.log.%d{yyyy-MM-dd}.%i">
+        <PatternLayout>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %p [%-5t:%c{2}] %m%n</Pattern>
+        </PatternLayout>
+
+        <Policies>
+            <TimeBasedTriggeringPolicy/>
+            <SizeBasedTriggeringPolicy size="${fileSize}"/>
+        </Policies>
+
+        <DefaultRolloverStrategy max="${maxIndex}">
+            <Delete basePath="${logPath}/logs/wechat" maxDepth="1">
+                <IfFileName glob="config.log.*.*"/>
+                <IfLastModified age="${P180D}"/>
+            </Delete>
+        </DefaultRolloverStrategy>
+    </RollingFile>
+
+    <Async name="ASYNC_WECHAT_CONFIG" bufferSize="1024" blocking="false">
+        <AppenderRef ref="WECHAT_LOG_FILE"/>
+    </Async>
+
+    <Loggers>
+        <Logger name="net.jlxxw.wechat.logger" level="${level}" additivity="false">
+            <AppenderRef ref="ASYNC_WECHAT_CONFIG"/>
+        </Logger>
+    </Loggers>
+</Configuration>
