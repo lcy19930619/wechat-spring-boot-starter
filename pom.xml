@@ -9,7 +9,7 @@
     <packaging>pom</packaging>
     <name>wechat-spring-boot-starter</name>
     <description>微信公众号快速开发组件</description>
-    <url>https://github.com/lcy19930619/weixin-spring-boot-starter</url>
+    <url>https://github.com/lcy19930619/wechat-spring-boot-starter</url>
 
     <licenses>
         <license>
@@ -33,7 +33,7 @@
 
     <issueManagement>
         <system>Github Issue</system>
-        <url>https://github.com/lcy19930619/weixin-spring-boot-starter/issues</url>
+        <url>https://github.com/lcy19930619/wechat-spring-boot-starter/issues</url>
     </issueManagement>
 
     <scm>
