@@ -57,7 +57,7 @@ public class TagManager {
     public TagResponse createTag(
         @NotBlank(message = "标签名字不能为空") @Size(max = 30, message = "最大长度不能超过30个字符") String tagValue) throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.CREATE_TAGS_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"创建公众号标签url:{}",url);
+        LoggerUtils.debug("创建公众号标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         JSONObject param = new JSONObject();
         param.put("name", tagValue);
@@ -68,7 +68,7 @@ public class TagManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger,"创建公众号标签应答结果:{}",body);
+        LoggerUtils.debug("创建公众号标签应答结果:{}",body);
         TagResponse response = JSONObject.parseObject(body, TagResponse.class);
         if (!response.isSuccessful()) {
             throw new WeChatException(response);
@@ -82,10 +82,10 @@ public class TagManager {
      */
     public List<Tag> getTag() throws WeChatException{
         String url = MessageFormat.format(UrlConstant.GET_TAGS_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"获取公众号已创建的标签url:{}",url);
+        LoggerUtils.debug("获取公众号已创建的标签url:{}",url);
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String body = entity.getBody();
-        LoggerUtils.debug(logger,"获取公众号已创建的标签应答结果:{}",body);
+        LoggerUtils.debug("获取公众号已创建的标签应答结果:{}",body);
 
         WeChatResponse weChatResponse = JSONObject.parseObject(body, WeChatResponse.class);
         if (!weChatResponse.isSuccessful()) {
@@ -108,7 +108,7 @@ public class TagManager {
     public WeChatResponse updateTag(@NotNull(message = "标签id不能为空") Integer id,
         @NotBlank(message = "标签名字不能为空") @Size(max = 30, message = "最大长度不能超过30个字符") String tagValue) throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.UPDATE_TAGS_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"更新标签url:{}",url);
+        LoggerUtils.debug("更新标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         JSONObject param = new JSONObject();
         param.put("name", tagValue);
@@ -120,7 +120,7 @@ public class TagManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger,"更新标签应答结果:{}",body);
+        LoggerUtils.debug("更新标签应答结果:{}",body);
 
         WeChatResponse response = JSONObject.parseObject(body, WeChatResponse.class);
         if (!response.isSuccessful()) {
@@ -140,7 +140,7 @@ public class TagManager {
     public WeChatResponse delete(
         @NotNull(message = "标签id不能为空") Integer id) throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.DELETE_TAGS_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"删除标签url:{}",url);
+        LoggerUtils.debug("删除标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         JSONObject param = new JSONObject();
         param.put("id", id);
@@ -151,7 +151,7 @@ public class TagManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger,"删除标签应答结果:{}",body);
+        LoggerUtils.debug("删除标签应答结果:{}",body);
 
         WeChatResponse response = JSONObject.parseObject(body, WeChatResponse.class);
 
@@ -174,7 +174,7 @@ public class TagManager {
     public TagUserResponse getTagUser(@NotNull(message = "标签id不能为空") Integer tagId,
         String nextOpenId) throws WeChatException, ParamCheckException {
         String url = MessageFormat.format(UrlConstant.GET_TAG_USERS_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"获取标签下粉丝列表url:{}",url);
+        LoggerUtils.debug("获取标签下粉丝列表url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("tagid", tagId);
         requestParam.put("next_openid", nextOpenId);
@@ -184,7 +184,7 @@ public class TagManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger,"取标签下粉丝列表应答结果:{}",body);
+        LoggerUtils.debug("取标签下粉丝列表应答结果:{}",body);
 
         TagUserResponse response = JSONObject.parseObject(body, TagUserResponse.class);
 
@@ -209,7 +209,7 @@ public class TagManager {
         @NotNull(message = "标签id不能为空") Integer tagId) throws WeChatException, ParamCheckException {
 
         String url = MessageFormat.format(UrlConstant.USERS_BATCH_TAGGING_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"用户批量打标签url:{}",url);
+        LoggerUtils.debug("用户批量打标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("openid_list", openIdList);
         requestParam.put("tagid", tagId);
@@ -219,7 +219,7 @@ public class TagManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger,"用户批量打标签应答结果:{}",body);
+        LoggerUtils.debug("用户批量打标签应答结果:{}",body);
 
         WeChatResponse response = JSONObject.parseObject(body, WeChatResponse.class);
         if (!response.isSuccessful()) {
@@ -244,7 +244,7 @@ public class TagManager {
         @NotNull(message = "标签id不能为空") Integer tagId) throws WeChatException, ParamCheckException {
 
         String url = MessageFormat.format(UrlConstant.USERS_BATCH_UNTAGGING_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"批量取消用户标签url:{}",url);
+        LoggerUtils.debug("批量取消用户标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("openid_list", openIdList);
         requestParam.put("tagid", tagId);
@@ -254,7 +254,7 @@ public class TagManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger,"批量取消用户标签应答结果:{}",body);
+        LoggerUtils.debug("批量取消用户标签应答结果:{}",body);
 
         WeChatResponse response = JSONObject.parseObject(body, WeChatResponse.class);
         if (!response.isSuccessful()) {
@@ -273,7 +273,7 @@ public class TagManager {
      */
     public List<Integer> getUserTags(String openId) throws WeChatException, ParamCheckException{
         String url = MessageFormat.format(UrlConstant.GET_USER_TAG_URL, weChatTokenRepository.get());
-        LoggerUtils.debug(logger,"获取用户身上的标签url:{}",url);
+        LoggerUtils.debug("获取用户身上的标签url:{}",url);
         JSONObject requestParam = new JSONObject();
         requestParam.put("openid", openId);
         HttpHeaders headers = new HttpHeaders();
@@ -282,7 +282,7 @@ public class TagManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger,"获取用户身上的标签应答结果:{}",body);
+        LoggerUtils.debug("获取用户身上的标签应答结果:{}",body);
 
         WeChatResponse response = JSONObject.parseObject(body, WeChatResponse.class);
         if (!response.isSuccessful()) {

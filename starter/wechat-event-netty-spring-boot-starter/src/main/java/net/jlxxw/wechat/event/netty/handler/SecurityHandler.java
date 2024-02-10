@@ -50,11 +50,11 @@ public class SecurityHandler extends ChannelInboundHandlerAdapter implements Sec
         InetSocketAddress socketAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         // 获取远程ip地址信息
         String ipAddress = socketAddress.getAddress().getHostAddress();
-        LoggerUtils.debug(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{}",ipAddress);
+        LoggerUtils.debug("公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{}",ipAddress);
 
-        LoggerUtils.debug(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},开始进行安全检查",ipAddress);
+        LoggerUtils.debug("公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},开始进行安全检查",ipAddress);
         boolean security = security(ipAddress);
-        LoggerUtils.debug(logger,"公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},安全检查结束,是否允许通过:{}",ipAddress,security);
+        LoggerUtils.debug("公众号组件 ---> netty模式 ip 安全检查,发现请求ip地址:{},安全检查结束,是否允许通过:{}",ipAddress,security);
 
         if (!security) {
             // 拒绝本次调用，并记录ip地址

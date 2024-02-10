@@ -101,7 +101,7 @@ public class WeChatEventNettyServer implements ApplicationRunner {
 
                             for (ChannelHandler channelHandler : channelHandlerList) {
                                 socketChannel.pipeline().addLast( channelHandler);
-                                LoggerUtils.debug(logger,"公众号组件 ---> 装配:{}",channelHandler.getClass());
+                                LoggerUtils.debug("公众号组件 ---> 装配:{}",channelHandler.getClass());
                             }
                         }
                     })

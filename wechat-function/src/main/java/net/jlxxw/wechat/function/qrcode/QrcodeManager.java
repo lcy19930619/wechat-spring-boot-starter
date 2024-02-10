@@ -70,7 +70,7 @@ public class QrcodeManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "创建一个临时二维码,eventKey:{},返回结果:{}",eventKey, body);
+        LoggerUtils.debug( "创建一个临时二维码,eventKey:{},返回结果:{}",eventKey, body);
 
         TempQrCodeResponse response = JSONObject.parseObject(body, TempQrCodeResponse.class);
         if (!response.isSuccessful()){
@@ -109,7 +109,7 @@ public class QrcodeManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "创建一个临时二维码,id:{},返回结果:{}",id, body);
+        LoggerUtils.debug( "创建一个临时二维码,id:{},返回结果:{}",id, body);
 
         TempQrCodeResponse response = JSONObject.parseObject(body, TempQrCodeResponse.class);
         if (!response.isSuccessful()){
@@ -143,7 +143,7 @@ public class QrcodeManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "创建一个永久二维码,eventKey:{},返回结果:{}",eventKey, body);
+        LoggerUtils.debug( "创建一个永久二维码,eventKey:{},返回结果:{}",eventKey, body);
 
         QrCodeResponse response = JSONObject.parseObject(body, QrCodeResponse.class);
         if (!response.isSuccessful()){
@@ -178,7 +178,7 @@ public class QrcodeManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "创建一个永久二维码,id:{},返回结果:{}",id, body);
+        LoggerUtils.debug( "创建一个永久二维码,id:{},返回结果:{}",id, body);
 
         QrCodeResponse response = JSONObject.parseObject(body, QrCodeResponse.class);
         if (!response.isSuccessful()){

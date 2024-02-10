@@ -76,13 +76,13 @@ public class PermanentMaterialManager {
 
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
-        LoggerUtils.debug(logger, "新增永久素材url:{}", url);
+        LoggerUtils.debug( "新增永久素材url:{}", url);
 
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(param);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
 
         String result = responseEntity.getBody();
-        LoggerUtils.debug(logger, "新增永久素材微信返回结果:{}", result);
+        LoggerUtils.debug( "新增永久素材微信返回结果:{}", result);
 
         PermanentMaterialResponse response = JSON.parseObject(result,PermanentMaterialResponse.class);
         if (!response.isSuccessful()){
@@ -137,13 +137,13 @@ public class PermanentMaterialManager {
         }
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
-        LoggerUtils.debug(logger, "新增永久素材url:{}", url);
+        LoggerUtils.debug( "新增永久素材url:{}", url);
 
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(param);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
 
         String result = responseEntity.getBody();
-        LoggerUtils.debug(logger, "新增永久素材微信返回结果:{}", result);
+        LoggerUtils.debug( "新增永久素材微信返回结果:{}", result);
 
         PermanentMaterialResponse response = JSON.parseObject(result,PermanentMaterialResponse.class);
         if (!response.isSuccessful()){
@@ -163,7 +163,7 @@ public class PermanentMaterialManager {
     public byte[] download(@NotBlank(message = "下载素材id不能为空") String mediaId) throws WeChatException, ParamCheckException{
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DOWNLOAD_PERMANENT_MATERIAL, tokenFromLocal);
-        LoggerUtils.debug(logger, "下载永久素材url:{}", url);
+        LoggerUtils.debug( "下载永久素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();
         JSONObject media = new JSONObject();
         media.put("media_id",mediaId);
@@ -208,14 +208,14 @@ public class PermanentMaterialManager {
     public WeChatResponse deleteMaterial(@NotBlank(message = "删除素材id不能为空") String mediaId) throws WeChatException, ParamCheckException{
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DELETE_PERMANENT_MATERIAL, tokenFromLocal);
-        LoggerUtils.debug(logger, "删除永久素材url:{}", url);
+        LoggerUtils.debug( "删除永久素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();
         JSONObject media = new JSONObject();
         media.put("media_id",mediaId);
         HttpEntity<Object> requestEntity = new HttpEntity<>(media.toJSONString(),headers);
         ResponseEntity<String> entity = restTemplate.exchange(url, HttpMethod.POST,requestEntity, String.class);
         String body = entity.getBody();
-        LoggerUtils.debug(logger, "删除永久素材:{},返回值:", mediaId,body);
+        LoggerUtils.debug( "删除永久素材:{},返回值:", mediaId,body);
         WeChatResponse weChatResponse = JSON.parseObject(body, WeChatResponse.class);
         if (!weChatResponse.isSuccessful()){
             throw new WeChatException(weChatResponse);

@@ -60,7 +60,7 @@ public class WeChatEventNettyAutoConfiguration {
                              @Autowired(required = false) UnKnowWeChatEventListener unKnowWeChatEventListener,
                              @Autowired(required = false) UnKnowWeChatMessageListener unKnowWeChatMessageListener,
                              WeChatMessageCodec weChatMessageCodec) {
-        LoggerUtils.debug(logger, "公众号组件 ---> EventBus 加载完毕");
+        LoggerUtils.debug( "公众号组件 ---> EventBus 加载完毕");
         return new EventBus(
                 eventBusThreadPool,
                 abstractWeChatMessageListeners,
@@ -92,7 +92,7 @@ public class WeChatEventNettyAutoConfiguration {
         //配置拒绝策略
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
 
-        LoggerUtils.debug(logger, "公众号组件 ---> 事件处理线程池 加载完毕");
+        LoggerUtils.debug( "公众号组件 ---> 事件处理线程池 加载完毕");
         return executor;
     }
 
@@ -134,7 +134,7 @@ public class WeChatEventNettyAutoConfiguration {
     @Order(0)
     @ConditionalOnProperty(value = "wechat.event.server.netty.log.enable", havingValue = "true")
     public ChannelHandler loggingHandler(NettyLogProperties nettyLogProperties) {
-        LoggerUtils.debug(logger, "公众号组件 ---> Netty 日志跟踪服务 加载完毕,level:{}", nettyLogProperties.getLevel().name());
+        LoggerUtils.debug( "公众号组件 ---> Netty 日志跟踪服务 加载完毕,level:{}", nettyLogProperties.getLevel().name());
         return new LoggingHandler(nettyLogProperties.getLevel());
     }
 

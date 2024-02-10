@@ -63,13 +63,13 @@ public class TempMaterialManager {
         param.add("type", materialEnum.name().toLowerCase());
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_TEMP_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
-        LoggerUtils.debug(logger, "新增临时素材url:{}", url);
+        LoggerUtils.debug( "新增临时素材url:{}", url);
 
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(param);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
 
         String result = responseEntity.getBody();
-        LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", result);
+        LoggerUtils.debug( "新增临时素材微信返回结果:{}", result);
 
         TempMaterialResponse response = JSON.parseObject(result,TempMaterialResponse.class);
         if (!response.isSuccessful()){
@@ -112,13 +112,13 @@ public class TempMaterialManager {
         param.add("type", materialEnum.name().toLowerCase());
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_TEMP_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
-        LoggerUtils.debug(logger, "新增临时素材url:{}", url);
+        LoggerUtils.debug( "新增临时素材url:{}", url);
 
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(param);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
 
         String result = responseEntity.getBody();
-        LoggerUtils.debug(logger, "新增临时素材微信返回结果:{}", result);
+        LoggerUtils.debug( "新增临时素材微信返回结果:{}", result);
 
         TempMaterialResponse response = JSON.parseObject(result,TempMaterialResponse.class);
         if (!response.isSuccessful()){
@@ -136,7 +136,7 @@ public class TempMaterialManager {
     public byte[] downloadMaterial(@NotBlank(message = "素材id不能为空") String mediaId) throws WeChatException{
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DOWN_TEMP_MATERIAL, tokenFromLocal, mediaId);
-        LoggerUtils.debug(logger, "下载临时素材url:{}", url);
+        LoggerUtils.debug( "下载临时素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<byte[]> entity = restTemplate.exchange(url, HttpMethod.GET,new HttpEntity<>(headers), byte[].class);
         // 返回数据
@@ -183,7 +183,7 @@ public class TempMaterialManager {
     public byte[] downloadHDVoice(String mediaId) throws WeChatException{
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.DOWN_HD_VOICE, tokenFromLocal, mediaId);
-        LoggerUtils.debug(logger, "下载高清语音素材url:{}", url);
+        LoggerUtils.debug( "下载高清语音素材url:{}", url);
         HttpHeaders headers = new HttpHeaders();
         ResponseEntity<byte[]> entity = restTemplate.exchange(url, HttpMethod.GET,new HttpEntity<>(headers), byte[].class);
         // 返回数据，在下面写到输出流里面

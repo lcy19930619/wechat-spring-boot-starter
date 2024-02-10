@@ -52,14 +52,14 @@ public class MenuManager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("button", list);
         String json = JSON.toJSONString(jsonObject);
-        LoggerUtils.debug(logger, "创建公众号菜单，请求参数:{}", json);
+        LoggerUtils.debug( "创建公众号菜单，请求参数:{}", json);
         String url = MessageFormat.format(UrlConstant.CREATE_MENU_URL, weChatTokenRepository.get());
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "创建公众号菜单，应答结果:{}", body);
+        LoggerUtils.debug( "创建公众号菜单，应答结果:{}", body);
         WeChatResponse weChatResponse = JSONObject.parseObject(body, WeChatResponse.class);
         if (StringUtils.isNotBlank(body) && !weChatResponse.isSuccessful()) {
             throw new WeChatException(weChatResponse);
@@ -77,7 +77,7 @@ public class MenuManager {
         String url = MessageFormat.format(UrlConstant.DELETE_MENU_URL, weChatTokenRepository.get());
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String body = entity.getBody();
-        LoggerUtils.debug(logger, "删除公众号菜单，应答结果:{}", body);
+        LoggerUtils.debug( "删除公众号菜单，应答结果:{}", body);
         WeChatResponse response = JSONObject.parseObject(body, WeChatResponse.class);
         if (StringUtils.isNotBlank(body) && !response.isSuccessful()) {
             throw new WeChatException(response);
@@ -95,7 +95,7 @@ public class MenuManager {
         String url = MessageFormat.format(UrlConstant.GET_MENU_URL, weChatTokenRepository.get());
         ResponseEntity<String> entity = restTemplate.getForEntity(url, String.class);
         String body = entity.getBody();
-        LoggerUtils.debug(logger, "获取公众号菜单，应答结果:{}", body);
+        LoggerUtils.debug( "获取公众号菜单，应答结果:{}", body);
         MenuResponse response = JSONObject.parseObject(body, MenuResponse.class);
         if (StringUtils.isNotBlank(body) && !response.isSuccessful()) {
             throw new WeChatException(response);

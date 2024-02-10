@@ -357,7 +357,7 @@ public class EventBus {
             throw new IllegalArgumentException(weChatMessageTypeEnum.name() + "消息监听器未注册,当前微信请求参数:" + JSON.toJSONString(abstractWeChatMessage));
         }
 
-        LoggerUtils.debug(logger, "接收到微信请求，请求类型:{},请求参数:{}", weChatMessageTypeEnum.getDescription(), JSON.toJSONString(abstractWeChatMessage));
+        LoggerUtils.debug( "接收到微信请求，请求类型:{},请求参数:{}", weChatMessageTypeEnum.getDescription(), JSON.toJSONString(abstractWeChatMessage));
         // 执行消息处理
         WeChatMessageResponse response = abstractWeChatMessageListener.handler(abstractWeChatMessage);
         if (Objects.isNull(response)) {
@@ -370,7 +370,7 @@ public class EventBus {
         response.setToUserName(fromUserName);
         try {
             String res = XML_MAPPER.writeValueAsString(response);
-            LoggerUtils.debug(logger, "返回微信应答信息，参数:{}", res);
+            LoggerUtils.debug( "返回微信应答信息，参数:{}", res);
             return res;
         } catch (JsonProcessingException e) {
             LoggerUtils.error(logger, "jackson 转xml失败，输入参数:" + JSON.toJSONString(response), e);

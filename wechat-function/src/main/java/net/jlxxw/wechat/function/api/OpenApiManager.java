@@ -65,14 +65,14 @@ public class OpenApiManager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("appid", appId);
         String url = MessageFormat.format(UrlConstant.OPEN_API_CLEAN, token);
-        LoggerUtils.debug(logger, "清空每日调用接口次数url:{}", url);
+        LoggerUtils.debug( "清空每日调用接口次数url:{}", url);
         String json = jsonObject.toJSONString();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "清空每日调用接口次数返回结果:{}", body);
+        LoggerUtils.debug( "清空每日调用接口次数返回结果:{}", body);
         WeChatResponse weChatResponse = JSONObject.parseObject(body, WeChatResponse.class);
         if (!weChatResponse.isSuccessful()) {
             throw new WeChatException(weChatResponse);
@@ -105,7 +105,7 @@ public class OpenApiManager {
         jsonObject.put("cgi_path", cgiPath);
 
         String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_QUOTA, token);
-        LoggerUtils.debug(logger, "查询每日调用接口次数url:{}", url);
+        LoggerUtils.debug( "查询每日调用接口次数url:{}", url);
 
         String json = jsonObject.toJSONString();
         HttpHeaders headers = new HttpHeaders();
@@ -113,7 +113,7 @@ public class OpenApiManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "查询每日调用接口次数返回结果:{}", body);
+        LoggerUtils.debug( "查询每日调用接口次数返回结果:{}", body);
         ApiResponse weChatResponse = JSONObject.parseObject(body, ApiResponse.class);
         if (!weChatResponse.isSuccessful()) {
             throw new WeChatException(weChatResponse);
@@ -144,7 +144,7 @@ public class OpenApiManager {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("rid", rid);
         String url = MessageFormat.format(UrlConstant.OPEN_API_SELECT_RID, token);
-        LoggerUtils.debug(logger, "查询rid:{},url:{}", rid,url);
+        LoggerUtils.debug( "查询rid:{},url:{}", rid,url);
 
         String json = jsonObject.toJSONString();
         HttpHeaders headers = new HttpHeaders();
@@ -152,7 +152,7 @@ public class OpenApiManager {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        LoggerUtils.debug(logger, "查询rid:{},返回结果:{}", rid,body);
+        LoggerUtils.debug( "查询rid:{},返回结果:{}", rid,body);
         ApiRequestRecord weChatResponse = JSONObject.parseObject(body, ApiRequestRecord.class);
         if (!weChatResponse.isSuccessful()) {
             throw new WeChatException(weChatResponse);

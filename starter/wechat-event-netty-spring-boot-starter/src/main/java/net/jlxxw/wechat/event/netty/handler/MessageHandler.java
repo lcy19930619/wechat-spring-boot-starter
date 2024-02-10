@@ -111,7 +111,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
 
         // 通道id，仅用于日志中使用
         String channelId = channelHandlerContext.channel().id().asShortText();
-        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，开始处理数据,channelId:{}", channelId);
+        LoggerUtils.debug( "公众号组件 ---> netty 消息处理器，开始处理数据,channelId:{}", channelId);
 
         // 获取请求体数据缓存
         ByteBuf content = fullHttpRequest.content();
@@ -121,9 +121,9 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
         content.readBytes(reqContent);
 
         // 事件总线开始执行处理逻辑
-        LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线开始执行处理逻辑,channelId:{}", channelId);
+        LoggerUtils.debug( "公众号组件 ---> netty 消息处理器，事件总线开始执行处理逻辑,channelId:{}", channelId);
         eventBus.dispatcher(reqContent, uri, (resultData) -> {
-            LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，事件总线处理数据结束,channelId:{}", channelId);
+            LoggerUtils.debug( "公众号组件 ---> netty 消息处理器，事件总线处理数据结束,channelId:{}", channelId);
             // 响应数据刷新到缓冲区
             // ByteBuf responseData = copiedBuffer(resultData, CharsetUtil.UTF_8);
 
@@ -139,7 +139,7 @@ public class MessageHandler extends SimpleChannelInboundHandler<FullHttpRequest>
                     .writeAndFlush(response)
                     // 处理完毕，关闭连接
                     .addListener(ChannelFutureListener.CLOSE);
-            LoggerUtils.debug(logger, "公众号组件 ---> netty 消息处理器，处理数据结束,channelId:{}", channelId);
+            LoggerUtils.debug( "公众号组件 ---> netty 消息处理器，处理数据结束,channelId:{}", channelId);
 
         });
 

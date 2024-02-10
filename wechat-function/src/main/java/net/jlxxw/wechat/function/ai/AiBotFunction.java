@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import net.jlxxw.wechat.enums.AiBotEnvEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.exception.WeChatException;
+import net.jlxxw.wechat.log.util.LoggerUtils;
 import net.jlxxw.wechat.repository.aibot.WeChatAiBotTokenRepository;
 import net.jlxxw.wechat.response.ai.ChatResponse;
 import net.jlxxw.wechat.response.ai.WeChatAiBotSignatureResponse;
@@ -69,7 +70,7 @@ public class AiBotFunction {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        logger.debug("ai bot signature,请求地址:{},请求参数:{},请求结果:{}",url,json,body);
+        LoggerUtils.debug("ai bot signature,请求地址:{},请求参数:{},请求结果:{}",url,json,body);
         WeChatAiBotSignatureResponse weChatResponse = JSON.parseObject(body, WeChatAiBotSignatureResponse.class);
         if (!weChatResponse.isSuccessful()) {
             throw new WeChatException(weChatResponse);
@@ -122,7 +123,7 @@ public class AiBotFunction {
         HttpEntity<String> request = new HttpEntity<>(json, headers);
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, request, String.class);
         String body = responseEntity.getBody();
-        logger.debug("ai bot chat,请求地址:{},请求参数:{},请求结果:{}",url,json,body);
+        LoggerUtils.debug("ai bot chat,请求地址:{},请求参数:{},请求结果:{}",url,json,body);
         ChatResponse weChatResponse = JSON.parseObject(body, ChatResponse.class);
         if (!weChatResponse.isSuccessful()) {
             throw new WeChatException(weChatResponse);
