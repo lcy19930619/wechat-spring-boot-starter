@@ -212,4 +212,30 @@ public interface UrlConstant {
      * 获取用户身上的标签列表
      */
     String GET_USER_TAG_URL = "https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token={0}";
+
+    /**
+     * 添加草稿
+     */
+    String ADD_DRAFT_URL = "https://api.weixin.qq.com/cgi-bin/draft/add?access_token={0}";
+    /**
+     * 获取草稿
+     */
+    String GET_DRAFT_URL = "https://api.weixin.qq.com/cgi-bin/draft/get?access_token={0}";
+    /**
+     * 删除草稿
+     */
+    String DELETE_DRAFT_URL="https://api.weixin.qq.com/cgi-bin/draft/delete?access_token={0}";
+    /**
+     * 修改草稿
+     */
+    String UPDATE_DRAFT_URL="https://api.weixin.qq.com/cgi-bin/draft/update?access_token={0}";
+    /**
+     * 获取草稿列表
+     */
+    String GET_DRAFT_LIST_URL="https://api.weixin.qq.com/cgi-bin/draft/batchget?access_token={0}";
+    /**
+     * 获取草稿数量
+     */
+    String GET_DRAFT_COUNT_URL="https://api.weixin.qq.com/cgi-bin/draft/count?access_token={0}";
+
 }
