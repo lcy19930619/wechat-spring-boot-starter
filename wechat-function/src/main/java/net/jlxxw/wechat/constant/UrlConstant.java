@@ -238,4 +238,10 @@ public interface UrlConstant {
      */
     String GET_DRAFT_COUNT_URL="https://api.weixin.qq.com/cgi-bin/draft/count?access_token={0}";
 
+    /**
+     * 获取已发布的消息列表
+     */
+    String BATCH_GET_FREE_PUBLISH = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token={0}";
+
+
 }

@@ -36,4 +36,9 @@ public class UrlConstant {
      * 获取草稿总数URL
      */
     public static final String GET_DRAFT_COUNT_URL = "https://api.weixin.qq.com/cgi-bin/draft/count?access_token={0}";
+    
+    /**
+     * 获取已发布文章列表URL
+     */
+    public static final String GET_PUBLISH_LIST_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token={0}";
 }
