@@ -41,4 +41,9 @@ public class UrlConstant {
      * 获取已发布文章列表URL
      */
     public static final String GET_PUBLISH_LIST_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token={0}";
+    
+    /**
+     * 删除已发布文章URL
+     */
+    public static final String DELETE_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/delete?access_token={0}";
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <configuration debug="false" scan="false" packagingData="true">
-    <contextName>wechat</contextName>
+    <springProperty scope="context" name="spring.application.name" source="spring.application.name" defaultValue="wechat"/>
+    <contextName>${spring.application.name}</contextName>
 
     <appender name="WECHAT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${wechat.log.config.store.path}/logs/wechat/wechat.log</file>

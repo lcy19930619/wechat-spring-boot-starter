@@ -244,4 +244,8 @@ public interface UrlConstant {
     String BATCH_GET_FREE_PUBLISH = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token={0}";
 
 
+    /**
+     * 删除已发布的消息
+     */
+    String DELETE_FREE_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/delete?access_token={0}";
 }
