@@ -101,6 +101,11 @@ public class Article {
     @JsonProperty(value = "product_info")
     private ProductInfo productInfo;
 
+    /**
+     * 草稿的临时链接
+     */
+    private String url;
+
     // Getters and setters
     public String getArticleType() {
         return articleType;

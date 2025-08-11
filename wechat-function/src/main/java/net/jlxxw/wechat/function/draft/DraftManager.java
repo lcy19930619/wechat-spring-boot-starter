@@ -1,6 +1,8 @@
 package net.jlxxw.wechat.function.draft;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import net.jlxxw.wechat.constant.UrlConstant;
@@ -84,7 +86,7 @@ public class DraftManager {
      * @return 草稿详情
      * @see <a href="https://developers.weixin.qq.com/doc/service/api/draftbox/draftmanage/api_getdraft.html">文档地址</a>
      */
-    public DraftResponse getDraft(@NotBlank(message = "草稿media_id不能为空") String mediaId) {
+    public DraftGetResponse getDraft(@NotBlank(message = "草稿media_id不能为空") String mediaId) {
         String token = getToken();
         String url = MessageFormat.format(UrlConstant.GET_DRAFT_URL, token);
 
@@ -95,7 +97,7 @@ public class DraftManager {
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String body = responseEntity.getBody();
-        DraftResponse response = JSON.parseObject(body, DraftResponse.class);
+        DraftGetResponse response = JSON.parseObject(body, DraftGetResponse.class);
         logger.debug("获取草稿详情结果: {}", body);
         return response;
     }
@@ -192,6 +194,8 @@ public class DraftManager {
      * 内部类，用于封装media_id请求参数
      */
     private static class MediaIdRequest {
+        @JSONField(name = "media_id")
+        @JsonProperty(value = "media_id")
         private String mediaId;
 
         public MediaIdRequest(String mediaId) {

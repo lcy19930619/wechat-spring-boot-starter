@@ -9,11 +9,7 @@ import java.util.List;
  * 草稿列表响应
  */
 public class DraftListResponse extends WeChatResponse {
-    /**
-     * 素材列表
-     */
-    private List<DraftListItem> item;
-    
+
     /**
      * 草稿素材的总数
      */
@@ -25,7 +21,14 @@ public class DraftListResponse extends WeChatResponse {
      */
     @JSONField(name = "item_count")
     @JsonProperty(value = "item_count")
-    private Integer item_count;
+    private Integer itemCount;
+
+
+    /**
+     * 素材列表
+     */
+    private List<DraftListItem> item;
+
 
     public List<DraftListItem> getItem() {
         return item;

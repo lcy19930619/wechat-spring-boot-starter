@@ -1,71 +1,92 @@
-package net.jlxxw.wechat.dto.draft;
+package net.jlxxw.wechat.response.draft;
+
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
+import net.jlxxw.wechat.dto.draft.CoverInfo;
+import net.jlxxw.wechat.dto.draft.ImageInfo;
+import net.jlxxw.wechat.dto.draft.ProductInfo;
 
 /**
- * 草稿图文内容DTO
+ * 内部文章类，包含所有文章字段
  */
-public class DraftNewsItemDTO {
+public class ArticleItem {
     /**
-     * 文章类型，分别有图文消息（news）、图片消息（newspic），不填默认为图文消息（news）
+     * 文章类型，
+     * 分别有图文消息（news）
+     * 图片消息（newspic）
+     * 不填默认为图文消息（news）
      */
+    @JSONField(name = "article_type")
+    @JsonProperty(value = "article_type")
     private String articleType;
-    
     /**
-     * 标题
+     * 图文消息的标题
      */
+    @NotBlank(message = "图文消息的标题不能为空")
     private String title;
-    
     /**
-     * 作者
+     * 图文消息的作者
      */
     private String author;
 
     /**
-     * 图文消息的具体内容，支持HTML标签，必须少于2万字符，小于1M，且此处会去除JS,
-     * 涉及图片url必须来源 "上传图文消息内的图片获取URL"接口获取。
-     * 外部图片url将被过滤。 图片消息则仅支持纯文本和部分特殊功能标签如商品，商品个数不可超过50个
-     */
-    private String content;
-    /**
-     * 图文消息的摘要，仅有单图文消息才有摘要，多图文此处为空。
-     * 如果本字段为没有填写，则默认抓取正文前54个字。
+     * 图文消息的描述，如本字段为空，则默认抓取正文前54个字
      */
     private String digest;
-
+    /**
+     * 图文消息页面的内容，支持HTML标签，必须少于2万字符，小于1M，且此处会去除JS
+     */
+    @NotBlank(message = "图文消息页面的内容不能为空")
+    private String content;
     /**
      * 图文消息的原文地址，即点击"阅读原文"后的URL
      */
+    @JSONField(name = "content_source_url")
+    @JsonProperty(value = "content_source_url")
     private String contentSourceUrl;
-    
+
     /**
-     * 图文消息的封面图片素材id（必须是永久MediaID）
+     * 图文消息缩略图的media_id，可以在基础支持-上传多媒体文件接口中获得
      */
+    @JSONField(name = "thumb_media_id")
+    @JsonProperty(value = "thumb_media_id")
     private String thumbMediaId;
-    
+
     /**
      * 是否打开评论，0不打开(默认)，1打开
      */
+    @JSONField(name = "need_open_comment")
+    @JsonProperty(value = "need_open_comment")
     private Integer needOpenComment;
-    
+
     /**
      * 是否粉丝才可评论，0所有人可评论(默认)，1粉丝才可评论
      */
+    @JSONField(name = "only_fans_can_comment")
+    @JsonProperty(value = "only_fans_can_comment")
     private Integer onlyFansCanComment;
-    
+
     /**
      * 图片消息里的图片相关信息，图片数量最多为20张，首张图片即为封面图
      */
-    private DraftImageInfoDTO imageInfo;
-    
+    @JSONField(name = "image_info")
+    @JsonProperty(value = "image_info")
+    private ImageInfo imageInfo;
+
     /**
      * 商品信息
      */
-    private DraftProductInfoDTO productInfo;
-    
+    @JSONField(name = "product_info")
+    @JsonProperty(value = "product_info")
+    private ProductInfo productInfo;
+
     /**
      * 草稿的临时链接
      */
     private String url;
 
+    // Getters and setters
     public String getArticleType() {
         return articleType;
     }
@@ -138,19 +159,19 @@ public class DraftNewsItemDTO {
         this.onlyFansCanComment = onlyFansCanComment;
     }
 
-    public DraftImageInfoDTO getImageInfo() {
+    public ImageInfo getImageInfo() {
         return imageInfo;
     }
 
-    public void setImageInfo(DraftImageInfoDTO imageInfo) {
+    public void setImageInfo(ImageInfo imageInfo) {
         this.imageInfo = imageInfo;
     }
 
-    public DraftProductInfoDTO getProductInfo() {
+    public ProductInfo getProductInfo() {
         return productInfo;
     }
 
-    public void setProductInfo(DraftProductInfoDTO productInfo) {
+    public void setProductInfo(ProductInfo productInfo) {
         this.productInfo = productInfo;
     }
 

@@ -13,7 +13,12 @@ public class DraftListItem {
      * 草稿内容
      */
     private DraftContentDTO content;
-    
+    /**
+     * 该草稿的id
+     */
+    @JSONField(name = "media_id")
+    @JsonProperty(value = "media_id")
+    private String mediaId;
     /**
      * 该草稿最近一次更新的时间
      */
@@ -21,11 +26,6 @@ public class DraftListItem {
     @JsonProperty(value = "update_time")
     private Date updateTime;
     
-    /**
-     * 该草稿的id
-     */
-    private String mediaId;
-
 
     public DraftContentDTO getContent() {
         return content;

@@ -2,9 +2,11 @@ package net.jlxxw.wechat.dto.draft;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * 新增草稿请求DTO
@@ -13,7 +15,7 @@ import java.util.List;
 public class DraftAddDTO {
 
     /**
-     * 图文素材集合
+     * 图文消息的描述，如本字段为空，则默认抓取正文前54个字
      */
     @JSONField(name = "articles")
     @JsonProperty(value = "articles")
@@ -26,5 +28,4 @@ public class DraftAddDTO {
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
-
 }
