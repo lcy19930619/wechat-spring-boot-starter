@@ -40,15 +40,25 @@ public class UrlConstant {
     /**
      * 获取已发布文章列表URL
      */
-    public static final String GET_PUBLISH_LIST_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token={0}";
+    public static final String BATCH_GET_FREE_PUBLISH = "https://api.weixin.qq.com/cgi-bin/freepublish/batchget?access_token={0}";
     
     /**
      * 删除已发布文章URL
      */
-    public static final String DELETE_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/delete?access_token={0}";
+    public static final String DELETE_FREE_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/delete?access_token={0}";
     
     /**
      * 获取发布状态URL
      */
     public static final String GET_PUBLISH_STATUS_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/get?access_token={0}";
+    
+    /**
+     * 获取已发布文章详情URL
+     */
+    public static final String GET_ARTICLE_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/getarticle?access_token={0}";
+
+    /**
+     * 发布草稿URL
+     */
+    public static final String SUBMIT_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/submit?access_token={0}";
 }

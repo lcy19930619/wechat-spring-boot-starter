@@ -253,4 +253,15 @@ public interface UrlConstant {
      * 获取已发布的消息状态
      */
     String GET_PUBLISH_STATUS_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/get?access_token={0}";
+
+    /**
+     * 获取已发布的文章
+     */
+    String GET_ARTICLE_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/get?access_token={0}";
+
+    /**
+     * 发布文章
+     */
+    String SUBMIT_FREE_PUBLISH_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/submit?access_token={0}";
+
 }

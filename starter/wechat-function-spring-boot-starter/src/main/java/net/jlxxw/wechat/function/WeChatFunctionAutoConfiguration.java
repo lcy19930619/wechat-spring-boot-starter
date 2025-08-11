@@ -4,6 +4,8 @@ import net.jlxxw.wechat.aop.ParamCheckAOP;
 import net.jlxxw.wechat.function.ai.AiBotFunction;
 import net.jlxxw.wechat.function.api.OpenApiManager;
 import net.jlxxw.wechat.function.auth.WebPageAuthorizationManager;
+import net.jlxxw.wechat.function.draft.DraftManager;
+import net.jlxxw.wechat.function.freepublish.FreePublishManager;
 import net.jlxxw.wechat.function.ip.IpManager;
 import net.jlxxw.wechat.function.material.MaterialManager;
 import net.jlxxw.wechat.function.material.PermanentMaterialManager;
@@ -219,6 +221,34 @@ public class WeChatFunctionAutoConfiguration  {
     @ConditionalOnBean(WeChatAiBotProperties.class)
     public WeChatAiBotTokenRepository weChatAiBotTokenRepository(WeChatAiBotProperties weChatAiBotProperties) {
         return weChatAiBotProperties::getToken;
+    }
+
+    /**
+     * 草稿管理
+     * @param restTemplate
+     * @param weChatTokenRepository
+     * @return
+     */
+    @Bean
+    @ConditionalOnBean(WeChatTokenRepository.class)
+    public DraftManager draftManager(RestTemplate restTemplate,
+                                     WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 IpManager");
+        return new DraftManager(restTemplate, weChatTokenRepository);
+    }
+
+    /**
+     * 发布管理
+     * @param restTemplate
+     * @param weChatTokenRepository
+     * @return
+     */
+    @Bean
+    @ConditionalOnBean(WeChatTokenRepository.class)
+    public FreePublishManager freePublishManager(RestTemplate restTemplate,
+                                                 WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 IpManager");
+        return new FreePublishManager(restTemplate, weChatTokenRepository);
     }
 
 }
