@@ -91,7 +91,11 @@ public interface UrlConstant {
      * 商户订单号查询
      */
     String JSAPI_V3_SELECT_BY_OUT_TRADE_NO = "https://api.mch.weixin.qq.com/v3/pay/transactions/out-trade-no/{0}";
-
+    
+    /**
+     * 上传图文消息图片
+     */
+    String UPLOAD_IMAGE_URL = "https://api.weixin.qq.com/cgi-bin/media/uploadimg?access_token={0}";
 
     /**
      * 创建临时二维码url
