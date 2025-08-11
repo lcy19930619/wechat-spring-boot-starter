@@ -248,4 +248,9 @@ public interface UrlConstant {
      * 删除已发布的消息
      */
     String DELETE_FREE_PUBLISH_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/delete?access_token={0}";
+
+    /**
+     * 获取已发布的消息状态
+     */
+    String GET_PUBLISH_STATUS_URL = "https://api.weixin.qq.com/cgi-bin/freepublish/get?access_token={0}";
 }
