@@ -9,6 +9,7 @@
         <version>2.0.1.20250811</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
+    <name>wechat-function-spring-boot-starter</name>
 
     <artifactId>wechat-function-spring-boot-starter</artifactId>
     <description>微信公众号相关接口封装自动装配</description>

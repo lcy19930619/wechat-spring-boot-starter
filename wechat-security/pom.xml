@@ -6,7 +6,7 @@
         <artifactId>wechat-spring-boot-starter</artifactId>
         <version>2.0.1.20250811</version>
     </parent>
-
+    <name>wechat-security</name>
     <artifactId>wechat-security</artifactId>
     <description>微信安全认证模块，用于检测请求是否来自微信服务器</description>
 

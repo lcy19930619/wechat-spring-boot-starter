@@ -9,7 +9,7 @@
         <version>2.0.1.20250811</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
+    <name>wechat-repository</name>
     <artifactId>wechat-repository</artifactId>
 
     <description>项目持久层模块，存储token等数据</description>
