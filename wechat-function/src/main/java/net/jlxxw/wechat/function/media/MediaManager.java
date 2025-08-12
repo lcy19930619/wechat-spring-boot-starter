@@ -18,10 +18,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.MessageFormat;
 
@@ -31,16 +31,13 @@ import java.text.MessageFormat;
  */
 public class MediaManager {
     private static final Logger logger = LoggerFactory.getLogger(MediaManager.class);
-    private final RestTemplate restTemplate;
     private final WeChatTokenRepository weChatTokenRepository;
 
     /**
-     *
-     * @param restTemplate 上传文件比较特殊，如果不存在 链接工厂，需要使用：new RestTemplate(new HttpComponentsClientHttpRequestFactory()
+     * 我不太清楚我为什么 RestTemplate 上传会失败，改为url上传就可以
      * @param weChatTokenRepository token 管理器
      */
-    public MediaManager(RestTemplate restTemplate, WeChatTokenRepository weChatTokenRepository) {
-        this.restTemplate = restTemplate;
+    public MediaManager( WeChatTokenRepository weChatTokenRepository) {
         this.weChatTokenRepository = weChatTokenRepository;
     }
 
@@ -62,24 +59,48 @@ public class MediaManager {
 
         File media = uploadImageDTO.getMedia();
 
-        //设置请求体，注意是LinkedMultiValueMap
-        MultiValueMap<String, Object> data = new LinkedMultiValueMap<>();
 
-        //设置上传文件
-        FileSystemResource fileSystemResource = new FileSystemResource(media);
-        data.add("media", fileSystemResource);
+        String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
+        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setUseCaches(false);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
-        //上传文件,设置请求头
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        httpHeaders.setContentLength(fileSystemResource.getFile().length());
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(data,httpHeaders);
-        //设置表单信息
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, requestEntity, String.class);
-        String responseBody = responseEntity.getBody();
-        UploadImageResponse response = JSON.parseObject(responseBody, UploadImageResponse.class);
-        logger.debug("上传图文消息图片结果: {}", responseBody);
-        return response;
+        try (DataOutputStream out = new DataOutputStream(conn.getOutputStream());
+             FileInputStream fis = new FileInputStream(media)) {
+
+            // 写文件头
+            out.writeBytes("--" + boundary + "\r\n");
+            out.writeBytes("Content-Disposition: form-data; name=\"media\"; filename=\"" + media.getName() + "\"\r\n");
+            out.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
+
+            // 写文件内容
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            out.writeBytes("\r\n");
+
+            // 结束 boundary
+            out.writeBytes("--" + boundary + "--\r\n");
+            out.flush();
+        }
+
+        // 读取响应
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+           String result = response.toString();
+            UploadImageResponse uploadImageResponse = JSON.parseObject(result, UploadImageResponse.class);
+            logger.debug("上传图文消息图片结果: {}", result);
+            return uploadImageResponse;
+        }
     }
 
 

@@ -254,16 +254,14 @@ public class WeChatFunctionAutoConfiguration  {
 
     /**
      * 上传图片函数
-     * @param restTemplate
      * @param weChatTokenRepository
      * @return
      */
     @Bean
     @ConditionalOnBean(WeChatTokenRepository.class)
-    public MediaManager mediaManager(RestTemplate restTemplate,
-                                           WeChatTokenRepository weChatTokenRepository) {
+    public MediaManager mediaManager( WeChatTokenRepository weChatTokenRepository) {
         LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 mediaManager");
-        return new MediaManager(restTemplate, weChatTokenRepository);
+        return new MediaManager( weChatTokenRepository);
     }
 
 }

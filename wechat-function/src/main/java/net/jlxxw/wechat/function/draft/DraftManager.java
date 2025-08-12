@@ -69,7 +69,8 @@ public class DraftManager {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<DraftAddDTO> entity = new HttpEntity<>(draftAddDTO, headers);
+        String json = JSON.toJSONString(draftAddDTO);
+        HttpEntity<String> entity = new HttpEntity<>(json, headers);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String body = responseEntity.getBody();
@@ -140,7 +141,8 @@ public class DraftManager {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<DraftUpdateDTO> entity = new HttpEntity<>(draftUpdateDTO, headers);
+        String json = JSON.toJSONString(draftUpdateDTO);
+        HttpEntity<String> entity = new HttpEntity<>(json, headers);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String body = responseEntity.getBody();
@@ -163,7 +165,8 @@ public class DraftManager {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<DraftListDTO> entity = new HttpEntity<>(draftListDTO, headers);
+        String json = JSON.toJSONString(draftListDTO);
+        HttpEntity<String> entity = new HttpEntity<>(json, headers);
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(url, entity, String.class);
         String body = responseEntity.getBody();
