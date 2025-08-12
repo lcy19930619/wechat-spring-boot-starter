@@ -5,7 +5,7 @@
 
     <groupId>net.jlxxw</groupId>
     <artifactId>wechat-spring-boot-starter</artifactId>
-    <version>2.0.1.20250811</version>
+    <version>2.0.1.20250812</version>
     <packaging>pom</packaging>
     <name>wechat-spring-boot-starter</name>
     <description>微信公众号快速开发组件</description>
