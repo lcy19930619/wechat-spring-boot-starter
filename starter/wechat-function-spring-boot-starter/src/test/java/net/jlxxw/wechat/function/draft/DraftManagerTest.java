@@ -12,11 +12,10 @@ import net.jlxxw.wechat.response.draft.DraftGetResponse;
 import net.jlxxw.wechat.response.draft.DraftListResponse;
 import net.jlxxw.wechat.response.material.PermanentMaterialResponse;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -27,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,7 +36,7 @@ import java.util.List;
 @TestPropertySource("classpath:application-*.yml")
 @ActiveProfiles("plain")
 @SpringBootTest(classes = WeChatFunctionAutoConfiguration.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class DraftManagerTest {
 
 
@@ -84,20 +82,20 @@ public class DraftManagerTest {
         draftAddDTO.setArticles(articles);
 
         DraftAddResponse response = draftManager.addDraft(draftAddDTO);
-        Assert.assertTrue("创建草稿不应该失败", response.isSuccessful());
+        Assertions.assertTrue(response.isSuccessful(), "创建草稿不应该失败");
         DRAFT_MEDIA_ID = response.getMediaId();
-        Assert.assertNotNull("草稿media_id不应该为空", DRAFT_MEDIA_ID);
+        Assertions.assertNotNull(DRAFT_MEDIA_ID, "草稿media_id不应该为空");
 
 
         WeChatResponse weChatResponse = permanentMaterialManager.deleteMaterial(mediaId);
-        Assert.assertTrue("删除永久素材不应该失败", weChatResponse.isSuccessful());
+        Assertions.assertTrue(weChatResponse.isSuccessful(), "删除永久素材不应该失败");
     }
 
     @Test
     public void test_1_getDraft() {
         DraftGetResponse response = draftManager.getDraft(DRAFT_MEDIA_ID);
-        Assert.assertTrue("获取草稿详情不应该失败", response.isSuccessful());
-        Assert.assertNotNull("获取的草稿详情不应该为空", response.getNewsItem());
+        Assertions.assertTrue( response.isSuccessful(),"获取草稿详情不应该失败");
+        Assertions.assertNotNull(response.getNewsItem(), "获取的草稿详情不应该为空");
     }
 
     @Test
@@ -116,7 +114,7 @@ public class DraftManagerTest {
         draftUpdateDTO.setArticles(articles);
 
         WeChatResponse response = draftManager.updateDraft(draftUpdateDTO);
-        Assert.assertTrue("更新草稿不应该失败", response.isSuccessful());
+        Assertions.assertTrue(response.isSuccessful(), "更新草稿不应该失败");
     }
 
     @Test
@@ -127,20 +125,20 @@ public class DraftManagerTest {
         draftListDTO.setNoContent(0);
 
         DraftListResponse response = draftManager.getDraftList(draftListDTO);
-        Assert.assertTrue("获取草稿列表不应该失败", response.isSuccessful());
-        Assert.assertNotNull("获取的草稿列表不应该为空", response.getItem());
+        Assertions.assertTrue(response.isSuccessful(), "获取草稿列表不应该失败");
+        Assertions.assertNotNull(response.getItem(), "获取的草稿列表不应该为空");
     }
 
     @Test
     public void test_4_getDraftCount() {
         DraftCountResponse response = draftManager.getDraftCount();
-        Assert.assertTrue("获取草稿总数不应该失败", response.isSuccessful());
-        Assert.assertNotNull("获取的草稿总数不应该为空", response.getTotalCount());
+        Assertions.assertTrue(response.isSuccessful(), "获取草稿总数不应该失败");
+        Assertions.assertNotNull(response.getTotalCount(), "获取的草稿总数不应该为空");
     }
 
     @Test
     public void test_5_deleteDraft() {
         WeChatResponse response = draftManager.deleteDraft(DRAFT_MEDIA_ID);
-        Assert.assertTrue("删除草稿不应该失败", response.isSuccessful());
+        Assertions.assertTrue( response.isSuccessful(),"删除草稿不应该失败");
     }
 }

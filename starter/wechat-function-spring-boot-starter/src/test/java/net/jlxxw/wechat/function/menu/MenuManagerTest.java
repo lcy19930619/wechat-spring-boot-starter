@@ -3,8 +3,8 @@ package net.jlxxw.wechat.function.menu;
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.function.WeChatFunctionAutoConfiguration;
 import net.jlxxw.wechat.response.menu.MenuResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,6 +26,6 @@ public class MenuManagerTest {
     public void getMenuTest(){
         MenuResponse menu = menuManager.getMenu();
         System.out.println(JSON.toJSONString(menu));
-        Assert.assertNotNull("返回值不应为null",menu);
+        Assertions.assertNotNull(menu, "返回值不应为null");
     }
 }

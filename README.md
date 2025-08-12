@@ -159,7 +159,7 @@ import net.jlxxw.wechat.event.component.listener.AbstractWeChatEventListener;
 import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatEventTypeEnum;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
-import org.junit.Assert;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -192,7 +192,7 @@ public class SubscribeEventMessageListener extends AbstractWeChatEventListener {
      */
     @Override
     public WeChatMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage) {
-        Assert.assertNotNull("接收到的数据不应为空", abstractWeChatMessage);
+        Assertions.assertNotNull(abstractWeChatMessage,"接收到的信息不应为空");
         // 类型转化参考 supportMessageType() 方法中枚举定义
         SubscribeEventMessage subscribeEventMessage = (SubscribeEventMessage)abstractWeChatMessage;
         // 用户关注 event key

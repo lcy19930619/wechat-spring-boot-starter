@@ -5,17 +5,13 @@ import net.jlxxw.wechat.dto.template.WeChatTemplateDTO;
 import net.jlxxw.wechat.enums.ColorEnums;
 import net.jlxxw.wechat.function.WeChatFunctionAutoConfiguration;
 import net.jlxxw.wechat.response.WeChatResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author chunyang.leng
@@ -50,7 +46,7 @@ public class SyncPushTemplateTest  {
                 .buildOtherData("abc", "abc DATA的具体值", ColorEnums.ORANGE);
         WeChatResponse weChatResponse = syncPushTemplate.pushTemplate(weChatTemplateDTO);
 
-        Assert.assertEquals("微信返回状态错误，当前为：" + JSON.toJSONString(weChatResponse), 0L, (int) weChatResponse.getErrcode());
+        Assertions.assertEquals(0L, (int) weChatResponse.getErrcode(), "微信返回状态错误，当前为：" + JSON.toJSONString(weChatResponse));
     }
 
 

@@ -7,8 +7,8 @@ import net.jlxxw.wechat.response.material.TempMaterialResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -35,12 +35,14 @@ public class TempMaterialManagerTest  {
     @Test
     public void uploadTest() {
         String mediaId = upload();
-        Assert.assertTrue("上传临时素材mediaId不应该为null", StringUtils.isNotBlank(mediaId));
+        Assertions.assertTrue(StringUtils.isNotBlank(mediaId), "上传临时素材mediaId不应该为null");
     }
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void uploadExceptionTest() {
-        tempMaterialManager.upload(MaterialEnum.IMAGE, null);
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            tempMaterialManager.upload(MaterialEnum.IMAGE, null);
+        });
     }
 
     @Test
@@ -54,7 +56,7 @@ public class TempMaterialManagerTest  {
         ) {
             FileUtils.copyToFile(inputStream, file);
             TempMaterialResponse response = tempMaterialManager.upload(MaterialEnum.IMAGE, file);
-            Assert.assertTrue("文件id不应该为空", Objects.nonNull(response) && StringUtils.isNotBlank(response.getMediaId()));
+            Assertions.assertTrue(Objects.nonNull(response) && StringUtils.isNotBlank(response.getMediaId()), "文件id不应该为空");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }finally {
@@ -66,7 +68,7 @@ public class TempMaterialManagerTest  {
     public void downloadTest(){
         String mediaId = upload();
         byte[] bytes = tempMaterialManager.downloadMaterial(mediaId);
-        Assert.assertTrue("文件不应该为空", Objects.nonNull(bytes));
+        Assertions.assertTrue(Objects.nonNull(bytes), "文件不应该为空");
     }
 
 

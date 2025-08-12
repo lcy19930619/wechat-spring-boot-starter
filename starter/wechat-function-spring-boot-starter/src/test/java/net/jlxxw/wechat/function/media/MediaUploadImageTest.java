@@ -3,9 +3,8 @@ package net.jlxxw.wechat.function.media;
 import com.alibaba.fastjson.JSON;
 import net.jlxxw.wechat.dto.media.UploadImageDTO;
 import net.jlxxw.wechat.function.WeChatFunctionAutoConfiguration;
-import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.media.UploadImageResponse;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,7 +28,7 @@ public class MediaUploadImageTest {
         uploadImageDTO.setMedia(file);
 
         UploadImageResponse uploadImageResponse = mediaManager.uploadImage(uploadImageDTO);
-        Assert.assertTrue(uploadImageResponse.isSuccessful());
+        Assertions.assertTrue(uploadImageResponse.isSuccessful());
         System.out.println(JSON.toJSONString(uploadImageResponse));
 
     }

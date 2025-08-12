@@ -9,8 +9,8 @@ import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.api.ApiRequestRecord;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -56,7 +56,7 @@ public class OpenApiManagerMockTest extends MockBaseTest {
         when(restTemplate.postForEntity(url, request, String.class)).thenReturn(responseEntity);
 
         WeChatResponse clean = openApiManager.clean();
-        Assert.assertTrue("测试不应该失败",clean.isSuccessful());
+        Assertions.assertTrue(clean.isSuccessful(), "测试不应该失败");
 
     }
 
@@ -80,6 +80,7 @@ public class OpenApiManagerMockTest extends MockBaseTest {
 
 
         ApiRequestRecord record = openApiManager.selectRid(rid);
-        Assert.assertNotNull("返回值不应为null",record);
+        Assertions.assertNotNull(record, "返回值不应为null");
+
     }
 }

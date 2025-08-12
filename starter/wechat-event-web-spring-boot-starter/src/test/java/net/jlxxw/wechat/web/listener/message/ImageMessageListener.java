@@ -5,7 +5,7 @@ import net.jlxxw.wechat.dto.message.AbstractWeChatMessage;
 import net.jlxxw.wechat.enums.WeChatMessageTypeEnum;
 import net.jlxxw.wechat.event.component.listener.AbstractWeChatMessageListener;
 import net.jlxxw.wechat.response.WeChatMessageResponse;
-import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,7 +32,7 @@ public class ImageMessageListener extends AbstractWeChatMessageListener {
      */
     @Override
     public WeChatMessageResponse handler(AbstractWeChatMessage abstractWeChatMessage) {
-        Assert.assertNotNull("接收到的信息不应为空", abstractWeChatMessage);
+        Assertions.assertNotNull(abstractWeChatMessage,"接收到的信息不应为空");
         return WeChatMessageResponse.buildImage("media_id");
     }
 }

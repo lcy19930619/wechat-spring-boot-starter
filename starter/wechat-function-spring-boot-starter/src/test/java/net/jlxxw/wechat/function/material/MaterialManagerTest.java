@@ -2,8 +2,8 @@ package net.jlxxw.wechat.function.material;
 
 import net.jlxxw.wechat.function.WeChatFunctionAutoConfiguration;
 import net.jlxxw.wechat.response.material.MaterialCountResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -23,6 +23,6 @@ public class MaterialManagerTest  {
     @Test
     public void materialCountTest(){
         MaterialCountResponse materialCountResponse = materialManager.materialCount();
-        Assert.assertNotNull("统计信息不应为空",materialCountResponse);
+        Assertions.assertNotNull(materialCountResponse, "统计信息不应为空");
     }
 }

@@ -18,7 +18,7 @@ import net.jlxxw.wechat.event.util.SHA1;
 import net.jlxxw.wechat.exception.AesException;
 import net.jlxxw.wechat.properties.WeChatProperties;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
@@ -116,7 +116,9 @@ public class ListenerCipherTextTest {
         String coreControllerUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
 
         Resource[] messageResources = pathMatchingResourcePatternResolver.getResources("mock/data/xml/message/*Message.xml");
-        Assert.assertNotNull("测试消息资源不应该为空", messageResources);
+
+        Assertions.assertNotNull(messageResources,"测试消息资源不应该为空");
+
         List<Resource> resourcesList = new ArrayList<>(Arrays.asList(messageResources));
 
         CountDownLatch countDownLatch = new CountDownLatch(resourcesList.size());

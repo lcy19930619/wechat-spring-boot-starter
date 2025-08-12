@@ -3,8 +3,8 @@ package net.jlxxw.wechat.function.api;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.function.WeChatFunctionAutoConfiguration;
 import net.jlxxw.wechat.response.api.ApiResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,19 +24,22 @@ public class OpenApiManagerTest {
     @Test
     public void selectQuotaTest(){
         ApiResponse response = openApiManager.selectQuota("/cgi-bin/message/custom/send");
-        Assert.assertNotNull("查询结果不应该为空",response);
+        Assertions.assertNotNull(response, "查询结果不应该为空");
     }
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void selectQuotaExceptionTest(){
-        openApiManager.selectQuota(null);
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            openApiManager.selectQuota(null);
+        });
     }
 
 
-
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void selectRidExceptionTest(){
-        openApiManager.selectRid(null);
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            openApiManager.selectRid(null);
+        });
     }
 
 }

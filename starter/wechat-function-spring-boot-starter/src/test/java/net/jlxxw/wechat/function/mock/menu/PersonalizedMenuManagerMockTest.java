@@ -9,8 +9,8 @@ import net.jlxxw.wechat.function.mock.MockBaseTest;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.menu.PersonalizedMenuResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -48,7 +48,7 @@ public class PersonalizedMenuManagerMockTest extends MockBaseTest {
         when(restTemplate.postForEntity(url, request, String.class)).thenReturn(buildMockResponseEntity("{\"menuid\":\"208379533\"}"));
 
         PersonalizedMenuResponse menu = personalizedMenuManager.createMenu(inputParam);
-        Assert.assertTrue("测试不应该失败", menu.isSuccessful());
+        Assertions.assertTrue(menu.isSuccessful(), "测试不应该失败");
 
     }
 
@@ -65,7 +65,7 @@ public class PersonalizedMenuManagerMockTest extends MockBaseTest {
 
         when(restTemplate.postForEntity(url, request, String.class)).thenReturn(buildMockResponseEntity(JSON.toJSONString(new WeChatResponse())));
         WeChatResponse menu = personalizedMenuManager.deleteMenu(menuId);
-        Assert.assertTrue("测试不应该失败", menu.isSuccessful());
+        Assertions.assertTrue(menu.isSuccessful(), "测试不应该失败");
     }
 
     @Test
@@ -82,7 +82,7 @@ public class PersonalizedMenuManagerMockTest extends MockBaseTest {
 
         when(restTemplate.postForEntity(url, request, String.class)).thenReturn(buildMockResponseEntity(json));
         WeChatResponse menu = personalizedMenuManager.tryMatch(uid);
-        Assert.assertTrue("测试不应该失败", menu.isSuccessful());
+        Assertions.assertTrue(menu.isSuccessful(), "测试不应该失败");
     }
 
 }

@@ -1,8 +1,10 @@
 package net.jlxxw.wechat.function.menu;
 
+import net.jlxxw.wechat.enums.MaterialEnum;
 import net.jlxxw.wechat.exception.ParamCheckException;
 import net.jlxxw.wechat.function.WeChatFunctionAutoConfiguration;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,19 +21,28 @@ public class PersonalizedMenuManagerTest {
     @Autowired
     private PersonalizedMenuManager personalizedMenuManager;
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void createMenuMockExceptionTest(){
-        personalizedMenuManager.createMenu(null);
+
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            personalizedMenuManager.createMenu(null);
+        });
     }
 
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void deleteMenuMockExceptionTest() {
-        personalizedMenuManager.deleteMenu(null);
+
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            personalizedMenuManager.deleteMenu(null);
+        });
     }
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void tryMatchMockExceptionTest() {
-        personalizedMenuManager.tryMatch(null);
+
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            personalizedMenuManager.tryMatch(null);
+        });
     }
 }

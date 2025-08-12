@@ -9,8 +9,8 @@ import net.jlxxw.wechat.properties.WeChatProperties;
 import net.jlxxw.wechat.response.WeChatResponse;
 import net.jlxxw.wechat.response.auth.AuthAccessTokenResponse;
 import net.jlxxw.wechat.response.auth.AuthUserInfoResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -44,7 +44,7 @@ public class WebPageAuthorizationManagerMockTest extends MockBaseTest {
         when(restTemplate.getForEntity(url, String.class)).thenReturn(responseEntity);
 
         AuthAccessTokenResponse token = webPageAuthorizationManager.getAuthorizeAccessToken(code);
-        Assert.assertTrue("测试不应该失败", token.isSuccessful());
+        Assertions.assertTrue(token.isSuccessful(), "测试不应该失败");
     }
 
     @Test
@@ -55,7 +55,8 @@ public class WebPageAuthorizationManagerMockTest extends MockBaseTest {
         ResponseEntity<String> responseEntity = new ResponseEntity<>(webPageAuthTokenJson, HttpStatus.OK);
         when(restTemplate.getForEntity(url, String.class)).thenReturn(responseEntity);
         AuthAccessTokenResponse response = webPageAuthorizationManager.refreshToken(token);
-        Assert.assertTrue("测试不应该失败", response.isSuccessful());
+        Assertions.assertTrue(response.isSuccessful(), "测试不应该失败");
+
     }
 
     @Test
@@ -66,7 +67,8 @@ public class WebPageAuthorizationManagerMockTest extends MockBaseTest {
         ResponseEntity<String> responseEntity = new ResponseEntity<>(webPageAuthTokenJson, HttpStatus.OK);
         when(restTemplate.getForEntity(url, String.class)).thenReturn(responseEntity);
         AuthAccessTokenResponse tokenResponse = webPageAuthorizationManager.getAuthorizeAccessToken(code);
-        Assert.assertTrue("token测试不应该失败", tokenResponse.isSuccessful());
+
+        Assertions.assertTrue(tokenResponse.isSuccessful(), "测试不应该失败");
         String token = tokenResponse.getAccessToken();
 
         String openId = "xxxxxxx";
@@ -78,7 +80,7 @@ public class WebPageAuthorizationManagerMockTest extends MockBaseTest {
         when(restTemplate.getForEntity(getUserInfoUrl, String.class)).thenReturn(userInfoResponseEntity);
 
         AuthUserInfoResponse userInfoResponse = webPageAuthorizationManager.getUserInfo(openId, token, LanguageEnum.ZH_CN);
-        Assert.assertTrue("getUserInfo测试不应该失败", userInfoResponse.isSuccessful());
+        Assertions.assertTrue(userInfoResponse.isSuccessful(), "getUserInfo测试不应该失败");
 
     }
     @Test
@@ -91,7 +93,8 @@ public class WebPageAuthorizationManagerMockTest extends MockBaseTest {
         ResponseEntity<String> responseEntity = new ResponseEntity<>(webPageAuthTokenJson, HttpStatus.OK);
         when(restTemplate.getForEntity(url, String.class)).thenReturn(responseEntity);
         AuthAccessTokenResponse tokenResponse = webPageAuthorizationManager.getAuthorizeAccessToken(code);
-        Assert.assertTrue("token测试不应该失败", tokenResponse.isSuccessful());
+        Assertions.assertTrue(tokenResponse.isSuccessful(), "token测试不应该失败");
+
         String token = tokenResponse.getAccessToken();
 
 
@@ -101,7 +104,7 @@ public class WebPageAuthorizationManagerMockTest extends MockBaseTest {
         when(restTemplate.getForEntity(checkAccessTokenUrl, String.class)).thenReturn(checkAccessTokenEntity);
 
         WeChatResponse testResponse = webPageAuthorizationManager.checkAccessToken(openId, token);
-        Assert.assertTrue("check token测试不应该失败", testResponse.isSuccessful());
+        Assertions.assertTrue(testResponse.isSuccessful(), "check token测试不应该失败");
 
     }
 
