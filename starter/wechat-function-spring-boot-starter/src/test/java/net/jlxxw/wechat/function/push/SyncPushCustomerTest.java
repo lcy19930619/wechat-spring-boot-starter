@@ -4,17 +4,13 @@ import net.jlxxw.wechat.dto.customer.ArticlesDTO;
 import net.jlxxw.wechat.dto.customer.CustomerMessageDTO;
 import net.jlxxw.wechat.function.WeChatFunctionAutoConfiguration;
 import net.jlxxw.wechat.response.WeChatResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.CollectionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 /**
  * 单元测试
  * @author chunyang.leng
@@ -41,7 +37,7 @@ public class SyncPushCustomerTest {
         articlesDTO.setDescription("测试描述信息");
         CustomerMessageDTO dto = CustomerMessageDTO.buildNews(openId, articlesDTO);
         WeChatResponse weChatResponse = syncPushCustomer.pushCustomer(dto);
-        Assert.assertTrue("微信返回结果应该为成功",weChatResponse.isSuccessful());
+        Assertions.assertTrue(weChatResponse.isSuccessful(), "微信返回结果应该为成功");
 
     }
 
@@ -54,7 +50,7 @@ public class SyncPushCustomerTest {
             "<a href='https://www.jlxxw.net'>点我查看主页</a>";
         CustomerMessageDTO dto = CustomerMessageDTO.buildText(openId, text);
         WeChatResponse weChatResponse = syncPushCustomer.pushCustomer(dto);
-        Assert.assertTrue("微信返回结果应该为成功",weChatResponse.isSuccessful());
+        Assertions.assertTrue(weChatResponse.isSuccessful(), "微信返回结果应该为成功");
 
     }
 }

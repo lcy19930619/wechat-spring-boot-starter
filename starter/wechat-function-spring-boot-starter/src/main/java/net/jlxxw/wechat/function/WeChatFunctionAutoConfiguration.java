@@ -10,6 +10,7 @@ import net.jlxxw.wechat.function.ip.IpManager;
 import net.jlxxw.wechat.function.material.MaterialManager;
 import net.jlxxw.wechat.function.material.PermanentMaterialManager;
 import net.jlxxw.wechat.function.material.TempMaterialManager;
+import net.jlxxw.wechat.function.media.MediaManager;
 import net.jlxxw.wechat.function.menu.MenuManager;
 import net.jlxxw.wechat.function.menu.PersonalizedMenuManager;
 import net.jlxxw.wechat.function.properties.WeChatAiBotProperties;
@@ -233,7 +234,7 @@ public class WeChatFunctionAutoConfiguration  {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public DraftManager draftManager(RestTemplate restTemplate,
                                      WeChatTokenRepository weChatTokenRepository) {
-        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 IpManager");
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 draftManager");
         return new DraftManager(restTemplate, weChatTokenRepository);
     }
 
@@ -247,8 +248,20 @@ public class WeChatFunctionAutoConfiguration  {
     @ConditionalOnBean(WeChatTokenRepository.class)
     public FreePublishManager freePublishManager(RestTemplate restTemplate,
                                                  WeChatTokenRepository weChatTokenRepository) {
-        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 IpManager");
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 freePublishManager");
         return new FreePublishManager(restTemplate, weChatTokenRepository);
+    }
+
+    /**
+     * 上传图片函数
+     * @param weChatTokenRepository
+     * @return
+     */
+    @Bean
+    @ConditionalOnBean(WeChatTokenRepository.class)
+    public MediaManager mediaManager( WeChatTokenRepository weChatTokenRepository) {
+        LoggerUtils.info(logger,"公众号组件 ---> 初始化函数 mediaManager");
+        return new MediaManager( weChatTokenRepository);
     }
 
 }

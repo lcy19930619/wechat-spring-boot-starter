@@ -8,8 +8,8 @@ import net.jlxxw.wechat.function.menu.MenuManager;
 import net.jlxxw.wechat.function.mock.MockBaseTest;
 import net.jlxxw.wechat.repository.token.WeChatTokenRepository;
 import net.jlxxw.wechat.response.WeChatResponse;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -41,7 +41,7 @@ public class MenuManagerMockTest extends MockBaseTest {
         ResponseEntity<String> responseEntity = new ResponseEntity<>(webPageAuthTokenJson, HttpStatus.OK);
         when(restTemplate.getForEntity(url, String.class)).thenReturn(responseEntity);
         WeChatResponse weChatResponse = menuManager.deleteMenu();
-        Assert.assertTrue("测试不应该失败",weChatResponse.isSuccessful());
+        Assertions.assertTrue(weChatResponse.isSuccessful(), "测试不应该失败");
 
     }
 
@@ -62,7 +62,7 @@ public class MenuManagerMockTest extends MockBaseTest {
         when(restTemplate.postForEntity(url, request, String.class)).thenReturn(mockResponse);
 
         WeChatResponse menu = menuManager.createMenu(button);
-        Assert.assertTrue("测试不应该失败",menu.isSuccessful());
+        Assertions.assertTrue(menu.isSuccessful(), "测试不应该失败");
     }
 
     @Test
@@ -84,7 +84,7 @@ public class MenuManagerMockTest extends MockBaseTest {
         when(restTemplate.postForEntity(url, request, String.class)).thenReturn(mockResponse);
 
         WeChatResponse menu = menuManager.createMenu(button);
-        Assert.assertTrue("测试不应该失败",menu.isSuccessful());
+        Assertions.assertTrue(menu.isSuccessful(), "测试不应该失败");
     }
 
 }

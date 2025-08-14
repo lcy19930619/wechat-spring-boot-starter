@@ -5,7 +5,7 @@
     <parent>
         <groupId>net.jlxxw</groupId>
         <artifactId>wechat-spring-boot-starter</artifactId>
-        <version>2.0.1.20250811</version>
+        <version>2.0.1.20250812</version>
         <relativePath>../../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <artifactId>wechat-event-web-spring-boot-starter</artifactId>
@@ -40,16 +40,8 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
+
+
 
     </dependencies>
     <build>

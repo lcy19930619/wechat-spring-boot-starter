@@ -218,4 +218,12 @@ public class Article {
     public void setProductInfo(ProductInfo productInfo) {
         this.productInfo = productInfo;
     }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

@@ -12,7 +12,7 @@ import io.netty.util.CharsetUtil;
 import net.jlxxw.wechat.event.netty.WeChatEventNettyAutoConfiguration;
 import net.jlxxw.wechat.event.netty.properties.WeChatEventNettyServerProperties;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.StringUtils;
@@ -78,7 +78,7 @@ public class ListenerPlainTextTest {
         String coreControllerUrl = weChatEventNettyServerProperties.getCoreControllerUrl();
 
         Resource[] messageResources = pathMatchingResourcePatternResolver.getResources("mock/data/xml/message/*Message.xml");
-        Assert.assertNotNull("测试消息资源不应该为空", messageResources);
+        Assertions.assertNotNull(messageResources, "测试消息资源不应该为空");
         List<Resource> resourcesList = new ArrayList<>(Arrays.asList(messageResources));
 
         CountDownLatch countDownLatch = new CountDownLatch(resourcesList.size());

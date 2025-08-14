@@ -9,8 +9,8 @@ import net.jlxxw.wechat.response.material.TempMaterialResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -44,9 +44,9 @@ public class PermanentMaterialManagerTest  {
         ) {
             FileUtils.copyToFile(inputStream, file);
             PermanentMaterialResponse response = permanentMaterialManager.upload(MaterialEnum.IMAGE, file,null,null);
-            Assert.assertNotNull("应答不应该为空", response);
-            Assert.assertTrue("文件id不应该为空",  StringUtils.isNotBlank(response.getMediaId()));
-            Assert.assertTrue("文件url不应该为空", StringUtils.isNotBlank(response.getUrl()));
+            Assertions.assertNotNull(response, "应答不应该为空");
+            Assertions.assertTrue(StringUtils.isNotBlank(response.getMediaId()), "文件id不应该为空");
+            Assertions.assertTrue(StringUtils.isNotBlank(response.getUrl()), "文件url不应该为空");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }finally {
@@ -57,18 +57,25 @@ public class PermanentMaterialManagerTest  {
     @Test
     public void uploadTest() {
         String mediaId = upload();
-        Assert.assertTrue("上传素材mediaId不应该为null", StringUtils.isNotBlank(mediaId));
+        Assertions.assertTrue(StringUtils.isNotBlank(mediaId), "上传素材mediaId不应该为null");
     }
 
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void uploadExceptionTest1() {
-        permanentMaterialManager.upload(MaterialEnum.IMAGE, null,null,null);
+
+
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            permanentMaterialManager.upload(MaterialEnum.IMAGE, null,null,null);
+        });
     }
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void uploadExceptionTest2() {
-        permanentMaterialManager.upload(null, null, null, null,null);
+
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            permanentMaterialManager.upload(null, null, null, null,null);
+        });
     }
 
 
@@ -89,25 +96,29 @@ public class PermanentMaterialManagerTest  {
     public void downloadTest(){
         String mediaId = upload();
         byte[] download = permanentMaterialManager.download(mediaId);
-        Assert.assertNotNull("下载数据不应为空",download);
+        Assertions.assertNotNull(download, "下载数据不应为空");
     }
 
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void downloadExceptionTest() {
-        permanentMaterialManager.download(null);
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            permanentMaterialManager.download(null);
+        });
     }
 
     @Test
     public void deleteTest(){
         String mediaId = upload();
         WeChatResponse weChatResponse = permanentMaterialManager.deleteMaterial(mediaId);
-        Assert.assertTrue("删除应该成功",weChatResponse.isSuccessful());
+        Assertions.assertTrue(weChatResponse.isSuccessful(), "删除应该成功");
     }
 
-    @Test(expected = ParamCheckException.class)
+    @Test
     public void deleteMaterialExceptionTest() {
-        permanentMaterialManager.deleteMaterial(null);
+        Assertions.assertThrowsExactly(ParamCheckException.class, () -> {
+            permanentMaterialManager.deleteMaterial(null);
+        });
     }
 
 }
