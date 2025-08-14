@@ -1,5 +1,7 @@
 package net.jlxxw.wechat.dto.draft;
 
+import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -13,6 +15,8 @@ public class DraftUpdateDTO {
     /**
      * 要修改的图文消息的id
      */
+    @JSONField(name = "media_id")
+    @JsonProperty(value = "media_id")
     @NotBlank(message = "要修改的图文消息的id不能为空")
     private String mediaId;
     
@@ -22,8 +26,8 @@ public class DraftUpdateDTO {
     @NotNull(message = "要更新的文章在图文消息中的位置不能为空")
     private Integer index;
 
-    @NotEmpty(message = "要更新的文章列表不能为空")
-    private List<Article> articles;
+    @NotEmpty(message = "要更新的文章不能为空")
+    private Article articles;
 
     public @NotBlank(message = "要修改的图文消息的id不能为空") String getMediaId() {
         return mediaId;
@@ -41,11 +45,11 @@ public class DraftUpdateDTO {
         this.index = index;
     }
 
-    public @NotEmpty(message = "要更新的文章列表不能为空") List<Article> getArticles() {
+    public @NotEmpty(message = "要更新的文章不能为空") Article getArticles() {
         return articles;
     }
 
-    public void setArticles(@NotEmpty(message = "要更新的文章列表不能为空") List<Article> articles) {
+    public void setArticles(@NotEmpty(message = "要更新的文章不能为空") Article articles) {
         this.articles = articles;
     }
 }

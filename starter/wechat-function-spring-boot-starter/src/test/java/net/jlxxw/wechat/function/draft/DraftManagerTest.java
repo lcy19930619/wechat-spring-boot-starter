@@ -38,9 +38,10 @@ import java.util.List;
 @SpringBootTest(classes = WeChatFunctionAutoConfiguration.class)
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class DraftManagerTest {
+    private String mediaId = "VGpFMieccgZX80T3qYuqLEekRiPsFp8XwSwCCCypq8oDrMucRYIue2u6ua9CYX6A";
 
 
-    private String DRAFT_MEDIA_ID = null;
+    private String DRAFT_MEDIA_ID = "VGpFMieccgZX80T3qYuqLD4CYqEQQavAIm0XjFJWWMPXLmbv428GrfMb4D5F1e8H";
 
     @Autowired
     private DraftManager draftManager;
@@ -50,34 +51,18 @@ public class DraftManagerTest {
 
 
     @Test
-    public void test_0_addDraft() throws IOException {
+    public void test_0_addDraft()  {
         DraftAddDTO draftAddDTO = new DraftAddDTO();
         List<Article> articles = new ArrayList<>();
         Article article = new Article();
         article.setArticleType("news");
-        article.setTitle("单元测试标题");
-        article.setAuthor("单元测试作者");
+        article.setTitle("单元测试标题2");
+        article.setAuthor("单元测试作者2");
         article.setDigest("单元测试摘要");
         article.setContent("单元测试内容");
 
-        ClassPathResource classPathResource = new ClassPathResource("/mock/data/base64/test.jpg.base64");
-        InputStream inputStream = classPathResource.getInputStream();
-        byte[] bytes = IOUtils.readFully(inputStream, inputStream.available());
-        File file = new File(".","test.jpg");
-        ImageUtils.saveImage(bytes,file);
-        Assertions.assertTrue(file.exists(), "文件应该转化成功");
+        article.setThumbMediaId(mediaId);
 
-        PermanentMaterialResponse upload = permanentMaterialManager.upload(MaterialEnum.IMAGE, file, null, null);
-        Assertions.assertTrue(upload.isSuccessful(), "上传成功");
-        String mediaId = upload.getMediaId();
-
-
-
-        ImageInfo imageInfo = new ImageInfo();
-        InnerImage innerImage = new InnerImage();
-        innerImage.setImageMediaId(mediaId);
-        imageInfo.setImageList(Collections.singletonList(innerImage));
-        article.setImageInfo(imageInfo);
         articles.add(article);
         draftAddDTO.setArticles(articles);
 
@@ -104,14 +89,14 @@ public class DraftManagerTest {
         draftUpdateDTO.setMediaId(DRAFT_MEDIA_ID);
         draftUpdateDTO.setIndex(0);
 
-        List<Article> articles = new ArrayList<>();
         Article article = new Article();
+        article.setArticleType("news");
         article.setTitle("单元测试更新标题");
         article.setAuthor("单元测试更新作者");
         article.setDigest("单元测试更新摘要");
         article.setContent("单元测试更新内容");
-        articles.add(article);
-        draftUpdateDTO.setArticles(articles);
+        article.setThumbMediaId("VGpFMieccgZX80T3qYuqLJQslJRWpVn9ixxO7cSV_KQB1VharIddCGe-76lyuolb");
+        draftUpdateDTO.setArticles(article);
 
         WeChatResponse response = draftManager.updateDraft(draftUpdateDTO);
         Assertions.assertTrue(response.isSuccessful(), "更新草稿不应该失败");
