@@ -24,10 +24,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 
@@ -58,37 +58,79 @@ public class PermanentMaterialManager {
      * @throws WeChatException 微信服务端验证异常
      * @throws ParamCheckException 方法调用前，参数检查异常
      */
-    public PermanentMaterialResponse upload( @NotNull(message = "文件类型不能为空") MaterialEnum materialEnum,
-                                             @NotNull(message = "文件不能为空") File file,
-                                             String videoTitle,
-                                             String videoIntroduction) throws WeChatException, ParamCheckException {
-        FileSystemResource resource = new FileSystemResource(file);
-        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-        //参数
-        param.add("media", resource);
-        param.add("type", materialEnum.name().toLowerCase());
-        if (materialEnum.equals(MaterialEnum.VIDEO)){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("title",videoTitle);
-            jsonObject.put("introduction",videoIntroduction);
-            param.add("description",JSON.toJSONString(jsonObject));
-        }
+    public PermanentMaterialResponse upload(
+            @NotNull(message = "文件类型不能为空") MaterialEnum materialEnum,
+            @NotNull(message = "文件不能为空") File file,
+            String videoTitle,
+            String videoIntroduction) throws WeChatException, ParamCheckException, IOException {
 
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
-        LoggerUtils.debug( "新增永久素材url:{}", url);
+        LoggerUtils.debug("新增永久素材url:{}", url);
 
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(param);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
+        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setUseCaches(false);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
-        String result = responseEntity.getBody();
-        LoggerUtils.debug( "新增永久素材微信返回结果:{}", result);
+        try (DataOutputStream out = new DataOutputStream(conn.getOutputStream())) {
 
-        PermanentMaterialResponse response = JSON.parseObject(result,PermanentMaterialResponse.class);
-        if (!response.isSuccessful()){
+            // 1. type 参数
+            out.writeBytes("--" + boundary + "\r\n");
+            out.writeBytes("Content-Disposition: form-data; name=\"type\"\r\n\r\n");
+            out.writeBytes(materialEnum.name().toLowerCase() + "\r\n");
+
+            // 2. 视频 description 参数（仅视频需要）
+            if (materialEnum.equals(MaterialEnum.VIDEO)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("title", videoTitle);
+                jsonObject.put("introduction", videoIntroduction);
+
+                out.writeBytes("--" + boundary + "\r\n");
+                out.writeBytes("Content-Disposition: form-data; name=\"description\"\r\n\r\n");
+                out.writeBytes(jsonObject.toJSONString() + "\r\n");
+            }
+
+            // 3. 文件 media 参数
+            out.writeBytes("--" + boundary + "\r\n");
+            out.writeBytes("Content-Disposition: form-data; name=\"media\"; filename=\"" + file.getName() + "\"\r\n");
+            out.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
+
+            try (FileInputStream fis = new FileInputStream(file)) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+            out.writeBytes("\r\n");
+
+            // 4. 结束 boundary
+            out.writeBytes("--" + boundary + "--\r\n");
+            out.flush();
+        }
+
+        // 读取响应
+        StringBuilder response = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+        }
+
+        String result = response.toString();
+        LoggerUtils.debug("新增永久素材微信返回结果:{}", result);
+
+        PermanentMaterialResponse responseObj = JSON.parseObject(result, PermanentMaterialResponse.class);
+        if (!responseObj.isSuccessful()) {
             throw new WeChatException(result);
         }
-        return response;
+        return responseObj;
     }
 
     /**
@@ -107,49 +149,69 @@ public class PermanentMaterialManager {
                                              @NotNull(message = "文件数据不能为空") byte[] fileData,
                                              @NotBlank(message = "文件名称不能为空") String fileName,
                                              String videoTitle,
-                                             String videoIntroduction) throws WeChatException, ParamCheckException{
+                                             String videoIntroduction) throws WeChatException, ParamCheckException, IOException {
 
-        Resource resource = new AbstractResource() {
-            @Override
-            public String getDescription() {
-                return null;
-            }
-
-            @Override
-            public InputStream getInputStream() throws IOException {
-                return new ByteArrayInputStream(fileData);
-            }
-
-            @Override
-            public String getFilename() {
-                return fileName;
-            }
-        };
-        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-        //参数
-        param.add("media", resource);
-        param.add("type", materialEnum.name().toLowerCase());
-        if (materialEnum.equals(MaterialEnum.VIDEO)){
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("title",videoTitle);
-            jsonObject.put("introduction",videoIntroduction);
-            param.add("description",JSON.toJSONString(jsonObject));
-        }
         String tokenFromLocal = weChatTokenRepository.get();
         String url = MessageFormat.format(UrlConstant.UPLOAD_PERMANENT_MATERIAL, tokenFromLocal, materialEnum.name().toLowerCase());
-        LoggerUtils.debug( "新增永久素材url:{}", url);
+        LoggerUtils.debug("新增永久素材url:{}", url);
 
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<MultiValueMap<String, Object>>(param);
-        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        String boundary = "----WebKitFormBoundary" + System.currentTimeMillis();
+        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        conn.setDoOutput(true);
+        conn.setDoInput(true);
+        conn.setUseCaches(false);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 
-        String result = responseEntity.getBody();
-        LoggerUtils.debug( "新增永久素材微信返回结果:{}", result);
+        try (DataOutputStream out = new DataOutputStream(conn.getOutputStream())) {
 
-        PermanentMaterialResponse response = JSON.parseObject(result,PermanentMaterialResponse.class);
-        if (!response.isSuccessful()){
+            // 1. type 参数
+            out.writeBytes("--" + boundary + "\r\n");
+            out.writeBytes("Content-Disposition: form-data; name=\"type\"\r\n\r\n");
+            out.writeBytes(materialEnum.name().toLowerCase() + "\r\n");
+
+            // 2. 视频 description 参数（仅视频需要）
+            if (materialEnum.equals(MaterialEnum.VIDEO)) {
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("title", videoTitle);
+                jsonObject.put("introduction", videoIntroduction);
+
+                out.writeBytes("--" + boundary + "\r\n");
+                out.writeBytes("Content-Disposition: form-data; name=\"description\"\r\n\r\n");
+                out.writeBytes(jsonObject.toJSONString() + "\r\n");
+            }
+
+            // 3. 文件 media 参数
+            out.writeBytes("--" + boundary + "\r\n");
+            out.writeBytes("Content-Disposition: form-data; name=\"media\"; filename=\"" + fileName + "\"\r\n");
+            out.writeBytes("Content-Type: application/octet-stream\r\n\r\n");
+
+            out.write(fileData);
+            out.writeBytes("\r\n");
+
+            // 4. 结束 boundary
+            out.writeBytes("--" + boundary + "--\r\n");
+            out.flush();
+        }
+
+        // 读取响应
+        StringBuilder response = new StringBuilder();
+        try (BufferedReader in = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line);
+            }
+        }
+
+        String result = response.toString();
+        LoggerUtils.debug("新增永久素材微信返回结果:{}", result);
+
+        PermanentMaterialResponse responseObj = JSON.parseObject(result, PermanentMaterialResponse.class);
+        if (!responseObj.isSuccessful()) {
             throw new WeChatException(result);
         }
-        return response;
+        return responseObj;
     }
 
     /**
